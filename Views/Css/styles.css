@@ -1,0 +1,30 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.error-text{
+    color: red;
+    display: none;
+    margin: 3px;
+    text-align: center;
+}
+
+.form-error{
+    font-size: 14.5px;
+    color: #c04747;
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.div-error{
+    display: none;
+}
+
+.form-error input, .form-error select{
+    border: 1px solid #c04747;
+    font-size: 14.5px;
+}
+
+.form-error .error-text{
+    display: block;
+}
