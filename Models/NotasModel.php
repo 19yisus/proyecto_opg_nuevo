@@ -159,7 +159,7 @@
         if(!isset($consulta[0])){
           $this->desactiva_asignacion_seccion();
           $this->driver->commit();
-          $this->ResJSON("Este estudiante ya esta graduado!", "success");
+          return $this->ResJSON("Este estudiante ya esta graduado!", "success");
         }
         // Promociona al estudiante al siguiente seccion
         $sql_seguimiento_estudiante = "UPDATE estudiante SET seguimiento_estudiante = (seguimiento_estudiante + 1) 
@@ -170,10 +170,10 @@
 
         if(!$this->GetResultRow()){
           $this->driver->rollback();
-          $this->ResJSON("Error al promocionar al estudiante!", "error");
+          return $this->ResJSON("Error al promocionar al estudiante!", "error");
         }else{
           $this->driver->commit();
-          $this->ResJSON("El estudiante con la cedula: $this->cedula_estudiante, ah aprobado el periodo escolar!", "success");
+          return $this->ResJSON("El estudiante con la cedula: $this->cedula_estudiante, ah aprobado el periodo escolar!", "success");
         }
 
       }catch(PDOException $e){
@@ -247,9 +247,10 @@
           INNER JOIN asignacion_estudiante_seccion ON asignacion_estudiante_seccion.cedula_estu_asignacion = estudiante.cedula_estudiante
           INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = asignacion_estudiante_seccion.id_periodo
           INNER JOIN seccion ON seccion.id_seccion = asignacion_estudiante_seccion.id_seccion WHERE
-          periodo_escolar.estatus_periodo_escolar = 1 AND asignacion_estudiante_seccion.estatus_asig_estu = 1 AND estudiante.cedula_estudiante = '$this->cedula_estudiante' ;";
+          periodo_escolar.estatus_periodo_escolar = 1 AND estudiante.cedula_estudiante = '$this->cedula_estudiante' ;";
         
         $result_consulta_estudiante = $this->consult($sql_consulta_estudiante);
+        
         if(!isset($result_consulta_estudiante)){
           $this->ResJSON("Operacion Fallida! El estudiante no esta registrado en una seccion en el periodo actual", "error"); 
         }

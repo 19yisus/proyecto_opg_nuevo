@@ -387,7 +387,7 @@
                 </button>
                       
                 <button type="button" onClick="CambiarEstatus(this)" data-id='${row.id}' class="btn btn-sm btn-warning">
-                  <i class="fa-regular fa-trash-can"></i>
+                  <i class="fas fa-power-off"></i>
                 </button>
               </div>`;
             return btns;

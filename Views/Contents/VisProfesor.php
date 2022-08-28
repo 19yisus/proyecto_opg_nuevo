@@ -296,8 +296,9 @@
             // this.id_materia = data;
             this.direccion = profesor.direccion_persona;
             this.sexo = profesor.sexo_persona;
-
-            if(data.Asignaciones[0][0] != undefined){
+            
+            if(data.Asignaciones[0] != undefined){
+              
               this.id_materia = [];
               this.id_seccion = [];
               this.seguimiento = data.Asignaciones[0].ano_seguimiento;
@@ -484,7 +485,7 @@
             console.log(row)
             
             let btns = '';    
-            if(row.estatus_asignacion == '1'){
+            if(row.estatus_asignacion == '1' && row.estatus_asignacion != undefined){
               btns = `
                 <div class="">
                   <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-info">
@@ -496,7 +497,7 @@
                   </button>
                   
                   <button type="button" onClick="CambiarEstatus(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-warning">
-                    <i class="fa-regular fa-trash-can"></i>
+                    <i class="fas fa-power-off"></i>
                   </button>
                 </div>`;  
             }else{

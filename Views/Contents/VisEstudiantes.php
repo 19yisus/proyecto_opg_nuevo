@@ -109,7 +109,7 @@
 
                 <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                   <span class="input-group-text" id="inputGroup-sizing-sm">Cédula:</span>
-                  <input type="text" name="cedula" :readonly="action == 'Update'" v-model="cedula" maxlength="8" class="form-control form-control-sm" id="cedula" required placeholder="Ingrese la cédula del estudiante" style="width:70%;">
+                  <input type="text" name="cedula" :readonly="action == 'Update' || action == 'Asignacion'" v-model="cedula" maxlength="8" class="form-control form-control-sm" id="cedula" required placeholder="Ingrese la cédula del estudiante" style="width:70%;">
                   <span class="error-text">Cedula incorrecta</span>
                 </div>
               </div>
@@ -151,7 +151,7 @@
                 <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
                   <span class="input-group-text" id="inputGroup-sizing-sm">Seguimiento:</span>
                   <input type="text" min="1" max="6" maxlength="1" :readonly="action == 'Update' || action == 'Asignacion' " minlength="1" name="seguimiento_estudiante" class="form-control form-control-sm" id="" v-model="seguimiento" placeholder="Año">
-                  <select name="id_seccion" v-model="id_seccion" id="seccion" class="form-select" aria-label="Default select example" required>
+                  <select name="id_seccion" v-model="id_seccion" id="seccion" class="form-select" :disabled="desactivado" aria-label="Default select example" required>
                     <option value="0">Seleccione una opción</option>
                     <option :value="item.id_seccion" v-for="item in secciones">{{item.id_seccion}}</option>
                   </select>
@@ -185,8 +185,8 @@
 
               <div class="modal-footer mx-auto">
                 <input type="hidden" name="ope" v-model="action">
-                <button type="submit" class="btn btn-sm btn-primary" id="btn-g">
-                  <i class="fa-regular fa-circle-check" :disabled="ifPeriodo"></i> GUARDAR 
+                <button type="submit" :disabled="ifPeriodo || desactivado" class="btn btn-sm btn-primary" id="btn-g">
+                  <i class="fa-regular fa-circle-check" ></i> GUARDAR 
                 </button>
                 <button type="button" class="btn btn-sm btn-danger" id='btn-sm' data-bs-dismiss="modal">
                   <i class="fa-regular fa-circle-xmark"></i> SALIR
@@ -221,6 +221,7 @@
           secciones: [],
           periodosFiltro: [],
           formulario_valido: false,
+          desactivado: false,
           action: "Save",
         }
       },
@@ -246,6 +247,7 @@
           }).catch(Error => console.error(Error))
         },
         async GetData(id){
+          this.desactivado = false;
           await fetch(`./Controllers/EstudiantesController.php?ope=ConsultOne&&id=${id}`)
           .then( res => res.json()).then( async ({data}) => {
 
@@ -256,17 +258,22 @@
               this.apellido = data.apellido_persona
               this.fecha_n = moment(data.fecha_n_persona).format("D/MM/YYYY")
               this.lugar_n = data.direccion_n_persona
-              this.seguimiento = data.seguimiento_estudiante
               this.direccion = data.direccion_persona
               this.sexo = data.sexo_persona
 
-              await this.consultarSecciones(data.seguimiento_estudiante)
+              if(parseInt(data.seguimiento_estudiante) == 7){
+                this.desactivado = true;
+                ViewAlert("Este estudiante ya no puede ser asignado, ya culmnó", "error");
+                return false;
+              }else{
+                this.seguimiento = data.seguimiento_estudiante
+                await this.consultarSecciones(data.seguimiento_estudiante)
 
-              setTimeout( () => {
-                this.id_seccion = data.id_seccion
-              },100)
+                setTimeout( () => {
+                  this.id_seccion = data.id_seccion
+                },100)
+              }
             }
-            
             this.action = "Update";
           }).catch( error => console.error(error))
         },
@@ -412,7 +419,7 @@
                   </button>
 
                   <button type="button" onClick="CambiarEstatus(this)" data-id='${row.cedula_estudiante}' class="btn btn-sm btn-warning">
-                    <i class="fa-regular fa-trash-can"></i>
+                    <i class="fas fa-power-off"></i>
                   </button>
                 </div>`;  
             }else{
@@ -681,9 +688,14 @@
       if(radio.checked || radio1.checked){
         radioValida = true;
       }
+
+      if(app.action == "Asignacion" && seccionValida ){
+        app.formulario_valido = true;
+        return false;
+      }
    
       if(cedulaValida && nombreValida && apellidoValida && lugarNValida && fechaValida && direccionValida && nacionalidadValida && seguimientoValida && seccionValida && radioValida){
-          app.formulario_valido = true;
+        app.formulario_valido = true;
         }else app.formulario_valido = false;
       }
 

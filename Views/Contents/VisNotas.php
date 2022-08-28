@@ -8,9 +8,9 @@
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
       <div class="col-md-12">
-
+        
         <div class="col-md-8 mx-auto " style="margin-top:5%;">
-
+          <div class="row"><h3>Vista de Notas</h3></div>
           <!-- input de busqueda -->
           <div class="col-md-12 justify-content-between container-fluid row " style="margin: 0; padding: 0;">
             <div class="col-md-6" style="margin: 0; padding: 0;">
@@ -109,14 +109,19 @@
                         <input type="hidden" name="des_materia[]" :value="item.des_materia">
                         <td class="text-center">{{item.des_materia}}</td>
                         <td class="text-center"> 
-                          <input :value="item.nota_lapso1" :disabled="item.estatus_nota == 0" name="nota1[]" type="number"class="form-control form-control-sm" id="" placeholder="">
+                          <input max="20" min="0" @keypress="validar" :value="item.nota_lapso1" :disabled="item.estatus_nota == 0" name="nota1[]" type="number"class="form-control form-control-sm" id="" placeholder="">
                         </td>
-                        <td class="text-center"> <input max="20" min="0" maxlength="2" :value="item.nota_lapso2" :disabled="item.estatus_nota == 0" name="nota2[]" type="number"class="form-control form-control-sm" id="" placeholder=""></td>
-                        <td class="text-center"> <input max="20" min="0" maxlength="2" :value="item.nota_lapso3" :disabled="item.estatus_nota == 0" name="nota3[]" type="number"class="form-control form-control-sm" id="" placeholder=""></td>
-                        <td class="text-center"> <input max="20" min="0" maxlength="2" readonly 
+                        <td class="text-center"> 
+                          <input max="20" min="0" @keypress="validar" maxlength="2" :value="item.nota_lapso2" :disabled="item.estatus_nota == 0" name="nota2[]" type="number"class="form-control form-control-sm" id="" placeholder=""></td>
+                        <td class="text-center"> 
+                          <input max="20" min="0" @keypress="validar" maxlength="2" :value="item.nota_lapso3" :disabled="item.estatus_nota == 0" name="nota3[]" type="number"class="form-control form-control-sm" id="" placeholder=""></td>
+                        <td class="text-center"> 
+                          <input max="20" min="0" maxlength="2" readonly 
                           :value="item.nota_final" readonly="readonly" :disabled="item.estatus_nota == 0" name="nota4[]" type="number"class="form-control form-control-sm" id="" placeholder=""></td>
 
-                        <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center"> <input :value="item.recuperativo_1" :disabled="item.estatus_nota == 0" name="rp1[]" type="number" max="20" min="0" maxlength="2" class="form-control form-control-sm" id="" placeholder=""></td>
+                        <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center"> 
+                          <input :value="item.recuperativo_1" :disabled="item.estatus_nota == 0" name="rp1[]" type="number" max="20" min="0" maxlength="2" class="form-control form-control-sm" id="" placeholder="">
+                        </td>
                         <input v-else type="hidden" name="rp1[]" value="0" :disabled="item.estatus_nota == 0">
 
                         <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center"> <input :value="item.recuperativo_2" :disabled="item.estatus_nota == 0" name="rp2[]" type="number" max="20" min="0" maxlength="2" class="form-control form-control-sm" id="" placeholder=""></td>
@@ -182,6 +187,11 @@
           this.cedula_estudiante = cedula;
           setTimeout( () =>{ document.getElementById("Form_pdf").submit(); },100)
         },
+        validar(e){
+          setTimeout(() => {
+            if(parseInt(e.target.value) > 20) e.target.value = 20; 
+          }, 100);
+        },
         SendData(e){
           this.action = e.submitter.value;
           e.preventDefault();
@@ -206,7 +216,6 @@
             if(res.mensaje){
               ViewAlert(res.mensaje, res.estado);
               
-
               setTimeout( () => {
                 this.ToggleModal();  
               },200)
@@ -214,6 +223,8 @@
             }
 
             let data = res.data;
+            this.recuperacion = false;
+            this.aprobar = true;
             this.seccion = data.estudiante.id_seccion;
             this.periodo = data.estudiante.periodoescolar;
             this.id_periodo = data.estudiante.id_periodo_escolar;
@@ -242,6 +253,7 @@
               }
               
             });
+            
           }).catch( error => console.error(error))
         },
         async consultarSecciones(){
@@ -277,11 +289,14 @@
       async mounted(){
         await this.periodo_activo();
         await this.consultarSecciones()
+        
       }
     }).mount("#App_vue");
 
     const ConsultPdf = (e) => { app.getPdf(e.dataset.cedula) }
     const Consult = async (e) => { await app.GetData(e.dataset.id) }
+
+    
 
 
     $("#datatable").DataTable({

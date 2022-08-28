@@ -85,20 +85,20 @@
                 <div class="col-md-12 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Descripción: </span>
-                    <input type="text" minlength="1" maxlength="30" v-model="periodoescolar" name="periodoescolar" class="form-control form-control-sm" required id="" readonly placeholder="Descripción del periodo">
+                    <input type="text" minlength="1" maxlength="30" v-model="periodo" name="periodoescolar" class="form-control form-control-sm" required id="" readonly placeholder="Descripción del periodo">
                   </div>
                 </div>
                 <div class="col-md-12 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Fecha de inicio:</span>
-                    <input type="text" v-model="fecha_inicio" name="fecha_inicio" class="form-control form-control-sm" required placeholder="dd/mm/aaaa" id=""style="width:50%;">
+                    <input type="date" v-model="fecha_inicio" name="fecha_inicio" class="form-control form-control-sm" required placeholder="dd/mm/aaaa" id=""style="width:50%;">
                   <span class="error-text">Formato o fecha inválida</span>
                   </div>
                 </div>
                 <div class="col-md-12 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Fecha de cierre:</span>
-                    <input type="text" readonly v-model="fechaCierre" name="fecha_cierre" class="form-control form-control-sm" required placeholder="dd/mm/aaaa" id=""style="width:50%;">
+                    <input type="date" readonly v-model="fechaCierre" name="fecha_cierre" class="form-control form-control-sm" required placeholder="dd/mm/aaaa" id=""style="width:50%;">
                   <span class="error-text">Formato o fecha inválida</span>
                   </div>
                 </div>
@@ -208,15 +208,11 @@
       computed:{
         periodo(){
           let fechas; 
-          if(this.fecha_inicio != ""){
-            if(this.fecha_cierre != "") fechas = `${moment(this.fecha_inicio).format("YYYY")}-${moment(this.fecha_cierre).format("YYYY")}`;
-            else fechas = `${moment(this.fecha_inicio).format("YYYY")}-`;
-          }
-          
+          if(this.fecha_inicio != "") fechas = `${moment(this.fecha_inicio).format("YYYY")}-${moment(this.fecha_inicio).add(1,"y").format("YYYY")}`;
           return fechas;
         },
         fechaCierre(){
-          if(this.fecha_inicio != '') return moment(this.fecha_inicio).add(1,"y").format("MM/DD/YYYY"); else return '';
+          if(this.fecha_inicio != '') return moment(this.fecha_inicio).add(1,"y").format("YYYY-MM-DD"); else return '';
         }
       },
       async mounted(){
@@ -237,11 +233,11 @@
         { data: "periodoescolar"},
         { data: "fecha_inicio",
           render: function(data){
-            return moment(data).format("D/MM/YYYY")
+            return moment(data).format("DD/MM/YYYY")
           }},
         { data: "fecha_cierre", 
           render: function(data){
-            return moment(data).format("D/MM/YYYY")
+            return moment(data).format("DD/MM/YYYY")
           }},
         { data: "estatus_periodo_escolar",
           render: function(data){
@@ -296,33 +292,18 @@
       });
 
       function validacion(box, boxInput){
-        const DATE_REGEX = /^(0[1-9]|[1-2]\d|3[01])(\/)(0[1-9]|1[012])\2(\d{4})$/
-        const CURRENT_YEAR = new Date().getFullYear();
         if(boxInput!= null & boxInput.name == "fecha_inicio"){
               console.log('Validacion fecha inicio')
-              if(boxInput.value.length == 2) boxInput.value = boxInput.value+'/';
-              if(boxInput.value.length == 5) boxInput.value = boxInput.value+'/';
 
-              if (!boxInput.value.match(DATE_REGEX)) {
+              if (!moment(boxInput.value).isValid()) {
                 app.formulario_valido = false
                 mostrarError(true, box);
                 fechaValida = false;
                 return false
               }
-              /* Comprobar los días del mes */
-              const day = parseInt(boxInput.value.split('/')[0])
-              const month = parseInt(boxInput.value.split('/')[1])
-              const year = parseInt(boxInput.value.split('/')[2])
-              const monthDays = new Date(year, month, 0).getDate()
-              if (day > monthDays) {
-                app.formulario_valido = false
-                mostrarError(true, box);
-                fechaIValida = false;
-                return false
-              }
-              
+                            
               /* Comprobar que el año no sea superior al actual*/
-              if (year > CURRENT_YEAR) {
+              if (moment(boxInput.value).isAfter(moment())) {
                 app.formulario_valido = false
                 mostrarError(true, box);
                 fechaIValida = false;
@@ -332,43 +313,6 @@
                 app.formulario_valido = true
                 mostrarError(false, box);
                 fechaValida = true;
-                return true
-              }
-        }
-        if(boxInput!= null & boxInput.name == "fecha_cierre"){
-              console.log('Validacion fecha cierre')
-              if(boxInput.value.length == 2) boxInput.value = boxInput.value+'/';
-              if(boxInput.value.length == 5) boxInput.value = boxInput.value+'/';
-
-              if (!boxInput.value.match(DATE_REGEX)) {
-                app.formulario_valido = false
-                mostrarError(true, box);
-                fechaIValida = false;
-                return false
-              }
-              /* Comprobar los días del mes */
-              const day = parseInt(boxInput.value.split('/')[0])
-              const month = parseInt(boxInput.value.split('/')[1])
-              const year = parseInt(boxInput.value.split('/')[2])
-              const monthDays = new Date(year, month, 0).getDate()
-              if (day > monthDays) {
-                app.formulario_valido = false;
-                mostrarError(true, box);
-                fechaCValida = false;
-                return false
-              }
-              
-              /* Comprobar que el año no sea superior al actual*/
-              if (year > CURRENT_YEAR) {
-                app.formulario_valido = false
-                mostrarError(true, box);
-                fechaCValida = false;
-                return false
-              }
-              else{
-                app.formulario_valido = true
-                mostrarError(false, box);
-                fechaCValida = true;
                 return true
               }
         }
@@ -387,6 +331,6 @@
 
   </script>
 
-  <script src="./views/js/Seccion/index.js"></script>
+  
 </body>
 </html>

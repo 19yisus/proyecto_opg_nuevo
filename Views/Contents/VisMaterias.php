@@ -83,7 +83,7 @@
                 <div class="col-md-12 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Descripción:</span>
-                    <input type="text" minlength="1" maxlength="30" v-model="des_materia" name="des_materia" class="form-control form-control-sm" required id="des_materia" placeholder="Descripción de la materia" style="width:70%;">
+                    <input type="text" minlength="1" maxlength="30" v-model="des_materia" name="des_materia" class="form-control form-control-sm" required id="des_materia" placeholder="Descripción de la materia" style="width:70%; text-transform:uppercase;">
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
@@ -186,13 +186,8 @@
       }
     }).mount("#App_vue");
 
-    const CambiarEstatus = (e) => {
-      app.ChangeState(e.dataset.id)
-    }
-
-    const Consult = (e) => {
-      app.GetData(e.dataset.id)
-    }
+    const CambiarEstatus = (e) => app.ChangeState(e.dataset.id)
+    const Consult = (e) => app.GetData(e.dataset.id)
 
     $("#datatable").DataTable({
       ajax:{
@@ -201,11 +196,11 @@
       },
       columns:[
         { data: "id_materia" },
-        { data: "des_materia"},
+        { data: "des_materia",
+          render(data){ return data.toUpperCase() }
+        },
         { data: "estatus_materia",
-          render: function(data){
-            return data == 1 ? "Activo" : "Inactivo"
-          }
+          render(data){ return data == 1 ? "Activo" : "Inactivo" }
         },
         { defaultContent: '',
           render: function(data, type, row){
@@ -219,7 +214,7 @@
                 </button>
                 
                 <button type="button" onClick="CambiarEstatus(this)" data-id='${row.id_materia}' class="btn btn-sm btn-warning">
-                  <i class="fa-regular fa-trash-can"></i>
+                  <i class="fas fa-power-off"></i>
                 </button>
               </div>`;
             return btns;

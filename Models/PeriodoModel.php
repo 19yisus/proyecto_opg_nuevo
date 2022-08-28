@@ -11,8 +11,8 @@
 		public function SetData($datos){
 			$this->id = isset($datos['id']) ? $datos['id'] : null;
 			$this->periodoescolar = isset($datos['periodoescolar']) ? $datos['periodoescolar'] : null;
-			$this->fecha_inicio = isset($datos['fecha_inicio']) && $datos['fecha_inicio'] != "" ? DateTime::createFromFormat("d/m/Y",$datos['fecha_inicio'])->format("Y-m-d") : null;
-			$this->fecha_cierre = isset($datos['fecha_cierre']) && $datos['fecha_cierre'] != "" ? DateTime::createFromFormat("d/m/Y",$datos['fecha_cierre'])->format("Y-m-d") : null;
+			$this->fecha_inicio = isset($datos['fecha_inicio']) ? $datos['fecha_inicio'] : null;
+			$this->fecha_cierre = isset($datos['fecha_cierre']) ? $datos['fecha_cierre'] : null;
 			$this->estatus = isset($datos['estatus']) ? $datos['estatus'] : null;
 		}
 
