@@ -186,7 +186,7 @@
               <div class="modal-footer mx-auto">
                 <input type="hidden" name="ope" v-model="action">
                 <button type="submit" :disabled="ifPeriodo || desactivado" class="btn btn-sm btn-primary" id="btn-g">
-                  <i class="fa-regular fa-circle-check" ></i> GUARDAR 
+                  <i class="fa-regular fa-circle-check" ></i> GUARDAR
                 </button>
                 <button type="button" class="btn btn-sm btn-danger" id='btn-sm' data-bs-dismiss="modal">
                   <i class="fa-regular fa-circle-xmark"></i> SALIR
@@ -264,9 +264,11 @@
               if(parseInt(data.seguimiento_estudiante) == 7){
                 this.desactivado = true;
                 ViewAlert("Este estudiante ya no puede ser asignado, ya culmnó", "error");
+                this.action = "Save";
                 return false;
               }else{
                 this.seguimiento = data.seguimiento_estudiante
+                this.action = "Update";
                 await this.consultarSecciones(data.seguimiento_estudiante)
 
                 setTimeout( () => {
@@ -274,7 +276,7 @@
                 },100)
               }
             }
-            this.action = "Update";
+            
           }).catch( error => console.error(error))
         },
         async Asignacion(id){
@@ -377,6 +379,8 @@
     const CambiarEstatus = (e) => app.ChangeState(e.dataset.id)
     const Consult = (e) => app.GetData(e.dataset.id)
     const asignacion = (e) => app.Asignacion(e.dataset.id);
+    
+    document.querySelector(".modal").addEventListener("hide.bs.modal", ()=> app.desactivado = false)
   
     $("#datatable").DataTable({
       ajax:{

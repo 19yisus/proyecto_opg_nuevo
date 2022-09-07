@@ -204,13 +204,19 @@
               body: form
             }).then( res => res.json()).then( result => {
               $("#datatable").DataTable().ajax.reload(null,false);
-              this.ToggleModal();
+              /* this.ToggleModal(); */
               ViewAlert(result.mensaje, result.estado);
               this.periodo_activo();
+              this.GetData(this.cedula);
             }).catch(Error => console.error(Error))
           },100);
         },
         async GetData(cedula){
+          this.materias = [];
+          this.aprobar = true;
+          this.boton_desactivado = true;
+          this.recuperacion = false;
+
           await fetch(`./Controllers/NotasController.php?ope=ConsultDatosAcademicos&&cedula=${cedula}`)
           .then( res => res.json()).then( (res) => {
             if(res.mensaje){
