@@ -6,6 +6,7 @@
 
 		public function __construct(){
 			parent::__construct();
+			session_start();
 		}
 
 		public function SetData($datos){
@@ -35,12 +36,14 @@
 		public function AsignarEstudiante(){
 			try{
 
-				$consult_fecha = $this->consult("SELECT id_periodo_escolar FROM periodo_escolar WHERE fecha_inicio >= (SELECT MAX(fecha_inicio) FROM periodo_escolar)");
+				if($_SESSION["id_rol"] != "1"){
+					$consult_fecha = $this->consult("SELECT id_periodo_escolar FROM periodo_escolar WHERE fecha_inicio >= (SELECT MAX(fecha_inicio) FROM periodo_escolar)");
 
-				if($consult_fecha["id_periodo_escolar"] != $this->id_periodo){
-					return $this->ResJSON("No se puede asignar al estudiante a un perido escolar anterior!", "error");
+					if($consult_fecha["id_periodo_escolar"] != $this->id_periodo){
+						return $this->ResJSON("No se puede asignar al estudiante a un perido escolar anterior!", "error");
+					}	
 				}
-
+				
 				$consult = $this->consult("SELECT * FROM asignacion_estudiante_seccion WHERE id_periodo = '$this->id_periodo' AND cedula_estu_asignacion = '$this->cedula_estudiante'");
 
 				if(!isset($consult[0])){
@@ -54,8 +57,6 @@
 				}else{
 					$this->ResJSON("Operacion Fallida! No se pueden realizar dos asignaciones en un mismo periodo escolar", "error");
 				}
-
-				
 
 			}catch(PDOException $e){
 				error_log("MateriasModel(line0------) => ".$e->getMessages());

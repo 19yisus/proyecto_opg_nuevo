@@ -17,7 +17,9 @@
               <h6 class="fw-bold text-danger">Periodo: {{des_periodo}}</h6>
             </div>
 
-            <div class="col-md-7"></div>
+            <div class="col-md-7">
+              <h3 class="fw-bold text-success">Gestión de Materias</h3>
+            </div>
             <div class="col-md-2 justify-content-end" style="margin: 0; padding: 0;">
               <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px;">
                 <i class="fa-regular fa-user"></i> AGREGAR
@@ -38,23 +40,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- <tr v-for="(data, index) in datos">
-                    <td class="text-center">{{ index }}</td>
-                    <td class="text-center">{{ data.ano_seguimiento }}</td>
-                    <td class="text-center">"{{ data.id_seccion }}"</td>
-                    <td class="text-center">{{ data.estatus_seccion }}</td>
-                    <td class="text-center">
-                      <button type="button" @click="GetData(data.id_seccion)" class="btn btn-sm btn-info">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                      </button>
-                      <button type="button" class="btn btn-sm btn-dark">
-                        <i class="fa-solid fa-gear"></i>
-                      </button>
-                      <button type="button" @click="ChangeState(data.id_seccion)" class="btn btn-sm btn-warning">
-                        <i class="fa-regular fa-trash-can"></i>
-                      </button>
-                    </td>
-                  </tr> -->
                 </tbody>
               </table>
             </div>
@@ -204,16 +189,14 @@
         },
         { defaultContent: '',
           render: function(data, type, row){
-            // <button type="button" class="btn btn-sm btn-dark">
-            //       <i class="fa-solid fa-gear"></i>
-            //     </button>
+            let classStatus = row.estatus_materia == 1 ? 'success' : 'danger';
             let btns = `
               <div class="">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.id_materia}' class="btn btn-sm btn-info">
                   <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
                 
-                <button type="button" onClick="CambiarEstatus(this)" data-id='${row.id_materia}' class="btn btn-sm btn-warning">
+                <button type="button" onClick="CambiarEstatus(this)" data-id='${row.id_materia}' class="btn btn-sm btn-${classStatus}">
                   <i class="fas fa-power-off"></i>
                 </button>
               </div>`;

@@ -13,11 +13,13 @@
 
           <!-- input de busqueda -->
           <div class="col-md-12 row " style="margin: 0; padding: 0;">
-            <div class="col-md-5" style="margin: 0; padding: 0;">
+            <div class="col-md-3" style="margin: 0; padding: 0;">
               <h6 class="fw-bold text-danger">Periodo: {{des_periodo}}</h6>
             </div>
 
-            <div class="col-md-5"></div>
+            <div class="col-md-7">
+              <h3 class="fw-bold text-success">Gestión de Profesores</h3>
+            </div>
             <div class="col-md-2 justify-content-end" style="margin: 0; padding: 0;">
               <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px;">
                 <i class="fa-regular fa-user"></i> AGREGAR
@@ -42,23 +44,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- <tr v-for="(data, index) in datos">
-                    <td class="text-center">{{ index }}</td>
-                    <td class="text-center">{{ data.ano_seguimiento }}</td>
-                    <td class="text-center">"{{ data.id_seccion }}"</td>
-                    <td class="text-center">{{ data.estatus_seccion }}</td>
-                    <td class="text-center">
-                      <button type="button" @click="GetData(data.id_seccion)" class="btn btn-sm btn-info">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                      </button>
-                      <button type="button" class="btn btn-sm btn-dark">
-                        <i class="fa-solid fa-gear"></i>
-                      </button>
-                      <button type="button" @click="ChangeState(data.id_seccion)" class="btn btn-sm btn-warning">
-                        <i class="fa-regular fa-trash-can"></i>
-                      </button>
-                    </td>
-                  </tr> -->
                 </tbody>
               </table>
             </div>
@@ -89,7 +74,7 @@
 
                 <div class="input-group input-group-sm form-box-select" v-if="action != 'Asignar' " style="display:flex; flex-wrap: wrap;">
                   <span class="input-group-text" id="inputGroup-sizing-sm">Nacionalidad:</span>
-                  <select class="form-select" v-model="nacionalidad" name="nacionalidad" id="nacionalidad" aria-label="Default select example" style="width: 50%;" required>
+                  <select class="form-select" @change="cedula = '' " v-model="nacionalidad" name="nacionalidad" id="nacionalidad" aria-label="Default select example" style="width: 50%;" required>
                     <option value="" selected>Seleccionar</option>
                     <option value="V">Venezolana</option>
                     <option value="E">Extranjera</option>
@@ -103,7 +88,7 @@
 
                 <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                   <span class="input-group-text" id="inputGroup-sizing-sm">Cédula:</span>
-                  <input type="text" name="cedula" v-model="cedula" maxlength="8" class="form-control form-control-sm" id="" required placeholder="Ingrese la cédula del profesor" :readonly="action == 'Asignar' " style="width:70%;">
+                  <input type="text" v-bind:disabled="nacionalidad == '' " name="cedula" v-model="cedula" v-bind:maxlength="[ nacionalidad == 'V' ? 8: 6 ]" class="form-control form-control-sm" id="" required placeholder="Ingrese la cédula del profesor" :readonly="action == 'Asignar' " style="width:70%;">
                   <span class="error-text">Cedula incorrecta</span>
                 </div> 
 
@@ -388,14 +373,16 @@
           .then( res => res.json()).then( ({data}) =>{
             return data;
           }).catch(error => console.error(error));
-
-          if(res[0] != undefined) this.materias = res; else ViewAlert("No existe pensum para el año solicitado","error");
+          
+          if(res[0] != undefined){
+            let lista = res.filter( i =>{ if(i) return i; })
+            this.materias = lista; 
+          }else ViewAlert("No existe pensum para el año solicitado","error");
         },
         async MateriaRepetida(){
           const res = await fetch(`./Controllers/ProfesorController.php?ope=MateriasRepetidas&&cedula=${this.cedula}&&materia=${this.id_materia}&&seccion=${this.id_seccion}`)
-          .then( res => res.json()).then( ({data}) => {
-            return data;
-          }).catch( error => console.error(error));
+          .then( res => res.json()).then( ({data}) => data)
+          .catch( error => console.error(error));
           
           if(res[0]){
             this.id_materia = "";
@@ -416,22 +403,6 @@
         }
       },
       watch: {
-        seguimiento(newAnio){ 
-          console.log(newAnio)
-          // if(newAnio != ''){
-          //   this.consultarSecciones(newAnio); 
-          //   this.consultarMaterias(newAnio);
-          // }else{
-          //   this.secciones = [];
-          //   this.materias = [];
-          // }
-        },
-        bucle(){
-          setTimeout( () => {
-            console.log(this.id_seccion)
-            console.log(this.id_materia)
-          },100)
-        },
         id_periodoFiltro(periodo){ 
           if(periodo != ''){
             $("#datatable").DataTable().ajax.url(`./Controllers/ProfesorController.php?ope=ConsulAll&&id_periodo=${periodo}`).load();
@@ -478,12 +449,8 @@
         },
         { defaultContent: '',
           render: function(data, type, row){
-            // <button disabled='disabled' type="button" class="btn btn-sm btn-dark">
-            //   <i class="fa-solid fa-gear"></i>
-            // </button>
-
-            console.log(row)
             
+            let classStatus = row.estatus_profesor == 1 ? 'success' : 'danger';
             let btns = '';    
             if(row.estatus_asignacion == '1' && row.estatus_asignacion != undefined){
               btns = `
@@ -496,7 +463,7 @@
                     <i class="fa-regular fa-user"></i>
                   </button>
                   
-                  <button type="button" onClick="CambiarEstatus(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-warning">
+                  <button type="button" onClick="CambiarEstatus(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-${classStatus}">
                     <i class="fas fa-power-off"></i>
                   </button>
                 </div>`;  

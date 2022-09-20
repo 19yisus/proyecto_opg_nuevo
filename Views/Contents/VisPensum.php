@@ -17,7 +17,9 @@
               <h6 class="fw-bold text-danger">Periodo: {{des_periodo}}</h6>
             </div>
 
-            <div class="col-md-7"></div>
+            <div class="col-md-7">
+              <h3 class="fw-bold text-success">Gestión de Pensum</h3>
+            </div>
             <div class="col-md-2 justify-content-end" style="margin: 0; padding: 0;">
               <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 <i class="fa-regular fa-user"></i> AGREGAR
@@ -39,23 +41,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- <tr v-for="(data, index) in datos">
-                    <td class="text-center">{{ index }}</td>
-                    <td class="text-center">{{ data.ano_seguimiento }}</td>
-                    <td class="text-center">"{{ data.id_seccion }}"</td>
-                    <td class="text-center">{{ data.estatus_seccion }}</td>
-                    <td class="text-center">
-                      <button type="button" @click="GetData(data.id_seccion)" class="btn btn-sm btn-info">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                      </button>
-                      <button type="button" class="btn btn-sm btn-dark">
-                        <i class="fa-solid fa-gear"></i>
-                      </button>
-                      <button type="button" @click="ChangeState(data.id_seccion)" class="btn btn-sm btn-warning">
-                        <i class="fa-regular fa-trash-can"></i>
-                      </button>
-                    </td>
-                  </tr> -->
                 </tbody>
               </table>
             </div>
@@ -72,12 +57,6 @@
               <h5 class="modal-title" id="staticBackdropLabel">Registro Pensum</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <!--
-               <div class="input-group input-group-sm">
-                  <span class="input-group-text" id="inputGroup-sizing-sm">Small</span>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                </div> 
-              -->
             <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation">
               <div class="modal-body row ">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
@@ -94,98 +73,16 @@
                     <option value="6">6to Año</option>
                   </select>
                 </div>
-                <div class="col-6"></div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 1<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia1" name="id_materia1" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
+                <div class="col-6">
+                  <label class="form-label">Periodo Escolar: </label>
+                  <input type="text" minlength="1" maxlength="30" v-model="des_periodo" name="periodoescolar" class="form-control form-control-sm" required id="" readonly placeholder="Descripción del periodo">
                 </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 2<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia2" name="id_materia2" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 3<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia3" name="id_materia3" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 4<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia4" name="id_materia4" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 5<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia5" name="id_materia5" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 6<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia6" name="id_materia6" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 7<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia7" name="id_materia7" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 8<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia8" name="id_materia8" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 9<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia9" name="id_materia9" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 10<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia10" name="id_materia10" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 11<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia11" name="id_materia11" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
-                <div class="col-md-6 py-1">
-                  <label class="form-label">Materia 12<span class="text-danger">*</span></label>
-                  <select v-model="materias.id_materia12" name="id_materia12" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option selected>Seleccionar</option>
+
+                <input type="hidden" name="id_materia[]" :value="e.id_materia" v-for="e in materias_select">
+                
+                <div class="col-md-6 py-1" v-for="(i, index) in materias_select">
+                  <label class="form-label">Materia {{i.num}}<span class="text-danger">*</span></label>
+                  <select :name="i.name_campo" value="" v-model="i.id_materia" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
                     <option value="" selected>Seleccionar</option>
                     <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
                   </select>
@@ -194,6 +91,8 @@
 
               <div class="modal-footer mx-auto">
                 <input type="hidden" name="ope" v-model="action">
+                <button type="button" @click="AgregarMaterias" v-if="materias_select.length < 12" class="btn btn-sm btn-success">Agregar</button>
+                <button type="button" @click="QuitarMaterias" v-if="materias_select.length > 1" class="btn btn-sm btn-warning">Quitar</button>
                 <button type="submit" class="btn btn-sm btn-primary" :disabled="id_periodo == '' ">
                   <i class="fa-regular fa-circle-check"></i>GUARDAR
                 </button>
@@ -202,6 +101,51 @@
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="modal_consulta" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Consulta Pensum</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body row ">
+              <div class="col-md-6">
+                <label class="form-label">Año del Pensum</label>
+                <select disabled class="form-select form-select-sm" v-model="anio" required aria-label="Default select example">
+                  <option value="" selected>Seleccionar</option>
+                  <option value="1">1er Año</option>
+                  <option value="2">2do Año</option>
+                  <option value="3">3er Año</option>
+                  <option value="4">4to Año</option>
+                  <option value="5">5to Año</option>
+                  <option value="6">6to Año</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Periodo Escolar: </label>
+                <input type="text" minlength="1" maxlength="30" v-model="periodo_escolar_consultado" name="periodoescolar" class="form-control form-control-sm" required id="" readonly placeholder="Descripción del periodo">
+              </div>
+
+              <div class="col-md-6 py-1" v-for="(i, index) in materias_select">
+                <label class="form-label">Materia {{i.num}}<span class="text-danger">*</span></label>
+                <select disabled v-model="i.id_materia" class="form-select form-select-sm" aria-label="Default select example">
+                  <option value="" selected>Seleccionar</option>
+                  <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="modal-footer mx-auto">
+              <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
+                <i class="fa-regular fa-circle-xmark"></i>SALIR
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -215,22 +159,13 @@
         return{
           des_periodo:"actual",
           id: "",
+          anio: "",
+          periodo_escolar_consultado: "",
           estatus: "",
           id_periodo: "",
-          materias:{
-            id_materia1: "",
-            id_materia2: "",
-            id_materia3: "",
-            id_materia4: "",
-            id_materia5: "",
-            id_materia6: "",
-            id_materia7: "",
-            id_materia8: "",
-            id_materia9: "",
-            id_materia10: "",
-            id_materia11: "",
-            id_materia12: "",
-          },
+          materias_select:[
+            {num: 1, id_materia: "", name_campo: `id_materia1`}
+          ],
           lista_materias: [],
           action: "Save",
         }
@@ -241,7 +176,7 @@
           e.preventDefault();
           // if(!$("#Formulario").valid()) return false;
           let form = new FormData(e.target);
-
+          
           fetch("./Controllers/PensumController.php",{
             method: "POST",
             body: form
@@ -257,9 +192,22 @@
         async GetData(id){
           await fetch(`./Controllers/PensumController.php?ope=ConsultOne&&id=${id}`)
           .then( res => res.json()).then( ({data}) => {
-            this.id = data.id_materia;
-            this.des_materia = data.des_materia;
-            this.action = "Update";
+            console.log(data)
+
+            this.materias_select = [];
+            this.anio = data.ano;
+            this.periodo_escolar_consultado = data.periodoescolar;
+            if(data.id_materia1) this.materias_select.push({num: 1, id_materia: data.id_materia1, name_campo: 'id_materia1'});
+            if(data.id_materia2) this.materias_select.push({num: 2, id_materia: data.id_materia2, name_campo: 'id_materia2'});
+            if(data.id_materia4) this.materias_select.push({num: 3, id_materia: data.id_materia4, name_campo: 'id_materia4'});
+            if(data.id_materia5) this.materias_select.push({num: 3, id_materia: data.id_materia5, name_campo: 'id_materia5'});
+            if(data.id_materia6) this.materias_select.push({num: 3, id_materia: data.id_materia6, name_campo: 'id_materia6'});
+            if(data.id_materia7) this.materias_select.push({num: 3, id_materia: data.id_materia7, name_campo: 'id_materia7'});
+            if(data.id_materia8) this.materias_select.push({num: 3, id_materia: data.id_materia8, name_campo: 'id_materia8'});
+            if(data.id_materia9) this.materias_select.push({num: 3, id_materia: data.id_materia9, name_campo: 'id_materia9'});
+            if(data.id_materia10) this.materias_select.push({num: 3, id_materia: data.id_materia10, name_campo: 'id_materia10'});
+            if(data.id_materia11) this.materias_select.push({num: 3, id_materia: data.id_materia11, name_campo: 'id_materia11'});
+            if(data.id_materia12) this.materias_select.push({num: 3, id_materia: data.id_materia12, name_campo: 'id_materia12'});
           }).catch( error => console.error(error))
         },
         async ChangeState(id){
@@ -278,11 +226,25 @@
             }).catch( error => console.error(error))  
           }, 100);
         },
+        AgregarMaterias(){
+          if(this.materias_select.length == 12){
+            ViewAlert("Has alcanzado el limite maximo de materias!", "error");
+            return false;
+          }
+          let numero = this.materias_select.length + 1;
+          this.materias_select.push({num: numero, id_materia: "", name_campo: `id_materia${numero}`})
+          setTimeout( () => { this.ValidaSelect({target:{name: `id_materia${numero}`, value: ''}}) },100)
+        },
+        QuitarMaterias(){
+          if(this.materias_select.length == 1){
+            ViewAlert("Has alcanzado el limite minimo de materias!", "error");
+            return false;
+          }
+          let numero = this.materias_select.length - 1;
+          this.materias_select.splice(numero)
+        },
         ValidaSelect(e){
-          let selects = [
-            "id_materia1","id_materia2","id_materia3","id_materia4","id_materia5","id_materia6","id_materia7","id_materia8","id_materia9",
-            "id_materia10","id_materia11","id_materia12"
-          ];
+          let selects = this.materias_select.map( item => item.name_campo);
           // Desactiva la opcion seleccionada en los demas selects
           selects.forEach( item => {
             if(item != e.target.name){
@@ -295,14 +257,14 @@
           })
           // Activa la opcion que no este dentro de mi lista de codigos
           setTimeout( ()=>{
-            // Creamos un array para hacer la comparación de codigos mucho mas sencilla
-            let codigos = selects.map( s => {
-              if(this.materias[s] != '') return this.materias[s]; return '0'
-            })
+            let codigos = this.materias_select.map( s =>{ if(s.id_materia != '') return s.id_materia; else return '0';})
             // Recorremos nuestro array de los name's de los selects, a su vez recorremos los options de esos selects en busca de los options desactivados, para luego ver si estos esta incluidos en nuestra lista de comparación ya previamente creada
             selects.forEach( itemy => {
               document.getElementsByName(itemy)[0].childNodes.forEach( itemz => {
-                if(itemz.disabled == true && codigos.includes(itemz.value) == false) itemz.disabled = false;
+                // Si el elemento ya no esta en la lista de codigos y esta inactivo, activalo!
+                if(itemz.disabled == true && codigos.includes(itemz.value) == false && itemz.value != '') itemz.disabled = false;
+                // Si el elemento si esta en lista de codigos y esta activo, inactivalo (esto para cuando creamos nuevos elementos)
+                if(codigos.includes(itemz.value) && itemz.disabled == false && e.target.name == itemy) itemz.disabled = true;
               })
             })
           }, 100)
@@ -323,22 +285,9 @@
         },
         LimpiarForm(){
           this.id = "";
-          this.des_materia = "";
+          this.anio = "";
+          this.materias_select = [{num: 1, id_materia: "", name_campo: `id_materia1`}];
           this.estatus = "";
-          this.materias = {
-            id_materia1: "",
-            id_materia2: "",
-            id_materia3: "",
-            id_materia4: "",
-            id_materia5: "",
-            id_materia6: "",
-            id_materia7: "",
-            id_materia8: "",
-            id_materia9: "",
-            id_materia10: "",
-            id_materia11: "",
-            id_materia12: "",
-          };
           this.action = "Save";
         },
         async GetMaterias(){
@@ -353,13 +302,8 @@
       }
     }).mount("#App_vue");
 
-    const CambiarEstatus = (e) => {
-      app.ChangeState(e.dataset.id)
-    }
-
-    const Consult = (e) => {
-      app.GetData(e.dataset.id)
-    }
+    const CambiarEstatus = (e) => app.ChangeState(e.dataset.id)
+    const Consult = (e) => app.GetData(e.dataset.id)
 
     $("#datatable").DataTable({
       ajax:{
@@ -377,12 +321,9 @@
         },
         { defaultContent: '',
           render: function(data, type, row){
-            // <button type="button" class="btn btn-sm btn-dark">
-            //       <i class="fa-solid fa-gear"></i>
-            //     </button>
             let btns = `
               <div class="">
-                <button type="button" disabled='disabled' data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.id}' class="btn btn-sm btn-info">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#modal_consulta" onClick="Consult(this)" data-id='${row.id}' class="btn btn-sm btn-info">
                   <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
                       
@@ -407,7 +348,5 @@
     });
 
   </script>
-
-  <!-- <script src="./views/js/Seccion/index.js"></script> -->
 </body>
 </html>
