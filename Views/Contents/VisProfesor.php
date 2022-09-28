@@ -159,11 +159,11 @@
               <div v-if="action == 'Asignar' " class="row d-flex align-items-center" v-for="(item,index) in id_materia">
                 <div class="col-md-6" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Asignación:</span>
-                    <input type="text" min="1" max="6" maxlength="1" minlength="1" :readonly="index > 0" name="seguimiento_profesor" class="form-control form-control-sm" id="" v-model="seguimiento" @keypress="consultarSecciones" :data-index="index" placeholder="Año" style="width: 10%">
-                    <select name="id_seccion[]" v-model="id_seccion[index]" @change="prueba" id="" class="form-select" aria-label="Default select example" style="width: 10%">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Asignación: {{index}}</span>
+                    <input type="text" min="1" v-model="seguimiento[index]" max="6" maxlength="1" minlength="1" name="seguimiento_profesor[]" class="form-control form-control-sm" id="" @keypress="consultarSecciones" :data-index="index" placeholder="Año" style="width: 10%">
+                    <select name="id_seccion[]" v-model="secciones[index]" id="" class="form-select" aria-label="Default select example" style="width: 10%">
                       <option value="" selected>Seleccione una opción</option>
-                      <option :value="item.id_seccion" v-for="item in secciones">{{item.id_seccion}}</option>
+                      <option :value="item.id_seccion" v-for="item in id_seccion[index]">{{item.id_seccion}}</option>
                     </select>
                     <span class="error-text">Selecciona año y sección</span>
                   </div>
@@ -171,9 +171,9 @@
                 <div class="col-md-5">
                   <div class="input-group input-group-sm form-box-select" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text">Materia</span>
-                    <select name="id_materia[]" @change="MateriaRepetida" v-model="id_materia[index].id" id="" class="form-select" aria-label="Default select example" style="width: 50%;">
+                    <select name="id_materia[]" @change="MateriaRepetida" v-model="materias[index]" id="" class="form-select" aria-label="Default select example" style="width: 50%;">
                       <option value="" selected>Seleccione una opción</option>
-                      <option :value="item.id_materia" v-for="item in materias">{{item.des_materia}}</option>
+                      <option :value="item.id_materia" v-for="item in id_materia[index]">{{item.des_materia}}</option>
                     </select>
                     <span class="error-text">Seleccione una materia</span>
                   </div>
@@ -183,10 +183,10 @@
 
               <div class="modal-footer mx-auto">
                 <div class="btn-group" v-if="action == 'Asignar' ">
-                  <button class="btn btn-sm btn-success" @click="id_materia.push({id:''})">
+                  <button class="btn btn-sm btn-success" @click="MasAsignacion">
                     <i class="fas fa-plus"></i>
                   </button>
-                  <button class="btn btn-sm btn-danger" @click="id_materia.pop()" v-if="id_materia.length > 1">
+                  <button class="btn btn-sm btn-danger" @click="MenosAsignacion" v-if="id_materia.length > 1">
                     -
                   </button>
                 </div>
@@ -222,10 +222,10 @@
           id_periodo: "",
           // id_seccion: "",
           // id_materia: "",
-          seguimiento: "",
-          // seguimiento: [],
-          id_seccion: [],
-          id_materia: [{id:""}],
+          // seguimiento: "",
+          seguimiento: [],
+          id_seccion: [[{id_seccion: ''}]],
+          id_materia: [{id_materia:""}],
           // Arrays para el formulario
           secciones: [],
           materias: [],
@@ -238,20 +238,21 @@
         }
       },
       methods:{
-        prueba(e){
-          console.log(e)
-          setTimeout( () => {
-            console.log(this.id_seccion)
-          },100)
+        MasAsignacion(e){
+          this.id_materia.push({id_materia:''})
+          this.id_seccion.push([{id_seccion:''}])
+          this.seguimiento.push('');
+        },
+        MenosAsignacion(){
+          this.id_materia.pop()
+          this.id_seccion.pop()
+          this.seguimiento.pop()
         },
         SendData(e){
 
           e.preventDefault();
           // if(!$("#Formulario").valid()) return false;
           let form = new FormData(e.target);
-          console.group("FORMULARIO VALIDO")
-          console.log(this.formulario_valido)
-          console.groupEnd()
           if(!this.formulario_valido) return false;
                     
           fetch("./Controllers/ProfesorController.php",{
@@ -263,12 +264,13 @@
             this.LimpiarForm();
             ViewAlert(result.mensaje, result.estado);
             this.periodo_activo();
-          }).catch(Error => console.error(Error))
+          }).catch(Error =>{
+            console.error(Error)
+          })
         },
         async GetData(id){
           await fetch(`./Controllers/ProfesorController.php?ope=ConsultOne&&id=${id}`)
           .then( res => res.json()).then( ({data}) => {
-            console.log(data)
             let profesor = data.profesor;
             this.nacionalidad = profesor.nacionalidad_persona;
             this.cedula = profesor.cedula_persona;
@@ -276,28 +278,23 @@
             this.apellido = profesor.apellido_persona;
             this.fecha_n = moment(profesor.fecha_n_persona).format("D/MM/YYYY");
             this.correo_persona = profesor.correo_persona;
-            // this.seguimiento = profesor.seccion_id.split("")[0];
-            // this.id_seccion = data;
-            // this.id_materia = data;
             this.direccion = profesor.direccion_persona;
             this.sexo = profesor.sexo_persona;
             
             if(data.Asignaciones[0] != undefined){
               
-              this.id_materia = [];
-              this.id_seccion = [];
-              this.seguimiento = data.Asignaciones[0].ano_seguimiento;
+              data.Asignaciones.forEach( (item, index) =>{
+                this.materias.push(item.id_materia);
+                this.secciones.push(item.id_seccion);
+                this.seguimiento.push(item.ano_seguimiento);
 
-              this.consultarSecciones({key: data.Asignaciones[0].ano_seguimiento})
-              setTimeout( () => {
-                this.id_seccion = data.Asignaciones.map( item => item.id_seccion)
-                // let materias = data.Asignaciones.map( item => item.id_materia)  
-                let materias =[]
-                data.Asignaciones.forEach( item => {
-                  materias.push({id: item.id_materia})
-                });
-                this.id_materia = materias;
-              },100)
+                let obj = {
+                  key: item.ano_seguimiento,
+                  target: { dataset:{ index: index } }
+                }
+
+                this.consultarSecciones(obj)
+              })
             }
             this.action = "Update";
           }).catch( error => console.error(error))
@@ -305,6 +302,7 @@
         async ChangeState(id){
           this.cedula = id;
           this.action = "ChangeStatus";
+          this.nacionalidad = "V";
           
           setTimeout( async () => {
             let form = new FormData(document.getElementById("Formulario"));
@@ -333,9 +331,7 @@
         },
         async Asignar(id){
           await this.GetData(id);
-          setTimeout( () => {
-            this.action = "Asignar";
-          },100)
+          setTimeout( () => this.action = "Asignar",100)
         },
         ToggleModal(){
           $("#staticBackdrop").modal("hide");
@@ -356,19 +352,27 @@
           this.sexo = "";
           this.id_materia = "";
           this.action = "Save";
+
+          this.seguimiento = []
+          this.id_seccion = [[{id_seccion: ''}]]
+          this.id_materia = [{id_materia:""}]
         },
         async consultarSecciones(e){
-          let anio = e.key;
-          this.secciones = [];
+          let anio = e.key, index = e.target.dataset.index;          
           const res = await fetch(`./Controllers/SeccionController.php?ope=ConsultPorAnio&&anio=${anio}`)
           .then( res => res.json()).then( ({data}) =>{
             return data;
           }).catch(error => console.error(error));
-          this.consultarMaterias(e.key)
-          if(res[0] != undefined) this.secciones = res; else ViewAlert("No hay suficientes secciones registradas","error");
+          
+          this.consultarMaterias(e)
+          if(res[0] != undefined){
+            this.id_seccion[index] = res;
+          }else ViewAlert("No hay suficientes secciones registradas","error");
+
         },
-        async consultarMaterias(anio){
-          this.materias = [];
+        async consultarMaterias(e){
+          let anio = e.key, index = e.target.dataset.index;
+          
           const res = await fetch(`./Controllers/PensumController.php?ope=ConsultPorAnio&&anio=${anio}`)
           .then( res => res.json()).then( ({data}) =>{
             return data;
@@ -376,16 +380,17 @@
           
           if(res[0] != undefined){
             let lista = res.filter( i =>{ if(i) return i; })
-            this.materias = lista; 
+            this.id_materia[index] = lista; 
           }else ViewAlert("No existe pensum para el año solicitado","error");
         },
-        async MateriaRepetida(){
+        async MateriaRepetida(e){
+          console.log(e);
+          return false;
           const res = await fetch(`./Controllers/ProfesorController.php?ope=MateriasRepetidas&&cedula=${this.cedula}&&materia=${this.id_materia}&&seccion=${this.id_seccion}`)
           .then( res => res.json()).then( ({data}) => data)
           .catch( error => console.error(error));
           
           if(res[0]){
-            this.id_materia = "";
             ViewAlert("La materia seleccionada ya esta asginada", "error");
           }
         },

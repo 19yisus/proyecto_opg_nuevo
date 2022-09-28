@@ -267,6 +267,7 @@
         async ChangeState(id){
           this.cedula = id;
           this.action = "ChangeStatus";
+          this.nacionalidad = "V";
           
           setTimeout( async () => {
             let form = new FormData(document.getElementById("Formulario"));

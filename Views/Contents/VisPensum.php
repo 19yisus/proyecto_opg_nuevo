@@ -199,15 +199,16 @@
             this.periodo_escolar_consultado = data.periodoescolar;
             if(data.id_materia1) this.materias_select.push({num: 1, id_materia: data.id_materia1, name_campo: 'id_materia1'});
             if(data.id_materia2) this.materias_select.push({num: 2, id_materia: data.id_materia2, name_campo: 'id_materia2'});
-            if(data.id_materia4) this.materias_select.push({num: 3, id_materia: data.id_materia4, name_campo: 'id_materia4'});
-            if(data.id_materia5) this.materias_select.push({num: 3, id_materia: data.id_materia5, name_campo: 'id_materia5'});
-            if(data.id_materia6) this.materias_select.push({num: 3, id_materia: data.id_materia6, name_campo: 'id_materia6'});
-            if(data.id_materia7) this.materias_select.push({num: 3, id_materia: data.id_materia7, name_campo: 'id_materia7'});
-            if(data.id_materia8) this.materias_select.push({num: 3, id_materia: data.id_materia8, name_campo: 'id_materia8'});
-            if(data.id_materia9) this.materias_select.push({num: 3, id_materia: data.id_materia9, name_campo: 'id_materia9'});
-            if(data.id_materia10) this.materias_select.push({num: 3, id_materia: data.id_materia10, name_campo: 'id_materia10'});
-            if(data.id_materia11) this.materias_select.push({num: 3, id_materia: data.id_materia11, name_campo: 'id_materia11'});
-            if(data.id_materia12) this.materias_select.push({num: 3, id_materia: data.id_materia12, name_campo: 'id_materia12'});
+            if(data.id_materia3) this.materias_select.push({num: 3, id_materia: data.id_materia3, name_campo: 'id_materia3'});
+            if(data.id_materia4) this.materias_select.push({num: 4, id_materia: data.id_materia4, name_campo: 'id_materia4'});
+            if(data.id_materia5) this.materias_select.push({num: 5, id_materia: data.id_materia5, name_campo: 'id_materia5'});
+            if(data.id_materia6) this.materias_select.push({num: 6, id_materia: data.id_materia6, name_campo: 'id_materia6'});
+            if(data.id_materia7) this.materias_select.push({num: 7, id_materia: data.id_materia7, name_campo: 'id_materia7'});
+            if(data.id_materia8) this.materias_select.push({num: 8, id_materia: data.id_materia8, name_campo: 'id_materia8'});
+            if(data.id_materia9) this.materias_select.push({num: 9, id_materia: data.id_materia9, name_campo: 'id_materia9'});
+            if(data.id_materia10) this.materias_select.push({num: 10, id_materia: data.id_materia10, name_campo: 'id_materia10'});
+            if(data.id_materia11) this.materias_select.push({num: 11, id_materia: data.id_materia11, name_campo: 'id_materia11'});
+            if(data.id_materia12) this.materias_select.push({num: 12, id_materia: data.id_materia12, name_campo: 'id_materia12'});
           }).catch( error => console.error(error))
         },
         async ChangeState(id){
@@ -321,13 +322,14 @@
         },
         { defaultContent: '',
           render: function(data, type, row){
+            let classStatus = row.estatus_pensum == 1 ? 'success' : 'danger';
             let btns = `
               <div class="">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#modal_consulta" onClick="Consult(this)" data-id='${row.id}' class="btn btn-sm btn-info">
                   <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
                       
-                <button type="button" onClick="CambiarEstatus(this)" data-id='${row.id}' class="btn btn-sm btn-warning">
+                <button type="button" onClick="CambiarEstatus(this)" data-id='${row.id}' class="btn btn-sm btn-${classStatus}">
                   <i class="fas fa-power-off"></i>
                 </button>
               </div>`;

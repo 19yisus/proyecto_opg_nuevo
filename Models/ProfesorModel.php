@@ -34,8 +34,7 @@
 		public function AsignarProfesor(){
 			try{
 				$status = true;
-				$pdoUpdate = $this->driver->query("UPDATE asignacion_profesor_seccion SET estatus_asignacion = 0 WHERE profesor_cedula = '$this->cedula_profesor' AND periodo_id != '$this->id_periodo' ;");
-
+				$this->driver->query("UPDATE asignacion_profesor_seccion SET estatus_asignacion = 0 WHERE profesor_cedula = '$this->cedula_profesor' AND periodo_id != '$this->id_periodo' ;");
 				$this->driver->query("DELETE FROM asignacion_profesor_seccion WHERE periodo_id = '$this->id_periodo' AND profesor_cedula = '$this->cedula_profesor' ;");
 
 				for($i = 0; $i < sizeof($this->id_materia); $i++){

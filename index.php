@@ -1,9 +1,4 @@
-<?php
-	// TODO:
-	// - camibios en la vista
-	// 	- Indicar en la vista donde se encuentra el ususario
-	// 	- El contenido tiene que estar en español y debe llevar con su respectivo acento
-	
+<?php	
 	
 	error_reporting(E_ALL);
 	ini_set("ignore_repeated_errors", true);
