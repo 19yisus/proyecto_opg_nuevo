@@ -58,7 +58,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="staticBackdropLabel">Registro Profesor</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" @click="LimpiarForm" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!--
                <div class="input-group input-group-sm">
@@ -156,9 +156,9 @@
               <div v-if="action == 'Asignar' " class="row d-flex align-items-center" v-for="(item,index) in id_materia">
                 <div class="col-md-6" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Asignación: {{index}}</span>
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Asignación: {{(index+1)}}</span>
                     <input type="text" min="1" v-model="seguimiento[index]" max="6" maxlength="1" minlength="1" name="seguimiento_profesor[]" class="form-control form-control-sm" id="" @keypress="consultarSecciones" :data-index="index" placeholder="Año" style="width: 10%">
-                    <select name="id_seccion[]" v-model="secciones[index]" id="" class="form-select" aria-label="Default select example" style="width: 10%">
+                    <select name="id_seccion[]" @change="MateriaRepetida(index)" v-model="secciones[index]" id="" class="form-select" aria-label="Default select example" style="width: 10%">
                       <option value="" selected>Seleccione una opción</option>
                       <option :value="item.id_seccion" v-for="item in id_seccion[index]">{{item.id_seccion}}</option>
                     </select>
@@ -168,7 +168,7 @@
                 <div class="col-md-5">
                   <div class="input-group input-group-sm form-box-select" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text">Materia</span>
-                    <select name="id_materia[]" @change="MateriaRepetida" v-model="materias[index]" id="" class="form-select" aria-label="Default select example" style="width: 50%;">
+                    <select name="id_materia[]" @change="MateriaRepetida(index)" v-model="materias[index]" id="" class="form-select" aria-label="Default select example" style="width: 50%;">
                       <option value="" selected>Seleccione una opción</option>
                       <option :value="item.id_materia" v-for="item in id_materia[index]">{{item.des_materia}}</option>
                     </select>
@@ -191,7 +191,7 @@
                 <button type="submit" class="btn btn-sm btn-primary" id="btn-g">
                   <i class="fa-regular fa-circle-check" :disabled="ifPeriodo"></i>GUARDAR
                 </button>
-                <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
+                <button type="button" @click="LimpiarForm" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
                   <i class="fa-regular fa-circle-xmark"></i>SALIR
                 </button>
               </div>
@@ -244,6 +244,8 @@
           this.id_materia.pop()
           this.id_seccion.pop()
           this.seguimiento.pop()
+          this.secciones.pop();
+          this.materias.pop();
         },
         SendData(e){
 
@@ -353,6 +355,8 @@
           this.seguimiento = []
           this.id_seccion = [[{id_seccion: ''}]]
           this.id_materia = [{id_materia:""}]
+          this.secciones = []
+          this.materias = []
         },
         async consultarSecciones(e){
           let anio = e.key, index = e.target.dataset.index;          
@@ -380,14 +384,14 @@
             this.id_materia[index] = lista; 
           }else ViewAlert("No existe pensum para el año solicitado","error");
         },
-        async MateriaRepetida(e){
-          console.log(e);
-          return false;
-          const res = await fetch(`./Controllers/ProfesorController.php?ope=MateriasRepetidas&&cedula=${this.cedula}&&materia=${this.id_materia}&&seccion=${this.id_seccion}`)
+        async MateriaRepetida(index){
+          
+          if(!this.secciones[index] && !this.materias[index]) return false;
+          const res = await fetch(`./Controllers/ProfesorController.php?ope=MateriasRepetidas&&cedula=${this.cedula}&&materia=${this.materias[index]}&&seccion=${this.secciones[index]}`)
           .then( res => res.json()).then( ({data}) => data)
           .catch( error => console.error(error));
-          
           if(res[0]){
+            this.MenosAsignacion();
             ViewAlert("La materia seleccionada ya esta asginada", "error");
           }
         },
@@ -417,10 +421,7 @@
       }
     }).mount("#App_vue");
 
-    const CambiarEstatus = (e) => {
-      app.ChangeState(e.dataset.id)
-    }
-
+    const CambiarEstatus = (e) => app.ChangeState(e.dataset.id)
     const Asignar = (e) => app.Asignar(e.dataset.id)
 
     const Consult = (e) => {

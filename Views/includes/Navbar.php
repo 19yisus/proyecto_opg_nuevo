@@ -7,8 +7,8 @@
       <i class="fa-brands fa-elementor"></i> Menú
     </button>
 
-    <div class="col-md-2">
-      <h4 class="text-bg-dark ml-4"><?php echo $_SESSION['des_rol']."-".$_SESSION['ced_usuario'];?></h4>
+    <div class="col-sm-4">
+      <h5 class="text-bg-dark ml-4"><?php echo $_SESSION['des_rol']."-".$_SESSION['ced_usuario'];?></h5>
     </div>
 
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
