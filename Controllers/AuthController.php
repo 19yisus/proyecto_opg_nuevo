@@ -12,12 +12,8 @@
         Login();
       break;
 
-      case 'Modificar':
+      case 'Update':
         Modificacion();
-      break;
-
-      case 'Desactivar':
-        Desactivar();
       break;
 
       case 'Exit_sesion':
@@ -28,11 +24,11 @@
 
   if(isset($_GET['ope'])){
     switch($_GET['ope']){
-      case 'Consulta':
+      case 'ConsultOne':
         ConsultaEspecifica();
       break;
 
-      case 'Consultar_todos':
+      case 'ConsulAll':
         ConsultaGeneral();
       break;
     }
@@ -60,12 +56,11 @@
     header("Location: ../VisLogin");
   }
 
-  // function Modificacion(){
-  //   $AuthModel = new AuthModel();
-  //   $AuthModel->SetDatos($_POST);
-  //   $resultado = $AuthModel->Modificar();
-  //   header("Location: ".constant("URL")."materia_modificacion?codigo=".$resultado['codigo']."&mensaje=".$resultado['mensaje']);
-  // }
+  function Modificacion(){
+    $AuthModel = new AuthModel();
+    $AuthModel->SetDatos($_POST);
+    $AuthModel->Modificar();
+  }
 
   // function Desactivar(){
   //   $AuthModel = new AuthModel();
@@ -75,25 +70,15 @@
   //   echo json_encode(['data' => $resultado], false);
   // }
 
-  // function ConsultaEspecifica(){
-  //   $AuthModel = new AuthModel();
-  //   $AuthModel->SetDatos(['id' => $_GET['id']]);
-  //   $resultado = $AuthModel->Consultar();
+  function ConsultaEspecifica(){
+    $AuthModel = new AuthModel();
+    $AuthModel->SetDatos(['id' => $_GET['id']]);
+    $AuthModel->Consultar();
+  }
 
-  //   if($resultado == []){
-  //     $resultado = [
-  //       'code' => 'error',
-  //       'mensaje' => 'El codigo ingresado es invalido o la materia esta inactiva'
-  //     ];
-  //   }
-
-  //   echo json_encode(['data' => $resultado], false);
-  // }
-
-  // function ConsultaGeneral(){
-  //   $AuthModel = new AuthModel();
-  //   $resultado = $AuthModel->ConsultarTodos();
-  //   echo json_encode(['data' => $resultado], false);
-  // }
+  function ConsultaGeneral(){
+    $AuthModel = new AuthModel();
+    $AuthModel->ConsultarTodos();
+  }
   
 ?>

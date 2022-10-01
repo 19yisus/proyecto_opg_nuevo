@@ -8,7 +8,7 @@
 	
 	class App{
 		private $vistasPublicas = ['VisLogin'];
-		private $vistasPrivadas = ['VisEstudiantes','VisInicio','VisMaterias','VisNotas','VisPensum','VisPeriodo','VisProfesor','VisSeccion','VispdfNotas','VisCreatePdfNotas'];
+		private $vistasPrivadas = ['VisEstudiantes','VisUsuarios','VisInicio','VisMaterias','VisNotas','VisPensum','VisPeriodo','VisProfesor','VisSeccion','VispdfNotas','VisCreatePdfNotas'];
 
 		public function __construct(){
 			$url = $this->GetURL();

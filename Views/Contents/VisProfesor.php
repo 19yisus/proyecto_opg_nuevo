@@ -71,19 +71,16 @@
               <div class="modal-body row " style="padding: 0 70px ;">
 
                 <div class="col-md-6 " style="margin:0; padding:5px;" v-if="action != 'Asignar' ">
-
-                <div class="input-group input-group-sm form-box-select" v-if="action != 'Asignar' " style="display:flex; flex-wrap: wrap;">
-                  <span class="input-group-text" id="inputGroup-sizing-sm">Nacionalidad:</span>
-                  <select class="form-select" @change="cedula = '' " v-model="nacionalidad" name="nacionalidad" id="nacionalidad" aria-label="Default select example" style="width: 50%;" required>
-                    <option value="" selected>Seleccionar</option>
-                    <option value="V">Venezolana</option>
-                    <option value="E">Extranjera</option>
-                  </select>
-                    <span class="error-text">Selecciona tu nacionalidad</span>
-                </div>
-
-    
-              </div> 
+                  <div class="input-group input-group-sm form-box-select" v-if="action != 'Asignar' " style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Nacionalidad:</span>
+                    <select class="form-select" @change="cedula = '' " v-model="nacionalidad" name="nacionalidad" id="nacionalidad" aria-label="Default select example" style="width: 50%;" required>
+                      <option value="" selected>Seleccionar</option>
+                      <option value="V">Venezolana</option>
+                      <option value="E">Extranjera</option>
+                    </select>
+                      <span class="error-text">Selecciona tu nacionalidad</span>
+                  </div>
+                </div> 
               <div class="col-md-6 " style="margin:0; padding:5px;">
 
                 <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">

@@ -7,13 +7,19 @@
       <i class="fa-brands fa-elementor"></i> Menú
     </button>
 
+    <div class="col-md-2">
+      <h4 class="text-bg-dark ml-4"><?php echo $_SESSION['des_rol']."-".$_SESSION['ced_usuario'];?></h4>
+    </div>
+
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
       aria-labelledby="offcanvasExampleLabel">
       <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
-
+      <ul class="list-group">
+        <a class="list-group-item list-group-item-action" href="./VisInicio">Inicio</a>
+      </ul>
       <form action="./Controllers/AuthController.php" method="POST" id="cerrar">
         <input type="hidden" name="ope" value="Exit_sesion">
       </form>
@@ -54,6 +60,9 @@
         </div>
       </div>
       <ul class="list-group">
+        <?php if($_SESSION['id_rol'] == '1'){?>
+        <a class="list-group-item list-group-item-action" href="./VisUsuarios">Configuración de usuarios</a>
+        <?php }?>
         <a class="list-group-item list-group-item-action" href="#" onclick="document.getElementById('cerrar').submit();">Cerrar Sesión</a>
       </ul>
     </div>
