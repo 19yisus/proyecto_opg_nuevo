@@ -158,7 +158,7 @@
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Asignación: {{(index+1)}}</span>
                     <input type="text" min="1" v-model="seguimiento[index]" max="6" maxlength="1" minlength="1" name="seguimiento_profesor[]" class="form-control form-control-sm" id="" @keypress="consultarSecciones" :data-index="index" placeholder="Año" style="width: 10%">
-                    <select name="id_seccion[]" @change="MateriaRepetida(index)" v-model="secciones[index]" id="" class="form-select" aria-label="Default select example" style="width: 10%">
+                    <select name="id_seccion[]" required @change="MateriaRepetida(index)" v-model="secciones[index]" id="" class="form-select" aria-label="Default select example" style="width: 10%">
                       <option value="" selected>Seleccione una opción</option>
                       <option :value="item.id_seccion" v-for="item in id_seccion[index]">{{item.id_seccion}}</option>
                     </select>
@@ -168,7 +168,7 @@
                 <div class="col-md-5">
                   <div class="input-group input-group-sm form-box-select" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text">Materia</span>
-                    <select name="id_materia[]" @change="MateriaRepetida(index)" v-model="materias[index]" id="" class="form-select" aria-label="Default select example" style="width: 50%;">
+                    <select name="id_materia[]" required @change="MateriaRepetida(index)" v-model="materias[index]" id="" class="form-select" aria-label="Default select example" style="width: 50%;">
                       <option value="" selected>Seleccione una opción</option>
                       <option :value="item.id_materia" v-for="item in id_materia[index]">{{item.des_materia}}</option>
                     </select>
@@ -188,7 +188,7 @@
                   </button>
                 </div>
                 <input type="hidden" name="ope" v-model="action">
-                <button type="submit" class="btn btn-sm btn-primary" id="btn-g">
+                <button type="submit" @click="evitandoDobleSubmit = true" class="btn btn-sm btn-primary" id="btn-g">
                   <i class="fa-regular fa-circle-check" :disabled="ifPeriodo"></i>GUARDAR
                 </button>
                 <button type="button" @click="LimpiarForm" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
@@ -230,6 +230,7 @@
           id_periodoFiltro: "",
           periodosFiltro:[],
           formulario_valido: false,
+          evitandoDobleSubmit: false,
           bucle: 1,
           action: "Save",
         }
@@ -241,6 +242,7 @@
           this.seguimiento.push('');
         },
         MenosAsignacion(){
+          console.log(this.secciones)
           this.id_materia.pop()
           this.id_seccion.pop()
           this.seguimiento.pop()
@@ -253,7 +255,8 @@
           // if(!$("#Formulario").valid()) return false;
           let form = new FormData(e.target);
           if(!this.formulario_valido) return false;
-                    
+          
+          if(!this.evitandoDobleSubmit) return false;
           fetch("./Controllers/ProfesorController.php",{
             method: "POST",
             body: form
@@ -263,6 +266,7 @@
             this.LimpiarForm();
             ViewAlert(result.mensaje, result.estado);
             this.periodo_activo();
+            this.evitandoDobleSubmit = false;
           }).catch(Error =>{
             console.error(Error)
           })
@@ -423,10 +427,7 @@
 
     const CambiarEstatus = (e) => app.ChangeState(e.dataset.id)
     const Asignar = (e) => app.Asignar(e.dataset.id)
-
-    const Consult = (e) => {
-      app.GetData(e.dataset.id)
-    }
+    const Consult = (e) => app.GetData(e.dataset.id)
   
     $("#datatable").DataTable({
       ajax:{
@@ -452,17 +453,18 @@
         },
         { defaultContent: '',
           render: function(data, type, row){
-            
+                        
             let classStatus = row.estatus_profesor == 1 ? 'success' : 'danger';
+            let disabled = row.estatus_profesor == 1 ? '' : 'disabled="disabled"';
             let btns = '';    
             if(row.estatus_asignacion == '1' && row.estatus_asignacion != undefined){
               btns = `
                 <div class="">
-                  <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-info">
+                  <button type="button" ${disabled} data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-info">
                     <i class="fa-solid fa-magnifying-glass"></i>
                   </button>
 
-                  <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Asignar(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-info">
+                  <button type="button" ${disabled} data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Asignar(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-info">
                     <i class="fa-regular fa-user"></i>
                   </button>
                   
