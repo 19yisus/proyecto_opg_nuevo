@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="./Views/plugins/DataTables/DataTables-1.12.1/css/dataTables.bootstrap5.min.css">
   <link rel="stylesheet" href="./Views/plugins/DataTables/Buttons-2.2.3/css/buttons.bootstrap5.min.css">
   <link rel="stylesheet" href="./Views/plugins/DataTables/datatables.min.css">
+  <link rel="stylesheet" href="./Views/Css/principal.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema O.P.G</title>
 </head>

@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+	<style>
+		.bg-login{
+			height:70vw;
+			background-image:url(./Views/includes/opg.png);
+		}
+	</style>
+
 <?php 
 	if($this->SessionActive()) header("Location: ./VisInicio");
 	$this->Head(); 
@@ -36,6 +43,9 @@
 					</form>
 				</div>
 			</nav>
+		</div>
+		<div class='row bg-login'>
+		
 		</div>
 
 	</div>

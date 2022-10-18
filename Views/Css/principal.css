@@ -1,0 +1,96 @@
+/* fuente: raleway */
+
+*{
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero{
+  height: 100vh;
+  width: 100vw;
+  /* background-image: url(./wave\ \(2\).svg); */
+  background-image:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  /* background-size: cover;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: 100%, 100%;
+} */
+  /* overflow: hidden; */
+}
+
+.hero__container{
+  width: 90%;
+  max-width: 1200px;
+  /* todo lo que salga del contenedor se esconda */
+  overflow: hidden;
+  height: 100vh;
+  margin: 0 auto;
+  position: relative;
+  z-index: 100;
+}
+
+.hero__texts{
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40%;
+}
+
+.hero__picture{
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hero__title{
+  font-size: 4rem;
+  color: #0606c0;
+}
+
+.hero__paragraph{
+  margin: 12px 0 16px;
+  color: #fff;
+}
+
+.hero__cta{
+  display: inline-block;
+  text-decoration: none;
+  color: #fff;
+  background-color: #264de4;
+  padding: 16px 35px;
+  border-radius: 30px;
+  font-weight: 300;
+  margin-left: 35%;
+  letter-spacing: 2px;
+}
+
+.hero__img{
+  display: block;
+  width: 550px;
+}
+
+.hero__wave{
+  position: absolute;
+  width: 100vw;
+  /* height: 100vh; */
+  background-image: url(../includes/wave.svg);
+  bottom: 0px;
+  left: 0px;
+  z-index: 0;
+  top: 50%;
+  /* background-image: url(./wave.svg), linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+  background-size: 100%;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  /* transform: translateY(100px); */
+  /* aca para poder moverlo debemos agregarle un overflow hidden al padre, y darle un traslate a la wave */
+}

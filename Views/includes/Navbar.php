@@ -18,7 +18,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <ul class="list-group">
-        <a class="list-group-item list-group-item-action" href="./VisInicio">Inicio</a>
+        <a class="list-group-item list-group-item-action" href="./VisPrincipal">Inicio</a>
       </ul>
       <form action="./Controllers/AuthController.php" method="POST" id="cerrar">
         <input type="hidden" name="ope" value="Exit_sesion">

@@ -48,7 +48,7 @@
             $_SESSION['des_rol'] = $data['rol'];
 
             return [
-              'view' => "VisInicio",
+              'view' => "VisPrincipal",
               'codigo' => 200,
               'mensaje' => "Bienvenido/a"
             ];

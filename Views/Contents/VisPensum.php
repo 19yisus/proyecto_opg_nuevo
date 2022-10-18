@@ -187,12 +187,12 @@
             this.ToggleModal();
             ViewAlert(result.mensaje, result.estado);
             this.periodo_activo();
+            this.LimpiarForm();
           }).catch(Error => console.error(Error))
         },
         async GetData(id){
           await fetch(`./Controllers/PensumController.php?ope=ConsultOne&&id=${id}`)
           .then( res => res.json()).then( ({data}) => {
-            console.log(data)
 
             this.materias_select = [];
             this.anio = data.ano;
@@ -245,6 +245,12 @@
           this.materias_select.splice(numero)
         },
         ValidaSelect(e){
+
+          if(e == 'false'){
+            document.getElementsByName("id_materia1")[0].childNodes.forEach( item => item.disabled = false);
+            return false;
+          }
+
           let selects = this.materias_select.map( item => item.name_campo);
           // Desactiva la opcion seleccionada en los demas selects
           selects.forEach( item => {
@@ -287,6 +293,7 @@
         LimpiarForm(){
           this.id = "";
           this.anio = "";
+          this.ValidaSelect('false');
           this.materias_select = [{num: 1, id_materia: "", name_campo: `id_materia1`}];
           this.estatus = "";
           this.action = "Save";

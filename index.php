@@ -8,7 +8,7 @@
 	
 	class App{
 		private $vistasPublicas = ['VisLogin'];
-		private $vistasPrivadas = ['VisEstudiantes','VisUsuarios','VisInicio','VisMaterias','VisNotas','VisPensum','VisPeriodo','VisProfesor','VisSeccion','VispdfNotas','VisCreatePdfNotas'];
+		private $vistasPrivadas = ['VisEstudiantes','VisUsuarios','VisPrincipal','VisInicio','VisMaterias','VisNotas','VisPensum','VisPeriodo','VisProfesor','VisSeccion','VispdfNotas','VisCreatePdfNotas'];
 
 		public function __construct(){
 			$url = $this->GetURL();
@@ -27,9 +27,14 @@
 
 		private function GetView($url){
 			$file = "./Views/Contents/".$url[0].".php";
-			if(file_exists($file)){
-				if($this->validarVistasPrivadas($url[0])) require_once $file; else header("Location: ./VisLogin");
+			if(strpos($url[0], 'Vis') !== false){
+				if(file_exists($file)){
+					if($this->validarVistasPrivadas($url[0])) require_once $file; else header("Location: ./VisLogin");
+				}
+				session_start();
+				if(isset($_SESSION['id_user'])) header("Location: ./VisPrincipal"); else header("Location: ./VisLogin");
 			}
+			
 		}
 
 		private function validarVistasPrivadas($vista){
