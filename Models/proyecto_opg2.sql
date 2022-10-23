@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 12-08-2022 a las 21:35:57
+-- Tiempo de generación: 23-10-2022 a las 18:11:00
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.4.22
 
@@ -37,14 +37,6 @@ CREATE TABLE `asignacion_estudiante_seccion` (
   `estatus_asig_estu` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `asignacion_estudiante_seccion`
---
-
-INSERT INTO `asignacion_estudiante_seccion` (`id_asignacion_estu`, `cedula_estu_asignacion`, `id_seccion`, `id_periodo`, `estatus_asig_estu`) VALUES
-(1, '27672468', '2A', 2, 1),
-(2, '27132642', '2B', 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -59,14 +51,6 @@ CREATE TABLE `asignacion_profesor_seccion` (
   `periodo_id` int(11) NOT NULL,
   `estatus_asignacion` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `asignacion_profesor_seccion`
---
-
-INSERT INTO `asignacion_profesor_seccion` (`id_asignacion`, `profesor_cedula`, `materia_id`, `seccion_id`, `periodo_id`, `estatus_asignacion`) VALUES
-(18, '14887885', 4, '1A', 1, 1),
-(19, '14887885', 2, '1B', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -95,25 +79,6 @@ CREATE TABLE `estudiante` (
   `estatus_estudiante` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `estudiante`
---
-
-INSERT INTO `estudiante` (`cedula_estudiante`, `seguimiento_estudiante`, `estatus_estudiante`) VALUES
-('27132642', 2, 1),
-('27672468', 2, 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `lapso`
---
-
-CREATE TABLE `lapso` (
-  `id_lapso` int(11) NOT NULL,
-  `des_lapso` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
 -- --------------------------------------------------------
 
 --
@@ -125,24 +90,6 @@ CREATE TABLE `materia` (
   `des_materia` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `estatus_materia` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `materia`
---
-
-INSERT INTO `materia` (`id_materia`, `des_materia`, `estatus_materia`) VALUES
-(1, 'Historia universal', 1),
-(2, 'ingles', 1),
-(3, 'Matematicas', 1),
-(4, 'castellano', 1),
-(5, 'historia de venezuela', 1),
-(6, 'GHC', 1),
-(7, 'Premilitar', 1),
-(8, 'Fricultura', 1),
-(9, 'Agricultura', 1),
-(10, 'Dibujo tecnico', 1),
-(11, 'chavismo', 1),
-(12, 'Deporte', 1);
 
 -- --------------------------------------------------------
 
@@ -176,10 +123,11 @@ CREATE TABLE `nota` (
 
 CREATE TABLE `pensum` (
   `id` int(11) NOT NULL,
-  `ano` int(11) NOT NULL,
+  `cod_pensum` char(5) COLLATE utf8_spanish_ci NOT NULL,
+  `anios_abarcados` enum('B','D','E') COLLATE utf8_spanish_ci NOT NULL,
   `periodo_id` int(11) NOT NULL,
   `estatus_pensum` tinyint(1) NOT NULL,
-  `id_materia1` int(11) DEFAULT NULL,
+  `id_materia1` int(11) NOT NULL,
   `id_materia2` int(11) DEFAULT NULL,
   `id_materia3` int(11) DEFAULT NULL,
   `id_materia4` int(11) DEFAULT NULL,
@@ -192,13 +140,6 @@ CREATE TABLE `pensum` (
   `id_materia11` int(11) DEFAULT NULL,
   `id_materia12` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `pensum`
---
-
-INSERT INTO `pensum` (`id`, `ano`, `periodo_id`, `estatus_pensum`, `id_materia1`, `id_materia2`, `id_materia3`, `id_materia4`, `id_materia5`, `id_materia6`, `id_materia7`, `id_materia8`, `id_materia9`, `id_materia10`, `id_materia11`, `id_materia12`) VALUES
-(2, 1, 1, 1, 1, 2, 3, 4, 6, 5, 8, 10, 11, 9, 7, 12);
 
 -- --------------------------------------------------------
 
@@ -213,14 +154,6 @@ CREATE TABLE `periodo_escolar` (
   `fecha_cierre` date NOT NULL,
   `estatus_periodo_escolar` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `periodo_escolar`
---
-
-INSERT INTO `periodo_escolar` (`id_periodo_escolar`, `periodoescolar`, `fecha_inicio`, `fecha_cierre`, `estatus_periodo_escolar`) VALUES
-(1, '2001-2001', '2001-01-01', '2001-01-01', 1),
-(2, '2000-2000', '2000-01-01', '2000-01-01', 0);
 
 -- --------------------------------------------------------
 
@@ -240,22 +173,6 @@ CREATE TABLE `personas` (
   `telefono_persona` varchar(12) COLLATE utf8_spanish_ci DEFAULT NULL,
   `direccion_n_persona` varchar(120) COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `personas`
---
-
-INSERT INTO `personas` (`cedula_persona`, `nombre_persona`, `apellido_persona`, `nacionalidad_persona`, `sexo_persona`, `correo_persona`, `fecha_n_persona`, `direccion_persona`, `telefono_persona`, `direccion_n_persona`) VALUES
-('14525653', 'Jose Gregorio', 'Hernandez', 'V', 'M', 'josegregorio@gmail.com', '1980-05-10', 'Villa hermosa', '14525653', NULL),
-('14575469', 'Maritza', 'Mura', 'V', 'F', 'muraa_mari@gmail.com', '1985-04-10', 'Villa hermosa', '14575469', NULL),
-('14887881', 'fadsfadsfsadf', 'fasdfasdfasdf', 'V', 'M', 'fasdfasdfasdfaddsff@gmail.com', '1994-10-10', 'fasdfasdfasdfasdfasdf', '14887881', NULL),
-('14887885', 'fasssssss', 'fasaaaaaaa', 'V', 'M', 'fasdfasdfasdfasdfasdf@gmail.com', '1996-10-10', 'fasdfasdfasdfasdf', '14887885', NULL),
-('27132642', 'jose', 'manuel', 'V', 'F', NULL, '2000-10-10', 'fgsfdgsdfgsdfgfd', '27132642', 'fasdfsadfasdfsdaf'),
-('27672468', 'jesus', 'moralasss', 'V', 'F', NULL, '2000-01-01', '5522552', NULL, 'fasdfasdfasdfasdfasdf'),
-('27777555', 'hhhhhhhhhh', 'ddddddgdgdfd', 'V', 'M', 'ggjhhhjhjhjh@gmail.com', '1994-01-10', 'hkhkhjhjhjh', '27777555', NULL),
-('29564898', 'Yesica', 'Diaz', 'V', 'F', NULL, '2003-10-10', 'calle 7', '29564898', 'hospital de acarigua'),
-('3040010', 'yeferson', 'Moorales', 'V', 'M', NULL, '2000-05-10', 'fasdfasdfasdfadsf', NULL, 'ni idea'),
-('30400156', 'Maria', 'Lopez', 'V', 'F', NULL, '2004-10-10', 'calle 7', '30400156', 'hospital de acarigua');
 
 -- --------------------------------------------------------
 
@@ -289,14 +206,6 @@ CREATE TABLE `profesor` (
   `estatus_profesor` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `profesor`
---
-
-INSERT INTO `profesor` (`cedula_profesor`, `estatus_profesor`) VALUES
-('14887885', 1),
-('27777555', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -328,17 +237,6 @@ CREATE TABLE `seccion` (
   `estatus_seccion` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `seccion`
---
-
-INSERT INTO `seccion` (`id_seccion`, `ano_seguimiento`, `estatus_seccion`) VALUES
-('1A', 1, 1),
-('1B', 1, 1),
-('2A', 2, 1),
-('2B', 2, 1),
-('2C', 2, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -362,7 +260,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `usuario`, `password`, `pregunta1`, `pregunta2`, `respuesta1`, `respuesta2`, `id_rol`, `estatus_usuario`) VALUES
-(1, '27132642', '$2y$12$E4MEf.JDX1St01SeQhSo5.0FISrm4uJDcZ2907kNTYdKg8k.sBAYK', 1, 1, 'fasdfasdf', 'fasdfasdfasdf', 2, 1),
+(1, '27132642', '$2y$12$9IJorIrYaVL5sw56Wn2.leFnlYLD9r.Q.TLfva0YnaC9jI7M3sEf.', 2, 1, 'azul', 'gato', 2, 1),
 (2, '12345678', '$2y$12$HG5VOfKxXMpfgOXTr6Pj0.DU7djkaTLDUF17eKrrE.ZzaTImucztK', 1, 3, 'nada', 'nada', 1, 1);
 
 --
@@ -401,12 +299,6 @@ ALTER TABLE `bitacora_notas`
 --
 ALTER TABLE `estudiante`
   ADD PRIMARY KEY (`cedula_estudiante`);
-
---
--- Indices de la tabla `lapso`
---
-ALTER TABLE `lapso`
-  ADD PRIMARY KEY (`id_lapso`);
 
 --
 -- Indices de la tabla `materia`
@@ -498,13 +390,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `asignacion_estudiante_seccion`
 --
 ALTER TABLE `asignacion_estudiante_seccion`
-  MODIFY `id_asignacion_estu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_asignacion_estu` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacion_profesor_seccion`
 --
 ALTER TABLE `asignacion_profesor_seccion`
-  MODIFY `id_asignacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_asignacion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `bitacora_notas`
@@ -513,16 +405,10 @@ ALTER TABLE `bitacora_notas`
   MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `lapso`
---
-ALTER TABLE `lapso`
-  MODIFY `id_lapso` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `materia`
 --
 ALTER TABLE `materia`
-  MODIFY `id_materia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_materia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `nota`
@@ -534,13 +420,13 @@ ALTER TABLE `nota`
 -- AUTO_INCREMENT de la tabla `pensum`
 --
 ALTER TABLE `pensum`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `periodo_escolar`
 --
 ALTER TABLE `periodo_escolar`
-  MODIFY `id_periodo_escolar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_periodo_escolar` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas`

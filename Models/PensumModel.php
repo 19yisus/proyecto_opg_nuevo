@@ -2,7 +2,7 @@
 	require("db.php");
 
 	class PensumModel extends DB{
-		public $id, $anio, $id_periodo, $id_materia1,$id_materia2,$id_materia3,$id_materia4,$id_materia5,$id_materia6,$id_materia7,$id_materia8,$id_materia9,$id_materia10,$id_materia11,$id_materia12;
+		public $id, $anios_abarcados, $code_pecod_pensumnsum, $id_periodo, $id_materia1,$id_materia2,$id_materia3,$id_materia4,$id_materia5,$id_materia6,$id_materia7,$id_materia8,$id_materia9,$id_materia10,$id_materia11,$id_materia12;
 
 		public function __construct(){
 			parent::__construct();
@@ -11,7 +11,8 @@
 		public function SetData($datos){
 			$this->id = isset($datos['id']) ? $datos['id'] : null;
 			$this->id_periodo = isset($datos['id_periodo']) ? $datos['id_periodo'] : null;
-			$this->anio = isset($datos['anio']) ? $datos['anio'] : null;
+			$this->cod_pensum = isset($datos['cod_pensum']) ? $datos['cod_pensum'] : null;
+			$this->anios_abarcados = isset($datos['anios_abarcados']) ? $datos['anios_abarcados'] : null;
 			$this->id_materia1 = isset($datos['id_materia'][0]) ? $datos['id_materia'][0] : null;
 			$this->id_materia2 = isset($datos['id_materia'][1]) ? $datos['id_materia'][1] : "NO";
 			$this->id_materia3 = isset($datos['id_materia'][2]) ? $datos['id_materia'][2] : "NO";
@@ -28,12 +29,11 @@
 
 		public function SaveDatos(){
 			try{
-				$result = $this->consult("SELECT * FROM pensum WHERE periodo_id = '$this->id_periodo' AND ano = '$this->anio' AND estatus_pensum = 1;");
-
+				$result = $this->consult("SELECT * FROM pensum WHERE periodo_id = '$this->id_periodo' AND anios_abarcados = '$this->anios_abarcados' AND estatus_pensum = 1;");
 				if(isset($result[0])) return $this->ResJSON("No se pueden duplicar las pensums en el mismo periodo","error");
 
-				$sql = "INSERT INTO pensum(ano,periodo_id,estatus_pensum,id_materia1,id_materia2,id_materia3,id_materia4,id_materia5,id_materia6,id_materia7,id_materia8,id_materia9,id_materia10,id_materia11,id_materia12) 
-					VALUES($this->anio,$this->id_periodo,1,
+				$sql = "INSERT INTO pensum(cod_pensum,anios_abarcados,periodo_id,estatus_pensum,id_materia1,id_materia2,id_materia3,id_materia4,id_materia5,id_materia6,id_materia7,id_materia8,id_materia9,id_materia10,id_materia11,id_materia12) 
+					VALUES($this->cod_pensum,'$this->anios_abarcados',$this->id_periodo,1,
 					$this->id_materia1,$this->id_materia2,$this->id_materia3,$this->id_materia4,$this->id_materia5,$this->id_materia6,
 					$this->id_materia7,$this->id_materia8,$this->id_materia9,$this->id_materia10,$this->id_materia11,$this->id_materia12);";
 				$sql = str_replace("NO",'NULL', $sql);

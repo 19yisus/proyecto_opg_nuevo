@@ -259,7 +259,9 @@
         $seccion = $result_consulta_estudiante['id_seccion'];
         $seguimiento = $result_consulta_estudiante['ano_seguimiento'];
 
-        $sql_pensum = "SELECT * FROM pensum WHERE ano = $seguimiento ;";
+        if(intval($seguimiento) < 4) $seguimiento = 'B'; else $seguimiento = 'D';
+
+        $sql_pensum = "SELECT * FROM pensum WHERE anios_abarcados = '$seguimiento' ;";
         $resultPensum = $this->consult($sql_pensum);
 
         if($resultPensum == false){
