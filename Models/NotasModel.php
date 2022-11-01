@@ -335,11 +335,14 @@
         INNER JOIN personas ON personas.cedula_persona = estudiante.cedula_estudiante 
         WHERE estudiante.cedula_estudiante = '$cedula';";
 
-      $sqlNotasHistoricas = "SELECT * FROM nota INNER JOIN materia ON materia.id_materia = nota.materia_id 
+      $sqlNotasHistoricas = "SELECT *,pensum.cod_pensum FROM nota 
+        INNER JOIN materia ON materia.id_materia = nota.materia_id 
         INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = nota.periodo_escolar_id 
         INNER JOIN seccion ON seccion.id_seccion = nota.seccion_id
+        LEFT JOIN pensum ON pensum.periodo_id = periodo_escolar.id_periodo_escolar
         WHERE nota.estatusNotas = 0 AND nota.cedula_estudiante = '$cedula' ORDER BY nota.seccion_id;";
-
+      // echo $sqlNotasHistoricas;
+      // echo "<br><br>";
       $result_datos_estudiante = $this->consult($sqlDatos);
       $result_datos_notas = $this->consultAll($sqlNotasHistoricas);
       

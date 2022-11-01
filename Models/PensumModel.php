@@ -104,9 +104,12 @@
 			try{
 				$lista_materias = [];
 				$encabezados = ["id_materia1","id_materia2","id_materia3","id_materia4","id_materia5","id_materia6","id_materia7","id_materia8","id_materia9","id_materia10","id_materia11","id_materia12"];
+				if($anio < 4) $anio = "B";
+				else if($anio < 6) $anio = "D";
+				else $anio = "E";
 
 				foreach($encabezados as $item){
-					$result = $this->consult("SELECT materia.* FROM pensum INNER JOIN materia ON materia.id_materia = pensum.$item WHERE ano = '$anio' ;");
+					$result = $this->consult("SELECT materia.* FROM pensum INNER JOIN materia ON materia.id_materia = pensum.$item WHERE anios_abarcados = '$anio' ;");
 					array_push($lista_materias, $result);
 				}
 				

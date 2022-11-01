@@ -62,7 +62,7 @@
                   <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div> 
               -->
-            <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" novalidate>
+            <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" novalidate autocomplete="off">
               <div class="modal-body row " style="padding: 0 70px ;">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
                 <div class="col-md-12 " style="margin:0; padding:5px;">

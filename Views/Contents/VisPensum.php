@@ -200,8 +200,7 @@
           fetch("./Controllers/PensumController.php", {
             method: "POST",
             body: form
-          }).then(res => res.text()).then(result => {
-            console.log(result)
+          }).then(res => res.json()).then(result => {
             this.id = "";
             this.estatus = "";
             $("#datatable").DataTable().ajax.reload(null, false);
