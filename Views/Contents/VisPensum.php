@@ -61,18 +61,6 @@
               <div class="modal-body row ">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
                 <input type="hidden" name="id_periodo" v-model="id_periodo">
-                <!-- <div class="col-md-6">
-                  <label class="form-label">Año del Pensum</label>
-                  <select name="anio" class="form-select form-select-sm" required aria-label="Default select example">
-                    <option value="" selected>Seleccionar</option>
-                    <option value="1">1er Año</option>
-                    <option value="2">2do Año</option>
-                    <option value="3">3er Año</option>
-                    <option value="4">4to Año</option>
-                    <option value="5">5to Año</option>
-                    <option value="6">6to Año</option>
-                  </select>
-                </div> -->
                 <div class="col-6">
                   <label class="form-label">Código: </label>
                   <input type="text" minlength="5" maxlength="5" v-model="cod_pensum" name="cod_pensum" class="form-control form-control-sm" required id="" placeholder="Código del pensum">
@@ -94,22 +82,10 @@
                     </div>
                   </div>
                 </div>
-
-                <input type="hidden" name="id_materia[]" :value="e.id_materia" v-for="e in materias_select">
-
-                <div class="col-md-6 py-1" v-for="(i, index) in materias_select">
-                  <label class="form-label">Materia {{i.num}}<span class="text-danger">*</span></label>
-                  <select :name="i.name_campo" value="" v-model="i.id_materia" required @change="ValidaSelect" class="form-select form-select-sm" aria-label="Default select example">
-                    <option value="" selected>Seleccionar</option>
-                    <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                  </select>
-                </div>
               </div>
 
               <div class="modal-footer mx-auto">
                 <input type="hidden" name="ope" v-model="action">
-                <button type="button" @click="AgregarMaterias" v-bind:disabled="action != 'Save'" v-if="materias_select.length < 12" class="btn btn-sm btn-success">Agregar</button>
-                <button type="button" @click="QuitarMaterias" v-bind:disabled="action != 'Save'" v-if="materias_select.length > 1" class="btn btn-sm btn-warning">Quitar</button>
                 <button type="submit" class="btn btn-sm btn-primary" v-bind:disabled="action != 'Save'" :disabled="id_periodo == '' ">
                   <i class="fa-regular fa-circle-check"></i>GUARDAR
                 </button>
@@ -147,14 +123,6 @@
                 <label class="form-label">Periodo Escolar: </label>
                 <input type="text" minlength="1" maxlength="30" v-model="periodo_escolar_consultado" name="periodoescolar" class="form-control form-control-sm" required id="" readonly placeholder="Descripción del periodo">
               </div>
-
-              <div class="col-md-6 py-1" v-for="(i, index) in materias_select">
-                <label class="form-label">Materia {{i.num}}<span class="text-danger">*</span></label>
-                <select disabled v-model="i.id_materia" class="form-select form-select-sm" aria-label="Default select example">
-                  <option value="" selected>Seleccionar</option>
-                  <option :value="item.id_materia" v-for="item in lista_materias">{{item.des_materia}}</option>
-                </select>
-              </div>
             </div>
 
             <div class="modal-footer mx-auto">
@@ -181,12 +149,6 @@
           periodo_escolar_consultado: "",
           estatus: "",
           id_periodo: "",
-          materias_select: [{
-            num: 1,
-            id_materia: "",
-            name_campo: `id_materia1`
-          }],
-          lista_materias: [],
           action: "Save",
         }
       },
@@ -201,6 +163,7 @@
             method: "POST",
             body: form
           }).then(res => res.json()).then(result => {
+            
             this.id = "";
             this.estatus = "";
             $("#datatable").DataTable().ajax.reload(null, false);
@@ -221,66 +184,6 @@
               this.cod_pensum = data.cod_pensum;
               this.anios_abarcados = data.anios_abarcados;
               this.periodo_escolar_consultado = data.periodoescolar;
-              if (data.id_materia1) this.materias_select.push({
-                num: 1,
-                id_materia: data.id_materia1,
-                name_campo: 'id_materia1'
-              });
-              if (data.id_materia2) this.materias_select.push({
-                num: 2,
-                id_materia: data.id_materia2,
-                name_campo: 'id_materia2'
-              });
-              if (data.id_materia3) this.materias_select.push({
-                num: 3,
-                id_materia: data.id_materia3,
-                name_campo: 'id_materia3'
-              });
-              if (data.id_materia4) this.materias_select.push({
-                num: 4,
-                id_materia: data.id_materia4,
-                name_campo: 'id_materia4'
-              });
-              if (data.id_materia5) this.materias_select.push({
-                num: 5,
-                id_materia: data.id_materia5,
-                name_campo: 'id_materia5'
-              });
-              if (data.id_materia6) this.materias_select.push({
-                num: 6,
-                id_materia: data.id_materia6,
-                name_campo: 'id_materia6'
-              });
-              if (data.id_materia7) this.materias_select.push({
-                num: 7,
-                id_materia: data.id_materia7,
-                name_campo: 'id_materia7'
-              });
-              if (data.id_materia8) this.materias_select.push({
-                num: 8,
-                id_materia: data.id_materia8,
-                name_campo: 'id_materia8'
-              });
-              if (data.id_materia9) this.materias_select.push({
-                num: 9,
-                id_materia: data.id_materia9,
-                name_campo: 'id_materia9'
-              });
-              if (data.id_materia10) this.materias_select.push({
-                num: 10,
-                id_materia: data.id_materia10,
-                name_campo: 'id_materia10'
-              });
-              if (data.id_materia11) this.materias_select.push({
-                num: 11,
-                id_materia: data.id_materia11,
-                name_campo: 'id_materia11'
-              });
-              if (data.id_materia12) this.materias_select.push({
-                num: 12,
-                id_materia: data.id_materia12,
-                name_campo: 'id_materia12'
-              });
             }).catch(error => console.error(error))
         },
         async ChangeState(id) {
@@ -299,78 +202,18 @@
             }).catch(error => console.error(error))
           }, 100);
         },
-        AgregarMaterias() {
-          if (this.materias_select.length == 12) {
-            ViewAlert("Has alcanzado el limite maximo de materias!", "error");
-            return false;
-          }
-          let numero = this.materias_select.length + 1;
-          this.materias_select.push({
-            num: numero,
-            id_materia: "",
-            name_campo: `id_materia${numero}`
-          })
-          setTimeout(() => {
-            this.ValidaSelect({
-              target: {
-                name: `id_materia${numero}`,
-                value: ''
-              }
-            })
-          }, 100)
-        },
-        QuitarMaterias() {
-          if (this.materias_select.length == 1) {
-            ViewAlert("Has alcanzado el limite minimo de materias!", "error");
-            return false;
-          }
-          let numero = this.materias_select.length - 1;
-          this.materias_select.splice(numero)
-        },
-        ValidaSelect(e) {
-
-          if (e == 'false') {
-            document.getElementsByName("id_materia1")[0].childNodes.forEach(item => item.disabled = false);
-            return false;
-          }
-
-          let selects = this.materias_select.map(item => item.name_campo);
-          // Desactiva la opcion seleccionada en los demas selects
-          selects.forEach(item => {
-            if (item != e.target.name) {
-              document.getElementsByName(item)[0].childNodes.forEach(itemx => {
-                if (itemx.value == e.target.value && itemx.disabled == false) {
-                  itemx.disabled = true;
-                }
-              })
-            }
-          })
-          // Activa la opcion que no este dentro de mi lista de codigos
-          setTimeout(() => {
-            let codigos = this.materias_select.map(s => {
-              if (s.id_materia != '') return s.id_materia;
-              else return '0';
-            })
-            // Recorremos nuestro array de los name's de los selects, a su vez recorremos los options de esos selects en busca de los options desactivados, para luego ver si estos esta incluidos en nuestra lista de comparación ya previamente creada
-            selects.forEach(itemy => {
-              document.getElementsByName(itemy)[0].childNodes.forEach(itemz => {
-                // Si el elemento ya no esta en la lista de codigos y esta inactivo, activalo!
-                if (itemz.disabled == true && codigos.includes(itemz.value) == false && itemz.value != '') itemz.disabled = false;
-                // Si el elemento si esta en lista de codigos y esta activo, inactivalo (esto para cuando creamos nuevos elementos)
-                if (codigos.includes(itemz.value) && itemz.disabled == false && e.target.name == itemy) itemz.disabled = true;
-              })
-            })
-          }, 100)
-        },
         async periodo_activo() {
           await fetch(`./Controllers/PeriodoController.php?ope=ConsultPeriodoActivo`)
             .then(res => res.json()).then(({
               data
             }) => {
               if (data[0] != undefined) {
-                this.id_periodo = data.id_periodo_escolar;
+                this.id_periodo = data.id_periodo_escolar
                 this.des_periodo = data.periodoescolar;
-              } else this.des_periodo = "No hay Periodo Escolar Activo";
+              } else {
+                this.id_periodo = "";
+                this.des_periodo = "No hay Periodo Escolar Activo";
+              }
             }).catch(Error => console.error(Error))
         },
         ToggleModal() {
@@ -382,26 +225,12 @@
           this.id = "";
           this.anios_abarcados = "";
           this.cod_pensum = "";
-          this.ValidaSelect('false');
-          this.materias_select = [{
-            num: 1,
-            id_materia: "",
-            name_campo: `id_materia1`
-          }];
           this.estatus = "";
           this.action = "Save";
         },
-        async GetMaterias() {
-          let lista = await fetch('./Controllers/MateriasController.php?ope=ConsulAll')
-            .then(res => res.json()).then(({
-              data
-            }) => data).catch(error => console.error(error))
-          this.lista_materias = lista.filter(item => item.estatus_materia == "1");
-        }
       },
       async mounted() {
         await this.periodo_activo();
-        await this.GetMaterias();
       }
     }).mount("#App_vue");
 
@@ -419,7 +248,8 @@
         {
           data: "anios_abarcados",
           render(data) {
-            if(data == "B") return "Basica"; else return "Diversificado"
+            if (data == "B") return "Basica";
+            else return "Diversificado"
           }
         },
         {

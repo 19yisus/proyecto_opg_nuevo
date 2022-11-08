@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 23-10-2022 a las 18:11:00
+-- Tiempo de generación: 08-11-2022 a las 16:51:52
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.4.22
 
@@ -32,7 +32,7 @@ USE `proyecto_opg2`;
 CREATE TABLE `asignacion_estudiante_seccion` (
   `id_asignacion_estu` int(11) NOT NULL,
   `cedula_estu_asignacion` char(8) COLLATE utf8_spanish_ci NOT NULL,
-  `id_seccion` varchar(2) COLLATE utf8_spanish_ci NOT NULL,
+  `id_seccion` int(11) NOT NULL,
   `id_periodo` int(11) NOT NULL,
   `estatus_asig_estu` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -47,7 +47,7 @@ CREATE TABLE `asignacion_profesor_seccion` (
   `id_asignacion` int(11) NOT NULL,
   `profesor_cedula` char(8) COLLATE utf8_spanish_ci NOT NULL,
   `materia_id` int(11) NOT NULL,
-  `seccion_id` varchar(2) COLLATE utf8_spanish_ci NOT NULL,
+  `seccion_id` int(11) NOT NULL,
   `periodo_id` int(11) NOT NULL,
   `estatus_asignacion` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -88,7 +88,9 @@ CREATE TABLE `estudiante` (
 CREATE TABLE `materia` (
   `id_materia` int(11) NOT NULL,
   `des_materia` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `estatus_materia` tinyint(1) NOT NULL
+  `estatus_materia` tinyint(1) NOT NULL,
+  `id_periodo_ma` int(11) NOT NULL,
+  `id_pensum_ma` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
@@ -126,19 +128,7 @@ CREATE TABLE `pensum` (
   `cod_pensum` char(5) COLLATE utf8_spanish_ci NOT NULL,
   `anios_abarcados` enum('B','D','E') COLLATE utf8_spanish_ci NOT NULL,
   `periodo_id` int(11) NOT NULL,
-  `estatus_pensum` tinyint(1) NOT NULL,
-  `id_materia1` int(11) NOT NULL,
-  `id_materia2` int(11) DEFAULT NULL,
-  `id_materia3` int(11) DEFAULT NULL,
-  `id_materia4` int(11) DEFAULT NULL,
-  `id_materia5` int(11) DEFAULT NULL,
-  `id_materia6` int(11) DEFAULT NULL,
-  `id_materia7` int(11) DEFAULT NULL,
-  `id_materia8` int(11) DEFAULT NULL,
-  `id_materia9` int(11) DEFAULT NULL,
-  `id_materia10` int(11) DEFAULT NULL,
-  `id_materia11` int(11) DEFAULT NULL,
-  `id_materia12` int(11) DEFAULT NULL
+  `estatus_pensum` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
@@ -173,6 +163,16 @@ CREATE TABLE `personas` (
   `telefono_persona` varchar(12) COLLATE utf8_spanish_ci DEFAULT NULL,
   `direccion_n_persona` varchar(120) COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `personas`
+--
+
+INSERT INTO `personas` (`cedula_persona`, `nombre_persona`, `apellido_persona`, `nacionalidad_persona`, `sexo_persona`, `correo_persona`, `fecha_n_persona`, `direccion_persona`, `telefono_persona`, `direccion_n_persona`) VALUES
+('12165465', 'fasdfasdf', 'fasdfasdf', 'V', 'M', 'fasdfasdf@gmail.com', '2000-10-10', 'fasdfasdfa', '12165465', NULL),
+('1458565', 'alfonso', 'morales', 'V', 'M', 'fasdfasdfasdfasdfasdf@gmail.com', '1992-10-10', 'fasdfasdfasdfasdf', '1458565', NULL),
+('27133656', 'jose', 'torress', 'V', 'M', NULL, '1999-10-10', 'fasdfasdfasdf', '27133656', 'fasdfasdfasdf'),
+('30400100', 'jose', 'morales', 'V', 'M', NULL, '1999-10-10', 'fasdfasdfasdf', NULL, 'gafasdfasdf');
 
 -- --------------------------------------------------------
 
@@ -232,9 +232,11 @@ INSERT INTO `roles` (`id`, `rol`) VALUES
 --
 
 CREATE TABLE `seccion` (
+  `idSeccion` int(11) NOT NULL,
   `id_seccion` varchar(2) COLLATE utf8_spanish_ci NOT NULL,
   `ano_seguimiento` int(11) NOT NULL,
-  `estatus_seccion` tinyint(1) NOT NULL
+  `estatus_seccion` tinyint(1) NOT NULL,
+  `id_sec_periodo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
@@ -304,7 +306,9 @@ ALTER TABLE `estudiante`
 -- Indices de la tabla `materia`
 --
 ALTER TABLE `materia`
-  ADD PRIMARY KEY (`id_materia`);
+  ADD PRIMARY KEY (`id_materia`),
+  ADD KEY `id_periodo_ma` (`id_periodo_ma`),
+  ADD KEY `id_pensum_ma` (`id_pensum_ma`);
 
 --
 -- Indices de la tabla `nota`
@@ -322,18 +326,6 @@ ALTER TABLE `nota`
 --
 ALTER TABLE `pensum`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_materia1` (`id_materia1`,`id_materia2`,`id_materia3`,`id_materia4`,`id_materia5`,`id_materia6`,`id_materia7`,`id_materia8`,`id_materia9`,`id_materia10`,`id_materia11`,`id_materia12`),
-  ADD KEY `id_materia2` (`id_materia2`),
-  ADD KEY `id_materia3` (`id_materia3`),
-  ADD KEY `id_materia4` (`id_materia4`),
-  ADD KEY `id_materia5` (`id_materia5`),
-  ADD KEY `id_materia6` (`id_materia6`),
-  ADD KEY `id_materia7` (`id_materia7`),
-  ADD KEY `id_materia8` (`id_materia8`),
-  ADD KEY `id_materia9` (`id_materia9`),
-  ADD KEY `id_materia10` (`id_materia10`),
-  ADD KEY `id_materia11` (`id_materia11`),
-  ADD KEY `id_materia12` (`id_materia12`),
   ADD KEY `periodo_id` (`periodo_id`);
 
 --
@@ -370,7 +362,8 @@ ALTER TABLE `roles`
 -- Indices de la tabla `seccion`
 --
 ALTER TABLE `seccion`
-  ADD PRIMARY KEY (`id_seccion`);
+  ADD PRIMARY KEY (`idSeccion`),
+  ADD KEY `secion_periodoo` (`id_sec_periodo`);
 
 --
 -- Indices de la tabla `usuario`
@@ -441,6 +434,12 @@ ALTER TABLE `roles`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de la tabla `seccion`
+--
+ALTER TABLE `seccion`
+  MODIFY `idSeccion` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
@@ -454,18 +453,18 @@ ALTER TABLE `usuario`
 -- Filtros para la tabla `asignacion_estudiante_seccion`
 --
 ALTER TABLE `asignacion_estudiante_seccion`
+  ADD CONSTRAINT `asignacion_estudiante_seccion_ibfk_1` FOREIGN KEY (`id_seccion`) REFERENCES `seccion` (`idSeccion`),
   ADD CONSTRAINT `estudiante_asig` FOREIGN KEY (`cedula_estu_asignacion`) REFERENCES `estudiante` (`cedula_estudiante`),
-  ADD CONSTRAINT `periodo_asignacion` FOREIGN KEY (`id_periodo`) REFERENCES `periodo_escolar` (`id_periodo_escolar`),
-  ADD CONSTRAINT `seccion_asig` FOREIGN KEY (`id_seccion`) REFERENCES `seccion` (`id_seccion`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `periodo_asignacion` FOREIGN KEY (`id_periodo`) REFERENCES `periodo_escolar` (`id_periodo_escolar`);
 
 --
 -- Filtros para la tabla `asignacion_profesor_seccion`
 --
 ALTER TABLE `asignacion_profesor_seccion`
+  ADD CONSTRAINT `asignacion_profesor_seccion_ibfk_1` FOREIGN KEY (`seccion_id`) REFERENCES `seccion` (`idSeccion`),
   ADD CONSTRAINT `materia_asignacion` FOREIGN KEY (`materia_id`) REFERENCES `materia` (`id_materia`) ON UPDATE CASCADE,
   ADD CONSTRAINT `periodo_asignacionnn` FOREIGN KEY (`periodo_id`) REFERENCES `periodo_escolar` (`id_periodo_escolar`),
-  ADD CONSTRAINT `professor_asignacion` FOREIGN KEY (`profesor_cedula`) REFERENCES `profesor` (`cedula_profesor`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `seccion_asignacion` FOREIGN KEY (`seccion_id`) REFERENCES `seccion` (`id_seccion`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `professor_asignacion` FOREIGN KEY (`profesor_cedula`) REFERENCES `profesor` (`cedula_profesor`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `bitacora_notas`
@@ -481,6 +480,13 @@ ALTER TABLE `estudiante`
   ADD CONSTRAINT `estudiante_persona` FOREIGN KEY (`cedula_estudiante`) REFERENCES `personas` (`cedula_persona`);
 
 --
+-- Filtros para la tabla `materia`
+--
+ALTER TABLE `materia`
+  ADD CONSTRAINT `materia_periodooo` FOREIGN KEY (`id_periodo_ma`) REFERENCES `periodo_escolar` (`id_periodo_escolar`),
+  ADD CONSTRAINT `pensum_materia_id` FOREIGN KEY (`id_pensum_ma`) REFERENCES `pensum` (`id`);
+
+--
 -- Filtros para la tabla `nota`
 --
 ALTER TABLE `nota`
@@ -493,25 +499,19 @@ ALTER TABLE `nota`
 -- Filtros para la tabla `pensum`
 --
 ALTER TABLE `pensum`
-  ADD CONSTRAINT `id_materia1` FOREIGN KEY (`id_materia1`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia10` FOREIGN KEY (`id_materia10`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia11` FOREIGN KEY (`id_materia11`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia12` FOREIGN KEY (`id_materia12`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia2` FOREIGN KEY (`id_materia2`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia3` FOREIGN KEY (`id_materia3`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia4` FOREIGN KEY (`id_materia4`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia5` FOREIGN KEY (`id_materia5`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia6` FOREIGN KEY (`id_materia6`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia7` FOREIGN KEY (`id_materia7`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia8` FOREIGN KEY (`id_materia8`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `id_materia9` FOREIGN KEY (`id_materia9`) REFERENCES `materia` (`id_materia`),
-  ADD CONSTRAINT `periodo_id` FOREIGN KEY (`periodo_id`) REFERENCES `periodo_escolar` (`id_periodo_escolar`);
+  ADD CONSTRAINT `pensum_ibfk_1` FOREIGN KEY (`periodo_id`) REFERENCES `periodo_escolar` (`id_periodo_escolar`);
 
 --
 -- Filtros para la tabla `profesor`
 --
 ALTER TABLE `profesor`
   ADD CONSTRAINT `cedula_profesor` FOREIGN KEY (`cedula_profesor`) REFERENCES `personas` (`cedula_persona`);
+
+--
+-- Filtros para la tabla `seccion`
+--
+ALTER TABLE `seccion`
+  ADD CONSTRAINT `secion_periodoo` FOREIGN KEY (`id_sec_periodo`) REFERENCES `periodo_escolar` (`id_periodo_escolar`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `usuario`

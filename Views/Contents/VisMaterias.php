@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php $this->Head(); ?>
+
 <body>
   <div class="col-md-12" id="App_vue">
     <div class="row">
@@ -35,6 +36,8 @@
                   <tr>
                     <th class="text-center" scope="col">N°</th>
                     <th class="text-center" scope="col">Descripción</th>
+                    <th class="text-center" scope="col">Perido Escolar</th>
+                    <th class="text-center" scope="col">Pensum</th>
                     <th class="text-center" scope="col">Estado</th>
                     <th class="text-center" scope="col">Opciones</th>
                   </tr>
@@ -48,8 +51,7 @@
       </div>
 
       <!-- Modal -->
-      <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal fade modal-lg" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -63,14 +65,22 @@
                 </div> 
               -->
             <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" novalidate autocomplete="off">
-              <div class="modal-body row " style="padding: 0 70px ;">
+              <div class="modal-body row py-2" style="padding: 0 70px ;">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
-                <div class="col-md-12 " style="margin:0; padding:5px;">
+                <input type="hidden" name="id_periodo" v-model="id_periodo">
+                <div class="col-md-6 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Descripción:</span>
                     <input type="text" minlength="1" maxlength="30" v-model="des_materia" name="des_materia" class="form-control form-control-sm" required id="des_materia" placeholder="Descripción de la materia" style="width:70%; text-transform:uppercase;">
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Pensum</label>
+                  <select class="form-select form-select-sm" name="id_pensum" v-model="id_pensum" required aria-label="Default select example">
+                    <option value="" selected>Seleccionar</option>
+                    <option v-for="item in pensums" :value="item.id">{{ item.cod_pensum }} {{ (item.anios_abarcados == 'B') ? 'Basica' : 'Diversificado' }}</option>
+                  </select>
                 </div>
               </div>
               <div class="modal-footer mx-auto">
@@ -92,82 +102,104 @@
   <?php $this->Script(); ?>
   <script>
     const app = Vue.createApp({
-      data(){
-        return{
-          des_periodo:"actual",
+      data() {
+        return {
+          des_periodo: "actual",
           id: "",
           des_materia: "",
+          id_periodo: "",
+          id_pensum: "",
           estatus: "",
           formulario_valido: false,
+          pensums: [],
           action: "Save",
         }
       },
-      methods:{
-        SendData(e){
-          
+      methods: {
+        SendData(e) {
+
           e.preventDefault();
           // if(!$("#Formulario").valid()) return false;
           let form = new FormData(e.target);
-          
-          if(!this.formulario_valido) return false;
-          fetch("./Controllers/MateriasController.php",{
+
+          if (!this.formulario_valido) return false;
+          fetch("./Controllers/MateriasController.php", {
             method: "POST",
             body: form
-          }).then( res => res.json()).then( result => {
+          }).then(res => res.json()).then(result => {
             this.id = "";
             this.des_materia = "";
             this.estatus = "";
-            $("#datatable").DataTable().ajax.reload(null,false);
+            $("#datatable").DataTable().ajax.reload(null, false);
             this.ToggleModal();
             ViewAlert(result.mensaje, result.estado);
             this.formulario_valido = false;
             this.periodo_activo();
           }).catch(Error => console.error(Error))
         },
-        async GetData(id){
+        async GetData(id) {
           await fetch(`./Controllers/MateriasController.php?ope=ConsultOne&&id=${id}`)
-          .then( res => res.json()).then( ({data}) => {
-            this.id = data.id_materia;
-            this.des_materia = data.des_materia;
-            this.action = "Update";
-          }).catch( error => console.error(error))
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              this.id = data.id_materia;
+              this.des_materia = data.des_materia;
+              this.action = "Update";
+            }).catch(error => console.error(error))
         },
-        async ChangeState(id){
+        async ChangeState(id) {
           this.id = id;
           this.action = "ChangeStatus";
-          
-          setTimeout( async () => {
+
+          setTimeout(async () => {
             let form = new FormData(document.getElementById("Formulario"));
-            await fetch(`./Controllers/MateriasController.php`,{
+            await fetch(`./Controllers/MateriasController.php`, {
               method: "POST",
               body: form
-            }).then( res => res.json()).then( result => {
+            }).then(res => res.json()).then(result => {
               ViewAlert(result.mensaje, result.estado);
-              $("#datatable").DataTable().ajax.reload(null,false);
+              $("#datatable").DataTable().ajax.reload(null, false);
               this.action = "Save";
-            }).catch( error => console.error(error))  
+            }).catch(error => console.error(error))
           }, 100);
         },
-        async periodo_activo(){
+        async periodo_activo() {
           await fetch(`./Controllers/PeriodoController.php?ope=ConsultPeriodoActivo`)
-          .then( res => res.json()).then( ({data}) => {
-            if(data[0] != undefined) this.des_periodo = data.periodoescolar; else this.des_periodo = "No hay Periodo Escolar Activo";
-          }).catch( Error => console.error(Error))
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              if (data[0] != undefined) {
+                this.id_periodo = data.id_periodo_escolar
+                this.des_periodo = data.periodoescolar;
+              } else {
+                this.id_periodo = "";
+                this.des_periodo = "No hay Periodo Escolar Activo";
+              }
+            }).catch(Error => console.error(Error))
         },
-        ToggleModal(){
+        async getPemsun() {
+          await fetch(`./Controllers/PensumController.php?ope=ConsulAll`)
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              this.pensums = data;
+            }).catch(Error => console.error(Error))
+        },
+        ToggleModal() {
           $("#staticBackdrop").modal("hide");
           $("body").removeClass("modal-open");
           $(".modal-backdrop").remove();
         },
-        LimpiarForm(){
+        LimpiarForm() {
           this.id = "";
           this.des_materia = "";
           this.estatus = "";
           this.action = "Save";
         }
       },
-      async mounted(){
+      async mounted() {
         await this.periodo_activo();
+        await this.getPemsun();
       }
     }).mount("#App_vue");
 
@@ -175,20 +207,38 @@
     const Consult = (e) => app.GetData(e.dataset.id)
 
     $("#datatable").DataTable({
-      ajax:{
+      ajax: {
         url: "./Controllers/MateriasController.php?ope=ConsulAll",
         dataSrc: "data"
       },
-      columns:[
-        { data: "id_materia" },
-        { data: "des_materia",
-          render(data){ return data.toUpperCase() }
+      columns: [{
+          data: "id_materia"
         },
-        { data: "estatus_materia",
-          render(data){ return data == 1 ? "Activo" : "Inactivo" }
+        {
+          data: "des_materia",
+          render(data) {
+            return data.toUpperCase()
+          }
         },
-        { defaultContent: '',
-          render: function(data, type, row){
+        {
+          data: "periodoescolar"
+        },
+        {
+          data: "anios_abarcados",
+          render(data){
+            if(data == "B") return "Basico";
+            if(data == "D") return "Diversificado";
+          }
+        },
+        {
+          data: "estatus_materia",
+          render(data) {
+            return data == 1 ? "Activo" : "Inactivo"
+          }
+        },
+        {
+          defaultContent: '',
+          render: function(data, type, row) {
             let classStatus = row.estatus_materia == 1 ? 'success' : 'danger';
             let btns = `
               <div class="">
@@ -211,7 +261,7 @@
       info: true,
       autoWidth: false,
       responsive: true,
-      language:{
+      language: {
         url: `./Views/js/DataTables.config.json`
       }
     });
@@ -222,17 +272,17 @@
     document.querySelectorAll('.form-box').forEach((box) => {
       app.formulario_valido = false;
       const boxInput = box.querySelector('input');
-      
+
       boxInput.addEventListener("blur", (event) => {
         clearTimeout(tiempoFuera);
         tiempoFuera = setTimeout(() => {
           console.log(`input ${boxInput.name} value: `, boxInput.value)
-          validacion(box, boxInput,null)
-        }); 
+          validacion(box, boxInput, null)
+        });
       });
 
       let button = document.querySelector('#btn-g');
-      button.addEventListener('click', e =>{
+      button.addEventListener('click', e => {
         console.log(document.getElementById("Formulario").des_materia)
         validacion(box, boxInput);
         // app.ToggleModal();
@@ -240,47 +290,45 @@
       })
     });
 
-    
 
-    function validacion(box, boxInput){
 
-        if(boxInput!= null && boxInput.name == "des_materia"){
-          if (boxInput.value.length < 1) {
-              console.log('Materia')
-              mostrarError(true, box);
-              materiaValida = false;
-          }
-          else{
-              console.log('Materia')
-              mostrarError(false, box);
-              materiaValida = true;
-          }
+    function validacion(box, boxInput) {
+
+      if (boxInput != null && boxInput.name == "des_materia") {
+        if (boxInput.value.length < 1) {
+          console.log('Materia')
+          mostrarError(true, box);
+          materiaValida = false;
+        } else {
+          console.log('Materia')
+          mostrarError(false, box);
+          materiaValida = true;
+        }
       }
-      
+
       if (materiaValida) {
         app.formulario_valido = true;
-        
 
-      }else{
+
+      } else {
         app.formulario_valido = false;
-    }
-
-  }
-      function mostrarError(check, box){
-          // console.log("MOSTRAR ERROR");
-          if(check){
-              box.classList.remove('div-error');
-              box.classList.add('form-error');
-          }  
-          else{
-              box.classList.add('div-error');
-              box.classList.remove('form-error');
-          }
       }
 
+    }
 
+    function mostrarError(check, box) {
+      // console.log("MOSTRAR ERROR");
+      if (check) {
+        box.classList.remove('div-error');
+        box.classList.add('form-error');
+      } else {
+        box.classList.add('div-error');
+        box.classList.remove('form-error');
+      }
+    }
   </script>
 
   <!-- <script src="./views/js/Seccion/index.js"></script> -->
 </body>
+
 </html>

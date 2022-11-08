@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php $this->Head(); ?>
+
 <body>
   <div class="col-md-12" id="App_vue">
     <div class="row">
@@ -21,8 +22,7 @@
               <h3 class="fw-bold text-success">Gestión de Secciones</h3>
             </div>
             <div class="col-md-2 justify-content-end" style="margin: 0; padding: 0;">
-              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop">
+              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 <i class="fa-regular fa-user"></i> AGREGAR
               </button>
             </div>
@@ -34,8 +34,9 @@
               <table class="table border" id="datatable">
                 <thead>
                   <tr>
+                    <th class="text-center" scope="col">Id</th>
                     <th class="text-center" scope="col">Seccion</th>
-                    <th class="text-center" scope="col">Año</th>
+                    <th class="text-center" scope="col">Periodo Escolar</th>
                     <th class="text-center" scope="col">Estado</th>
                     <th class="text-center" scope="col">Opciones</th>
                   </tr>
@@ -49,8 +50,7 @@
       </div>
 
       <!-- Modal -->
-      <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal fade modal-lg" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -63,17 +63,19 @@
                   <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div> 
               -->
-            <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" novalidate>
+            <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" novalidate autocomplete="off">
               <div class="modal-body row " style="padding: 0 70px ;">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
-                <div class="col-md-12 " style="margin:0; padding:5px;">
+                <input type="hidden" name="id_periodo" v-model="id_periodo">
+
+                <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Año:</span>
                     <input type="text" min="1" max="6" v-model="anio" name="anio" class="form-control form-control-sm" required id="" placeholder="1 - 6" style="width:70%;">
                     <span class="error-text">Campo vacío o año inválido</span>
                   </div>
                 </div>
-                <div class="col-md-12 " style="margin:0; padding:5px;">
+                <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Seccion:</span>
                     <input type="text" v-model="seccion" maxlength="1" name="seccion" class="form-control form-control-sm" id="" placeholder="A - Z" required style="width:70%;">
@@ -100,9 +102,10 @@
   <?php $this->Script(); ?>
   <script>
     const app = Vue.createApp({
-      data(){
-        return{
-          des_periodo:"actual",
+      data() {
+        return {
+          des_periodo: "actual",
+          id_periodo: "",
           id: "",
           anio: "",
           seccion: "",
@@ -112,68 +115,80 @@
           action: "Save",
         }
       },
-      methods:{
-        SendData(e){
+      methods: {
+        SendData(e) {
           e.preventDefault();
           // if(!$("#Formulario").valid()) return false;
           let form = new FormData(e.target);
-          if(!this.formulario_valido) return false;
+          if (!this.formulario_valido) return false;
 
-          fetch("./Controllers/SeccionController.php",{
+          fetch("./Controllers/SeccionController.php", {
             method: "POST",
             body: form
-          }).then( res => res.json()).then( result => {
+          }).then(res => res.json()).then(result => {
+            console.log(result)
             this.id = "";
             this.anio = "";
             this.seccion = "";
             this.ToggleModal();
-            $("#datatable").DataTable().ajax.reload(null,false);
+            $("#datatable").DataTable().ajax.reload(null, false);
             ViewAlert(result.mensaje, result.estado);
             this.periodo_activo();
           }).catch(Error => console.error(Error))
         },
-        async GetData(id){
+        async GetData(id) {
           await fetch(`./Controllers/SeccionController.php?ope=ConsultOne&&id=${id}`)
-          .then( res => res.json()).then( ({data}) => {
-            this.action = "Update";
-          }).catch( error => console.error(error))
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              this.action = "Update";
+            }).catch(error => console.error(error))
         },
-        async ChangeState(id){
+        async ChangeState(id) {
           this.id = id;
           this.action = "ChangeStatus";
-          
-          setTimeout( async () => {
+
+          setTimeout(async () => {
             let form = new FormData(document.getElementById("Formulario"));
-            await fetch(`./Controllers/SeccionController.php`,{
+            await fetch(`./Controllers/SeccionController.php`, {
               method: "POST",
               body: form
-            }).then( res => res.json()).then( result => {
+            }).then(res => res.json()).then(result => {
               ViewAlert(result.mensaje, result.estado);
-              $("#datatable").DataTable().ajax.reload(null,false);
+              $("#datatable").DataTable().ajax.reload(null, false);
               this.action = "Save";
-            }).catch( error => console.error(error))  
+            }).catch(error => console.error(error))
           }, 100);
         },
-        async periodo_activo(){
+        async periodo_activo() {
           await fetch(`./Controllers/PeriodoController.php?ope=ConsultPeriodoActivo`)
-          .then( res => res.json()).then( ({data}) => {
-            if(data[0] != undefined) this.des_periodo = data.periodoescolar; else this.des_periodo = "No hay Periodo Escolar Activo";
-          }).catch( Error => console.error(Error))
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              if (data[0] != undefined) {
+                this.id_periodo = data.id_periodo_escolar
+                this.des_periodo = data.periodoescolar;
+              } else {
+                this.id_periodo = "";
+                this.des_periodo = "No hay Periodo Escolar Activo";
+              }
+            }).catch(Error => console.error(Error))
         },
-        ToggleModal(){
+        ToggleModal() {
           $("#staticBackdrop").modal("hide");
           $("body").removeClass("modal-open");
           $(".modal-backdrop").remove();
-        }
-        ,
-        async GetDatos(){
+        },
+        async GetDatos() {
           await fetch("./Controllers/SeccionController.php?ope=ConsulAll")
-          .then( res => res.json()).then( ({data}) => {
-            this.datos = data;
-          }).catch( error => console.error(error))  
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              this.datos = data;
+            }).catch(error => console.error(error))
         }
       },
-      async mounted(){
+      async mounted() {
         await this.periodo_activo();
         await this.GetDatos();
       }
@@ -182,22 +197,31 @@
     const CambiarEstatus = (e) => {
       app.ChangeState(e.dataset.id)
     }
-  
+
     $("#datatable").DataTable({
-      ajax:{
+      ajax: {
         url: "./Controllers/SeccionController.php?ope=ConsulAll",
         dataSrc: "data"
       },
-      columns:[
-        { data: "id_seccion"},
-        { data: "ano_seguimiento"},
-        { data: "estatus_seccion",
-          render: function(data){
+      columns: [
+        {
+          data: "idSeccion"
+        },
+        {
+          data: "id_seccion"
+        },
+        {
+          data: "periodoescolar"
+        },
+        {
+          data: "estatus_seccion",
+          render: function(data) {
             return data == 1 ? "Activo" : "Inactivo"
           }
         },
-        { defaultContent: '',
-          render: function(data, type, row){
+        {
+          defaultContent: '',
+          render: function(data, type, row) {
             let classStatus = row.estatus_seccion == 1 ? 'success' : 'danger';
             let btns = `
               <div class="">                                     
@@ -216,7 +240,7 @@
       info: true,
       autoWidth: false,
       responsive: true,
-      language:{
+      language: {
         url: `./Views/js/DataTables.config.json`
       }
     });
@@ -227,100 +251,97 @@
 
     document.querySelectorAll('.form-box').forEach((box) => {
       const boxInput = box.querySelector('input');
-      
+
       boxInput.addEventListener("blur", (event) => {
         clearTimeout(tiempoFuera);
         tiempoFuera = setTimeout(() => {
-        console.log(`input ${boxInput.name} value: `, boxInput.value)
-        validacion(box, boxInput,null)
+          console.log(`input ${boxInput.name} value: `, boxInput.value)
+          validacion(box, boxInput, null)
 
         });
       });
 
       let button = document.querySelector('#btn-g');
-      button.addEventListener('click', e =>{
+      button.addEventListener('click', e => {
         validacion(box, boxInput);
         // app.ToggleModal();
-        let seccionValida = false;        
+        let seccionValida = false;
       })
     });
 
-      function validacion(box, boxInput){
-        if(boxInput!= null && boxInput.name == "anio"){
-          console.log("validacion anio")
-          if (boxInput.value > 6 || boxInput.value < 1){
-              mostrarError(true, box);
-              anioValida = false;
-          }
-          else if (isNaN(boxInput.value)) {
-            console.error(`${boxInput.value} no es un numero`);
-            mostrarError(true, box);
-            numero = false
-        }
-          else{
-              mostrarError(false, box);
-              anioValida = true;
-          }
-        }
-        if(boxInput!= null && boxInput.name == "seccion"){
-          const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬", " "];
-          const numeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-          let contieneLetraEspecial = 0;
-          let contieneNumeros = 0;
-
-          for (let i = 0; i < boxInput.value.length; i++) {
-              for (let j = 0; j < letrasEspeciales.length; j++) {
-                  if (boxInput.value[i] === letrasEspeciales[j]) {
-                      contieneLetraEspecial++;
-                  }
-              }
-          }
-
-          for (let i = 0; i < boxInput.value.length; i++) {
-              for (let j = 0; j < numeros.length; j++) {
-                  if (boxInput.value[i] === numeros[j]) {
-                      contieneNumeros++;
-                  }
-              }
-          }
-          console.log("validacion seccion")
-          if (boxInput.value < 1 || contieneLetraEspecial > 0 || contieneNumeros > 0){
-              mostrarError(true, box);
-              seccionValida = false;
-          }
-          else{
-              boxInput.value = boxInput.value.toUpperCase();
-              mostrarError(false, box);
-              seccionValida = true;
-          }
-        }
-        let button = document.querySelector('#btn-g');
-        if(anioValida && seccionValida){
-          app.formulario_valido = true;
-          // button.addEventListener('click', e =>{
-          //   app.ToggleModal();
-          // })
-          // app.ToggleModal();
-        }else{
-          app.formulario_valido = false;
-          // button.addEventListener('click', e =>{
-          //   app.preventDefault();
-          // });
-          
+    function validacion(box, boxInput) {
+      if (boxInput != null && boxInput.name == "anio") {
+        console.log("validacion anio")
+        if (boxInput.value > 6 || boxInput.value < 1) {
+          mostrarError(true, box);
+          anioValida = false;
+        } else if (isNaN(boxInput.value)) {
+          console.error(`${boxInput.value} no es un numero`);
+          mostrarError(true, box);
+          numero = false
+        } else {
+          mostrarError(false, box);
+          anioValida = true;
         }
       }
-      function mostrarError(check, box){
-        // console.log("MOSTRAR ERROR");
-        if(check){
-            box.classList.remove('div-error');
-            box.classList.add('form-error');
-        }  
-        else{
-            box.classList.add('div-error');
-            box.classList.remove('form-error');
+      if (boxInput != null && boxInput.name == "seccion") {
+        const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬", " "];
+        const numeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+        let contieneLetraEspecial = 0;
+        let contieneNumeros = 0;
+
+        for (let i = 0; i < boxInput.value.length; i++) {
+          for (let j = 0; j < letrasEspeciales.length; j++) {
+            if (boxInput.value[i] === letrasEspeciales[j]) {
+              contieneLetraEspecial++;
+            }
+          }
+        }
+
+        for (let i = 0; i < boxInput.value.length; i++) {
+          for (let j = 0; j < numeros.length; j++) {
+            if (boxInput.value[i] === numeros[j]) {
+              contieneNumeros++;
+            }
+          }
+        }
+        console.log("validacion seccion")
+        if (boxInput.value < 1 || contieneLetraEspecial > 0 || contieneNumeros > 0) {
+          mostrarError(true, box);
+          seccionValida = false;
+        } else {
+          boxInput.value = boxInput.value.toUpperCase();
+          mostrarError(false, box);
+          seccionValida = true;
         }
       }
+      let button = document.querySelector('#btn-g');
+      if (anioValida && seccionValida) {
+        app.formulario_valido = true;
+        // button.addEventListener('click', e =>{
+        //   app.ToggleModal();
+        // })
+        // app.ToggleModal();
+      } else {
+        app.formulario_valido = false;
+        // button.addEventListener('click', e =>{
+        //   app.preventDefault();
+        // });
 
+      }
+    }
+
+    function mostrarError(check, box) {
+      // console.log("MOSTRAR ERROR");
+      if (check) {
+        box.classList.remove('div-error');
+        box.classList.add('form-error');
+      } else {
+        box.classList.add('div-error');
+        box.classList.remove('form-error');
+      }
+    }
   </script>
 </body>
+
 </html>

@@ -132,7 +132,7 @@
                   <input type="text" min="1" max="6" maxlength="1" :readonly="action == 'Update' || action == 'Asignacion' " minlength="1" name="seguimiento_estudiante" class="form-control form-control-sm" id="" v-model="seguimiento" placeholder="Año">
                   <select name="id_seccion" v-model="id_seccion" id="seccion" class="form-select" :disabled="desactivado" aria-label="Default select example" required>
                     <option value="0">Seleccione una opción</option>
-                    <option :value="item.id_seccion" v-for="item in secciones">{{item.id_seccion}}</option>
+                    <option :value="item.idSeccion" v-for="item in secciones">{{item.id_seccion}}</option>
                   </select>
                   <span class="error-text">Selecciona año y sección</span>
                   <!-- <input type="text" class="form-control form-control-sm" id="" placeholder="Seccion"> -->

@@ -2,28 +2,33 @@
 	require("db.php");
 
 	class SeccionModel extends DB{
-		private $id, $anio, $status;
+		private $id, $id_seccion, $anio, $status, $id_sec_periodo;
 
 		public function __construct(){
 			parent::__construct();
 		}
 
 		public function SetData($datos){
-			$this->id = isset($datos['id']) ? $datos['id'] : $datos['anio'].strtoupper($datos['seccion']);
+			$this->id = isset($datos['id']) ? $datos['id'] : null;
+			$this->id_seccion = isset($datos['id_seccion']) ? $datos['id_seccion'] : $datos['anio'].strtoupper($datos['seccion']);
 			$this->anio = isset($datos['anio']) ? intval($datos['anio']) : null;
 			$this->status = isset($datos['estatus']) ? $datos['estatus'] : 1;
+			$this->id_sec_periodo = isset($datos['id_periodo']) ?  $datos['id_periodo'] : null;
 		}
 
 		public function SaveDatos(){
 			try{
 				
-				$result = $this->consult("SELECT * FROM seccion WHERE id_seccion = '$this->id';");
+				$result = $this->consult("SELECT * FROM seccion WHERE id_sec_periodo = $this->id_sec_periodo AND id_seccion = '$this->id_seccion';");
 
 				if(!isset($result[0])){
-					$pdo = $this->driver->prepare("INSERT INTO seccion(id_seccion,ano_seguimiento,estatus_seccion) VALUES(:id, :anio, :estatus);");
-					$pdo->bindParam(':id', $this->id);
+					$pdo = $this->driver->prepare("
+						INSERT INTO seccion(id_seccion,ano_seguimiento,estatus_seccion,id_sec_periodo) 
+						VALUES(:id, :anio, :estatus, :id_periodo);");
+					$pdo->bindParam(':id', $this->id_seccion);
 					$pdo->bindParam(':anio', $this->anio);
 					$pdo->bindParam(':estatus', $this->status);
+					$pdo->bindParam(':id_periodo', $this->id_sec_periodo);
 
 					if($pdo->execute()) $this->ResJSON("Operacion Exitosa!","success");
 					else $this->ResJSON("Operacion Fallida!", "error");	
@@ -45,7 +50,7 @@
 
 		public function ChangeStatus(){
 			try{
-				$pdo = $this->driver->prepare("UPDATE seccion SET estatus_seccion = !estatus_seccion WHERE id_seccion = :id ;");
+				$pdo = $this->driver->prepare("UPDATE seccion SET estatus_seccion = !estatus_seccion WHERE idSeccion = :id ;");
 				$pdo->bindParam(':id', $this->id);
 
 				if($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
@@ -58,7 +63,9 @@
 
 		public function GetAll(){
 			try{
-				$result = $this->consultAll("SELECT * FROM seccion");
+				$result = $this->consultAll("SELECT * FROM seccion 
+					INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = seccion.id_sec_periodo 
+					WHERE periodo_escolar.estatus_periodo_escolar = 1");
 
 				if(isset($result[0])) $this->ResDataJSON($result);
 				else $this->ResDataJSON([]);
@@ -70,7 +77,8 @@
 
 		public function GetOne($id){
 			try{
-				$result = $this->consult("SELECT * FROM seccion WHERE id = '$id' ;");
+				$result = $this->consult("SELECT * FROM seccion
+				INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = seccion.id_sec_periodo WHERE id = '$id' ;");
 
 				if(isset($result[0])) $this->ResDataJSON($result);
 				else $this->ResDataJSON([]);
@@ -82,7 +90,9 @@
 
 		public function GetByAnio($anio){
 			try{
-				$result = $this->consultAll("SELECT * FROM seccion WHERE estatus_seccion = 1 AND ano_seguimiento = $anio ;");
+				$result = $this->consultAll("SELECT * FROM seccion
+					INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = seccion.id_sec_periodo 
+					WHERE estatus_seccion = 1 AND ano_seguimiento = $anio ;");
 
 				if(isset($result[0])) $this->ResDataJSON($result);
 				else $this->ResDataJSON([]);

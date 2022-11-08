@@ -160,7 +160,7 @@
                     <input type="text" min="1" v-model="seguimiento[index]" max="6" maxlength="1" minlength="1" name="seguimiento_profesor[]" class="form-control form-control-sm" id="" @keypress="consultarSecciones" :data-index="index" placeholder="Año" style="width: 10%">
                     <select name="id_seccion[]" required @change="MateriaRepetida(index)" v-model="secciones[index]" id="" class="form-select" aria-label="Default select example" style="width: 10%">
                       <option value="" selected>Seleccione una opción</option>
-                      <option :value="item.id_seccion" v-for="item in id_seccion[index]">{{item.id_seccion}}</option>
+                      <option :value="item.idSeccion" v-for="item in id_seccion[index]">{{item.id_seccion}}</option>
                     </select>
                     <span class="error-text">Selecciona año y sección</span>
                   </div>

@@ -13,30 +13,17 @@
 			$this->id_periodo = isset($datos['id_periodo']) ? $datos['id_periodo'] : null;
 			$this->cod_pensum = isset($datos['cod_pensum']) ? $datos['cod_pensum'] : null;
 			$this->anios_abarcados = isset($datos['anios_abarcados']) ? $datos['anios_abarcados'] : null;
-			$this->id_materia1 = isset($datos['id_materia'][0]) ? $datos['id_materia'][0] : null;
-			$this->id_materia2 = isset($datos['id_materia'][1]) ? $datos['id_materia'][1] : "NO";
-			$this->id_materia3 = isset($datos['id_materia'][2]) ? $datos['id_materia'][2] : "NO";
-			$this->id_materia4 = isset($datos['id_materia'][3]) ? $datos['id_materia'][3] : "NO";
-			$this->id_materia5 = isset($datos['id_materia'][4]) ? $datos['id_materia'][4] : "NO";
-			$this->id_materia6 = isset($datos['id_materia'][5]) ? $datos['id_materia'][5] : "NO";
-			$this->id_materia7 = isset($datos['id_materia'][6]) ? $datos['id_materia'][6] : "NO";
-			$this->id_materia8 = isset($datos['id_materia'][7]) ? $datos['id_materia'][7] : "NO";
-			$this->id_materia9 = isset($datos['id_materia'][8]) ? $datos['id_materia'][8] : "NO";
-			$this->id_materia10 = isset($datos['id_materia'][9]) ? $datos['id_materia'][9] : "NO";
-			$this->id_materia11 = isset($datos['id_materia'][10]) ? $datos['id_materia'][10] : "NO";
-			$this->id_materia12 = isset($datos['id_materia'][11]) ? $datos['id_materia'][11] : "NO";
 		}
 
 		public function SaveDatos(){
 			try{
-				$result = $this->consult("SELECT * FROM pensum WHERE periodo_id = '$this->id_periodo' AND anios_abarcados = '$this->anios_abarcados' AND estatus_pensum = 1;");
+				$result = $this->consult("SELECT * FROM pensum WHERE periodo_id = '$this->id_periodo' AND 
+				anios_abarcados = '$this->anios_abarcados' AND estatus_pensum = 1;");
 				if(isset($result[0])) return $this->ResJSON("No se pueden duplicar las pensums en el mismo periodo","error");
 
-				$sql = "INSERT INTO pensum(cod_pensum,anios_abarcados,periodo_id,estatus_pensum,id_materia1,id_materia2,id_materia3,id_materia4,id_materia5,id_materia6,id_materia7,id_materia8,id_materia9,id_materia10,id_materia11,id_materia12) 
-					VALUES($this->cod_pensum,'$this->anios_abarcados',$this->id_periodo,1,
-					$this->id_materia1,$this->id_materia2,$this->id_materia3,$this->id_materia4,$this->id_materia5,$this->id_materia6,
-					$this->id_materia7,$this->id_materia8,$this->id_materia9,$this->id_materia10,$this->id_materia11,$this->id_materia12);";
-				$sql = str_replace("NO",'NULL', $sql);
+				$sql = "INSERT INTO pensum(cod_pensum,anios_abarcados,periodo_id,estatus_pensum) 
+					VALUES('$this->cod_pensum','$this->anios_abarcados',$this->id_periodo,1);";
+
 				$pdo = $this->driver->prepare($sql);
 				
 				if($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
