@@ -92,7 +92,7 @@
 			try{
 				$result = $this->consultAll("SELECT * FROM seccion
 					INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = seccion.id_sec_periodo 
-					WHERE estatus_seccion = 1 AND ano_seguimiento = $anio ;");
+					WHERE estatus_seccion = 1 AND ano_seguimiento = $anio AND periodo_escolar.estatus_periodo_escolar = 1;");
 
 				if(isset($result[0])) $this->ResDataJSON($result);
 				else $this->ResDataJSON([]);

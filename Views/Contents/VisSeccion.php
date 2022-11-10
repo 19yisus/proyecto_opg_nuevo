@@ -68,14 +68,14 @@
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
                 <input type="hidden" name="id_periodo" v-model="id_periodo">
 
-                <div class="col-md-6 " style="margin:0; padding:5px;">
+                <div class="col-6 col-sm-12" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Año:</span>
                     <input type="text" min="1" max="6" v-model="anio" name="anio" class="form-control form-control-sm" required id="" placeholder="1 - 6" style="width:70%;">
                     <span class="error-text">Campo vacío o año inválido</span>
                   </div>
                 </div>
-                <div class="col-md-6 " style="margin:0; padding:5px;">
+                <div class="col-6 col-sm-12" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Seccion:</span>
                     <input type="text" v-model="seccion" maxlength="1" name="seccion" class="form-control form-control-sm" id="" placeholder="A - Z" required style="width:70%;">

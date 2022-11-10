@@ -27,8 +27,7 @@
     $code_pensum_basica = $datos['notas'][2]['cod_pensum'];
     $code_pensum_diversificado = $datos['notas'][4]['cod_pensum'];
 
-    // var_dump($datos['notas'][4]);
-    // var_dump($code_pensum_basica, $code_pensum_diversificado);
+    // var_dump($notas);
     // die("SS");
 
     foreach($notas as $nota){

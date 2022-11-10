@@ -21,7 +21,7 @@
                 <span class="input-group-text" id="inputGroup-sizing-sm">Año/Seccion:</span>
                 <select class="form-select" v-model="id_seccion" aria-label="Default select example">
                   <option value="" selected>Seleccionar</option>
-                  <option :value="item.id_seccion" v-for="item in seccionesFiltro">{{item.id_seccion}}</option>
+                  <option :value="item.idSeccion" v-for="item in seccionesFiltro">{{item.id_seccion}}</option>
                 </select>
               </div>
               <h6 class="fw-bold text-danger">Periodo: {{des_periodo}}</h6>
@@ -31,7 +31,7 @@
                 <input type="hidden" name="id_seccion" v-model="id_seccion">
                 <input type="hidden" name="id_periodo" v-model="id_periodo">
                 <button type="submit" class="btn btn-danger" v-bind:disabled="id_seccion == '' || id_periodo == ''">
-                  {{id_periodo}} Reporte por sección {{id_seccion}}
+                  Reporte por sección
                   <i class="fas fa-file-pdf"></i>
                 </button>
               </form>
@@ -247,7 +247,7 @@
               let data = res.data;
               this.recuperacion = false;
               this.aprobar = true;
-              this.seccion = data.estudiante.id_seccion;
+              this.seccion = data.estudiante.idSeccion;
               this.periodo = data.estudiante.periodoescolar;
               this.id_periodo = data.estudiante.id_periodo_escolar;
               this.nombre = data.estudiante.nombre_persona + ' ' + data.estudiante.apellido_persona;
@@ -316,7 +316,7 @@
       },
       watch: {
         id_seccion(seccion) {
-          $("#datatable").DataTable().ajax.url(`./Controllers/NotasController.php?ope=ConsulAll&&id_seccion=${this.id_seccion}`).load();
+          $("#datatable").DataTable().ajax.url(`./Controllers/NotasController.php?ope=ConsulAll&&idSeccion=${this.id_seccion}`).load();
         }
       },
       async mounted() {

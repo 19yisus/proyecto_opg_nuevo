@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 10-11-2022 a las 01:11:03
+-- Tiempo de generación: 10-11-2022 a las 01:49:31
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.4.22
 
@@ -81,6 +81,13 @@ CREATE TABLE `bitacora_notas` (
   `notas_antiguas` varchar(230) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `bitacora_notas`
+--
+
+INSERT INTO `bitacora_notas` (`id_bitacora`, `usuario_id`, `nota_id`, `fecha_bitacora`, `observacion_bitacora`, `notas_antiguas`) VALUES
+(12, 1, 14, '2022-11-09 20:48:43', 'no', 'Nuevo Registro');
+
 -- --------------------------------------------------------
 
 --
@@ -131,7 +138,7 @@ CREATE TABLE `nota` (
   `idNota` int(11) NOT NULL,
   `cedula_estudiante` char(8) COLLATE utf8_spanish_ci NOT NULL,
   `periodo_escolar_id` int(11) NOT NULL,
-  `seccion_id` varchar(2) COLLATE utf8_spanish_ci NOT NULL,
+  `seccion_id` int(11) NOT NULL,
   `materia_id` int(11) NOT NULL,
   `lapso_id` int(11) DEFAULT NULL,
   `nota_lapso1` int(2) NOT NULL,
@@ -144,6 +151,13 @@ CREATE TABLE `nota` (
   `recuperativo_4` int(2) DEFAULT NULL,
   `estatusNotas` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `nota`
+--
+
+INSERT INTO `nota` (`idNota`, `cedula_estudiante`, `periodo_escolar_id`, `seccion_id`, `materia_id`, `lapso_id`, `nota_lapso1`, `nota_lapso2`, `nota_lapso3`, `nota_final`, `recuperativo_1`, `recuperativo_2`, `recuperativo_3`, `recuperativo_4`, `estatusNotas`) VALUES
+(14, '21313565', 1, 1, 1, NULL, 10, 10, 10, 10, 0, 0, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -453,7 +467,7 @@ ALTER TABLE `asignacion_profesor_seccion`
 -- AUTO_INCREMENT de la tabla `bitacora_notas`
 --
 ALTER TABLE `bitacora_notas`
-  MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `materia`
@@ -465,7 +479,7 @@ ALTER TABLE `materia`
 -- AUTO_INCREMENT de la tabla `nota`
 --
 ALTER TABLE `nota`
-  MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `pensum`
@@ -550,7 +564,7 @@ ALTER TABLE `materia`
 ALTER TABLE `nota`
   ADD CONSTRAINT `notas_asignacion` FOREIGN KEY (`materia_id`) REFERENCES `materia` (`id_materia`),
   ADD CONSTRAINT `notas_estudiante` FOREIGN KEY (`cedula_estudiante`) REFERENCES `estudiante` (`cedula_estudiante`),
-  ADD CONSTRAINT `notas_seccion` FOREIGN KEY (`seccion_id`) REFERENCES `seccion` (`id_seccion`),
+  ADD CONSTRAINT `nuevo_id_seccion` FOREIGN KEY (`seccion_id`) REFERENCES `seccion` (`idSeccion`),
   ADD CONSTRAINT `periodo_asignacionn` FOREIGN KEY (`periodo_escolar_id`) REFERENCES `periodo_escolar` (`id_periodo_escolar`);
 
 --

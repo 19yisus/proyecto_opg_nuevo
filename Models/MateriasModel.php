@@ -18,7 +18,7 @@
 
 		public function SaveDatos(){
 			try{
-				$result = $this->consult("SELECT * FROM materia WHERE des_materia = '$this->des_materia' ;");
+				$result = $this->consult("SELECT * FROM materia WHERE id_pensum_ma = $this->id_periodo_ma AND des_materia = '$this->des_materia' ;");
 
 				if(isset($result[0])){
 					return $this->ResJSON("No se pueden duplicar las materias","error");

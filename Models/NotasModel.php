@@ -77,6 +77,7 @@ class NotasModel extends DB
 
             if (!$this->GetResultRow()) {
               $this->driver->rollback();
+              var_dump("Fallo numero 1");
               break;
             }
 
@@ -88,6 +89,7 @@ class NotasModel extends DB
 
             if (!$this->GetResultRow()) {
               $this->driver->rollback();
+              var_dump("Fallo numero 2");
               break;
             }
           }
@@ -96,7 +98,7 @@ class NotasModel extends DB
 
           $sql_nota = "INSERT INTO nota(idNota, cedula_estudiante, periodo_escolar_id, seccion_id, materia_id, nota_lapso1, 
             nota_lapso2, nota_lapso3, nota_final, recuperativo_1, recuperativo_2, recuperativo_3, recuperativo_4, estatusNotas) 
-            VALUES(NULL,'$this->cedula_estudiante',$this->id_periodo,'$this->id_seccion',$idMateria,$nt1,$nt2,$nt3,$nt4,$rp1,$rp2,$rp3,$rp4,$this->estatus);";
+            VALUES(NULL,'$this->cedula_estudiante',$this->id_periodo,$this->id_seccion,$idMateria,$nt1,$nt2,$nt3,$nt4,$rp1,$rp2,$rp3,$rp4,$this->estatus);";
 
           $sql_nota = str_ireplace(",,", ",NULL,", $sql_nota);
           $sql_nota = str_ireplace(",,", ",NULL,", $sql_nota);
@@ -106,6 +108,7 @@ class NotasModel extends DB
           $this->driver->query($sql_nota);
           if (!$this->GetResultRow()) {
             $this->driver->rollback();
+            var_dump("Fallo numero 3");
             break;
           }
         }
@@ -118,6 +121,7 @@ class NotasModel extends DB
           $this->driver->query($sql_bitacora);
           if (!$this->GetResultRow()) {
             $this->driver->rollback();
+            var_dump("Fallo numero 4");
             break;
           }
         }
@@ -131,6 +135,7 @@ class NotasModel extends DB
       }
     } catch (PDOException $e) {
       $this->driver->rollback();
+      var_dump("Algo grave pasó");
       error_log("NotasModel(line0------) => " . $e->getMessages());
       $this->ResJSON("Operacion Fallida!", "error");
     }
@@ -207,14 +212,14 @@ class NotasModel extends DB
     }
   }
 
-  public function GetAll($id_seccion = '')
+  public function GetAll($idSeccion = '')
   {
     try {
-      if ($id_seccion == '') $result = [];
+      if ($idSeccion == '') $result = [];
       else $result = $this->consultAll("SELECT DISTINCT * FROM estudiante INNER JOIN asignacion_estudiante_seccion ON asignacion_estudiante_seccion.cedula_estu_asignacion = estudiante.cedula_estudiante 
           INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = asignacion_estudiante_seccion.id_periodo 
           INNER JOIN personas ON personas.cedula_persona = estudiante.cedula_estudiante
-          WHERE periodo_escolar.estatus_periodo_escolar = '1' AND asignacion_estudiante_seccion.id_seccion = '$id_seccion'");
+          WHERE periodo_escolar.estatus_periodo_escolar = '1' AND asignacion_estudiante_seccion.id_seccion = '$idSeccion'");
 
       if (isset($result[0])) $this->ResDataJSON($result);
       else $this->ResDataJSON([]);
@@ -248,9 +253,13 @@ class NotasModel extends DB
       $this->ResJSON("La cédula del estudiante no esta registrada", "error");
     }
 
-    $sql_consulta_estudiante = "SELECT personas.cedula_persona,personas.nombre_persona,personas.apellido_persona,
-          seccion.id_seccion,seccion.ano_seguimiento,periodo_escolar.id_periodo_escolar,periodo_escolar.periodoescolar FROM
-          personas
+    $sql_consulta_estudiante = "SELECT 
+      personas.cedula_persona,
+      personas.nombre_persona,
+      personas.apellido_persona,
+      seccion.idSeccion,seccion.ano_seguimiento,
+      periodo_escolar.id_periodo_escolar,
+      periodo_escolar.periodoescolar FROM personas
           INNER JOIN estudiante ON estudiante.cedula_estudiante = personas.cedula_persona
           INNER JOIN asignacion_estudiante_seccion ON asignacion_estudiante_seccion.cedula_estu_asignacion = estudiante.cedula_estudiante
           INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = asignacion_estudiante_seccion.id_periodo
@@ -264,14 +273,13 @@ class NotasModel extends DB
     }
 
     $periodo = $result_consulta_estudiante['id_periodo_escolar'];
-    $seccion = $result_consulta_estudiante['id_seccion'];
+    $seccion = $result_consulta_estudiante['idSeccion'];
     $seguimiento = $result_consulta_estudiante['ano_seguimiento'];
 
     if (intval($seguimiento) < 4) $seguimiento = 'B';
     else $seguimiento = 'D';
-
-    $sql_pensum = "SELECT * FROM pensum WHERE anios_abarcados = '$seguimiento' ;";
-    $resultPensum = $this->consult($sql_pensum);
+    // $sql_pensum = "SELECT * FROM pensum WHERE anios_abarcados = '$seguimiento' ;";
+    $resultPensum = $this->consultAll("SELECT materia.* FROM materia INNER JOIN pensum ON pensum.id = materia.id_pensum_ma WHERE pensum.anios_abarcados = '$seguimiento' ;");
 
     if ($resultPensum == false) {
       $this->ResJSON("Operacion Fallida! No hay pensum para el año a trabajar", "error");
@@ -279,17 +287,11 @@ class NotasModel extends DB
     }
 
     $listaMaterias = [];
-    for ($i = 1; $i <= 12; $i++) {
-      $idMateria = $resultPensum["id_materia$i"];
-
-      if ($idMateria != "") {
-        $sqlMateria = "SELECT * FROM materia WHERE id_materia = $idMateria";
-        $materia = $this->consult($sqlMateria);
-        array_push($listaMaterias, [
-          'materia_id' => $materia['id_materia'],
-          'des_materia' => $materia['des_materia'],
-        ]);
-      }
+    foreach ($resultPensum as $materia) {
+      array_push($listaMaterias, [
+        'materia_id' => $materia['id_materia'],
+        'des_materia' => $materia['des_materia'],
+      ]);
     }
 
     $materias_estudiante = [];
@@ -351,8 +353,7 @@ class NotasModel extends DB
         INNER JOIN seccion ON seccion.id_seccion = nota.seccion_id
         LEFT JOIN pensum ON pensum.periodo_id = periodo_escolar.id_periodo_escolar
         WHERE nota.estatusNotas = 0 AND nota.cedula_estudiante = '$cedula' ORDER BY nota.seccion_id;";
-    // echo $sqlNotasHistoricas;
-    // echo "<br><br>";
+    
     $result_datos_estudiante = $this->consult($sqlDatos);
     $result_datos_notas = $this->consultAll($sqlNotasHistoricas);
 
@@ -382,10 +383,10 @@ class NotasModel extends DB
         nota.periodo_escolar_id = '$id_periodo' AND 
         nota.estatusNotas = FALSE AND 
         nota.cedula_estudiante = '$cedula' GROUP BY nota.idNota";
-      
+
       $result2 = $this->consultAll($sql2);
-      array_push($datos,[
-        'cedula' => $estu['nacionalidad_persona'].'-'.$estu['cedula_estudiante'],
+      array_push($datos, [
+        'cedula' => $estu['nacionalidad_persona'] . '-' . $estu['cedula_estudiante'],
         'nombre' => $estu['nombre_persona'],
         'apellido' => $estu['apellido_persona'],
         'fec' => $estu['fecha_n_persona'],

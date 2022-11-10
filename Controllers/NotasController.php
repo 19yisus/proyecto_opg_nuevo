@@ -61,8 +61,8 @@
 
 	function GetDatas(){
 		$NotasModel = new NotasModel();
-		if(isset($_GET['id_seccion'])){
-			$NotasModel->GetAll($_GET['id_seccion']);
+		if(isset($_GET['idSeccion'])){
+			$NotasModel->GetAll($_GET['idSeccion']);
 		}else $NotasModel->GetAll();
 	}
 
