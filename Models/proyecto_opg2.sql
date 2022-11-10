@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 08-11-2022 a las 16:51:52
+-- Tiempo de generación: 10-11-2022 a las 01:11:03
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.4.22
 
@@ -37,6 +37,13 @@ CREATE TABLE `asignacion_estudiante_seccion` (
   `estatus_asig_estu` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `asignacion_estudiante_seccion`
+--
+
+INSERT INTO `asignacion_estudiante_seccion` (`id_asignacion_estu`, `cedula_estu_asignacion`, `id_seccion`, `id_periodo`, `estatus_asig_estu`) VALUES
+(1, '21313565', 1, 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -51,6 +58,13 @@ CREATE TABLE `asignacion_profesor_seccion` (
   `periodo_id` int(11) NOT NULL,
   `estatus_asignacion` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `asignacion_profesor_seccion`
+--
+
+INSERT INTO `asignacion_profesor_seccion` (`id_asignacion`, `profesor_cedula`, `materia_id`, `seccion_id`, `periodo_id`, `estatus_asignacion`) VALUES
+(1, '45646465', 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -79,6 +93,13 @@ CREATE TABLE `estudiante` (
   `estatus_estudiante` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `estudiante`
+--
+
+INSERT INTO `estudiante` (`cedula_estudiante`, `seguimiento_estudiante`, `estatus_estudiante`) VALUES
+('21313565', 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -92,6 +113,13 @@ CREATE TABLE `materia` (
   `id_periodo_ma` int(11) NOT NULL,
   `id_pensum_ma` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `materia`
+--
+
+INSERT INTO `materia` (`id_materia`, `des_materia`, `estatus_materia`, `id_periodo_ma`, `id_pensum_ma`) VALUES
+(1, 'ingles', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -131,6 +159,13 @@ CREATE TABLE `pensum` (
   `estatus_pensum` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `pensum`
+--
+
+INSERT INTO `pensum` (`id`, `cod_pensum`, `anios_abarcados`, `periodo_id`, `estatus_pensum`) VALUES
+(1, '11ASA', 'B', 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -144,6 +179,13 @@ CREATE TABLE `periodo_escolar` (
   `fecha_cierre` date NOT NULL,
   `estatus_periodo_escolar` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `periodo_escolar`
+--
+
+INSERT INTO `periodo_escolar` (`id_periodo_escolar`, `periodoescolar`, `fecha_inicio`, `fecha_cierre`, `estatus_periodo_escolar`) VALUES
+(1, '1995-1996', '1995-03-10', '1995-12-10', 1);
 
 -- --------------------------------------------------------
 
@@ -171,8 +213,10 @@ CREATE TABLE `personas` (
 INSERT INTO `personas` (`cedula_persona`, `nombre_persona`, `apellido_persona`, `nacionalidad_persona`, `sexo_persona`, `correo_persona`, `fecha_n_persona`, `direccion_persona`, `telefono_persona`, `direccion_n_persona`) VALUES
 ('12165465', 'fasdfasdf', 'fasdfasdf', 'V', 'M', 'fasdfasdf@gmail.com', '2000-10-10', 'fasdfasdfa', '12165465', NULL),
 ('1458565', 'alfonso', 'morales', 'V', 'M', 'fasdfasdfasdfasdfasdf@gmail.com', '1992-10-10', 'fasdfasdfasdfasdf', '1458565', NULL),
+('21313565', 'fasdfasdf', 'fasdfasdf', 'V', 'M', NULL, '1999-10-10', 'fasdfasdfasf', '21313565', 'fasdfasdf'),
 ('27133656', 'jose', 'torress', 'V', 'M', NULL, '1999-10-10', 'fasdfasdfasdf', '27133656', 'fasdfasdfasdf'),
-('30400100', 'jose', 'morales', 'V', 'M', NULL, '1999-10-10', 'fasdfasdfasdf', NULL, 'gafasdfasdf');
+('30400100', 'jose', 'morales', 'V', 'M', NULL, '1999-10-10', 'fasdfasdfasdf', NULL, 'gafasdfasdf'),
+('45646465', 'fasdfasdfas', 'fasdfasdf', 'V', 'M', 'fasdfasdfasd@gmail.com', '1990-10-10', 'fasfasdfasfsadf', '45646465', NULL);
 
 -- --------------------------------------------------------
 
@@ -206,6 +250,13 @@ CREATE TABLE `profesor` (
   `estatus_profesor` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `profesor`
+--
+
+INSERT INTO `profesor` (`cedula_profesor`, `estatus_profesor`) VALUES
+('45646465', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -238,6 +289,13 @@ CREATE TABLE `seccion` (
   `estatus_seccion` tinyint(1) NOT NULL,
   `id_sec_periodo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `seccion`
+--
+
+INSERT INTO `seccion` (`idSeccion`, `id_seccion`, `ano_seguimiento`, `estatus_seccion`, `id_sec_periodo`) VALUES
+(1, '1A', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -383,13 +441,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `asignacion_estudiante_seccion`
 --
 ALTER TABLE `asignacion_estudiante_seccion`
-  MODIFY `id_asignacion_estu` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_asignacion_estu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacion_profesor_seccion`
 --
 ALTER TABLE `asignacion_profesor_seccion`
-  MODIFY `id_asignacion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_asignacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `bitacora_notas`
@@ -401,7 +459,7 @@ ALTER TABLE `bitacora_notas`
 -- AUTO_INCREMENT de la tabla `materia`
 --
 ALTER TABLE `materia`
-  MODIFY `id_materia` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_materia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `nota`
@@ -413,13 +471,13 @@ ALTER TABLE `nota`
 -- AUTO_INCREMENT de la tabla `pensum`
 --
 ALTER TABLE `pensum`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `periodo_escolar`
 --
 ALTER TABLE `periodo_escolar`
-  MODIFY `id_periodo_escolar` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_periodo_escolar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas`
@@ -437,7 +495,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `seccion`
 --
 ALTER TABLE `seccion`
-  MODIFY `idSeccion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idSeccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`

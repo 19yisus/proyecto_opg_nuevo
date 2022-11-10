@@ -380,6 +380,7 @@
           
           const res = await fetch(`./Controllers/PensumController.php?ope=ConsultPorAnio&&anio=${anio}`)
           .then( res => res.json()).then( ({data}) =>{
+            console.log(data)
             return data;
           }).catch(error => console.error(error));
           
