@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php $this->Head(); ?>
+
 <body>
   <div class="col-md-12" id="App_vue">
     <div class="row">
@@ -50,8 +51,7 @@
       </div>
 
       <!-- Modal -->
-      <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -70,15 +70,15 @@
                 <div class="col-md-12 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Fecha de inicio:</span>
-                    <input type="date" v-model="fecha_inicio" name="fecha_inicio" class="form-control form-control-sm" required placeholder="dd/mm/aaaa" id=""style="width:50%;">
-                  <span class="error-text">Formato o fecha inválida</span>
+                    <input type="date" min="1987-01-01" max="2000-12-31" v-model="fecha_inicio" name="fecha_inicio" class="form-control form-control-sm" required placeholder="dd/mm/aaaa" id="" style="width:50%;">
+                    <span class="error-text">Formato o fecha inválida</span>
                   </div>
                 </div>
                 <div class="col-md-12 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Fecha de cierre:</span>
-                    <input type="date" readonly v-model="fechaCierre" name="fecha_cierre" class="form-control form-control-sm" required placeholder="dd/mm/aaaa" id=""style="width:50%;">
-                  <span class="error-text">Formato o fecha inválida</span>
+                    <input type="date" readonly v-model="fechaCierre" name="fecha_cierre" class="form-control form-control-sm" required placeholder="dd/mm/aaaa" id="" style="width:50%;">
+                    <span class="error-text">Formato o fecha inválida</span>
                   </div>
                 </div>
               </div>
@@ -101,9 +101,9 @@
   <?php $this->Script(); ?>
   <script>
     const app = Vue.createApp({
-      data(){
-        return{
-          des_periodo:"actual",
+      data() {
+        return {
+          des_periodo: "actual",
           id: "",
           periodoescolar: this.periodo,
           fecha_inicio: "",
@@ -113,69 +113,74 @@
           action: "Save",
         }
       },
-      methods:{
-        SendData(e){
+      methods: {
+        SendData(e) {
 
           e.preventDefault();
           // if(!$("#Formulario").valid()) return false;
           let form = new FormData(e.target);
 
-          if(!this.formulario_valido) return false;
-          fetch("./Controllers/PeriodoController.php",{
+          if (!this.formulario_valido) return false;
+          fetch("./Controllers/PeriodoController.php", {
             method: "POST",
             body: form
-          }).then( res => res.json()).then( result => {
-            
+          }).then(res => res.json()).then(result => {
+
             this.id = "";
             this.periodoescolar = "";
             this.fecha_inicio = "";
             this.fecha_cierre = "";
-            $("#datatable").DataTable().ajax.reload(null,false);
+            $("#datatable").DataTable().ajax.reload(null, false);
             this.ToggleModal();
             this.periodo_activo();
             ViewAlert(result.mensaje, result.estado);
           }).catch(Error => console.error(Error))
         },
-        async GetData(id){
+        async GetData(id) {
           await fetch(`./Controllers/PeriodoController.php?ope=ConsultOne&&id=${id}`)
-          .then( res => res.json()).then( ({data}) => {
-            this.id = data.id_periodo_escolar;
-            this.periodoescolar = data.periodoescolar;
-            this.fecha_inicio = data.fecha_inicio;
-            this.fecha_cierre = data.fecha_cierre;
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              this.id = data.id_periodo_escolar;
+              this.periodoescolar = data.periodoescolar;
+              this.fecha_inicio = data.fecha_inicio;
+              this.fecha_cierre = data.fecha_cierre;
 
-            this.action = "Update";
-          }).catch( error => console.error(error))
+              this.action = "Update";
+            }).catch(error => console.error(error))
         },
-        ChangeState(id){
+        ChangeState(id) {
           this.id = id;
           this.action = "ChangeStatus";
-          
-          setTimeout( () => {
+
+          setTimeout(() => {
             let form = new FormData(document.getElementById("Formulario"));
-            fetch(`./Controllers/PeriodoController.php`,{
+            fetch(`./Controllers/PeriodoController.php`, {
               method: "POST",
               body: form
-            }).then( res => res.json()).then( result => {
+            }).then(res => res.json()).then(result => {
               ViewAlert(result.mensaje, result.estado);
-              $("#datatable").DataTable().ajax.reload(null,false);
+              $("#datatable").DataTable().ajax.reload(null, false);
               this.action = "Save";
               this.periodo_activo();
-            }).catch( error => console.error(error))  
+            }).catch(error => console.error(error))
           }, 100);
         },
-        async periodo_activo(){
+        async periodo_activo() {
           await fetch(`./Controllers/PeriodoController.php?ope=ConsultPeriodoActivo`)
-          .then( res => res.json()).then( ({data}) => {
-            if(data[0] != undefined) this.des_periodo = data.periodoescolar; else this.des_periodo = "No hay Periodo Escolar Activo";
-          }).catch( Error => console.error(Error))
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              if (data[0] != undefined) this.des_periodo = data.periodoescolar;
+              else this.des_periodo = "No hay Periodo Escolar Activo";
+            }).catch(Error => console.error(Error))
         },
-        ToggleModal(){
+        ToggleModal() {
           $("#staticBackdrop").modal("hide");
           $("body").removeClass("modal-open");
           $(".modal-backdrop").remove();
         },
-        LimpiarForm(){
+        LimpiarForm() {
           this.id = "";
           this.periodoescolar = "";
           this.fecha_inicio = "";
@@ -184,47 +189,60 @@
           this.action = "Save";
         }
       },
-      computed:{
-        periodo(){
-          let fechas; 
-          if(this.fecha_inicio != "") fechas = `${moment(this.fecha_inicio).format("YYYY")}-${moment(this.fecha_inicio).add(1,"y").format("YYYY")}`;
+      computed: {
+        periodo() {
+          let fechas;
+          if (this.fecha_inicio != "") {
+            fechas = `${moment(this.fecha_inicio).format("YYYY")}-${moment(this.fecha_inicio).add(1,"y").format("YYYY")}`;
+          }
           return fechas;
         },
-        fechaCierre(){
-          if(this.fecha_inicio != '') return moment(this.fecha_inicio).add(9,"M").format("YYYY-MM-DD"); else return '';
+        fechaCierre() {
+          if (this.fecha_inicio != '') {
+            return moment([moment(this.fecha_inicio).add(1,'y').format("YYYY"), 6, 28]).format("YYYY-MM-DD")
+          }else return '';
         }
       },
-      async mounted(){
+      async mounted() {
         await this.periodo_activo();
       }
     }).mount("#App_vue");
 
-    const CambiarEstatus = (e) =>  app.ChangeState(e.dataset.id)
-    const Consult = (e) =>  app.GetData(e.dataset.id)
-  
+    const CambiarEstatus = (e) => app.ChangeState(e.dataset.id)
+    const Consult = (e) => app.GetData(e.dataset.id)
+
     $("#datatable").DataTable({
-      ajax:{
+      ajax: {
         url: "./Controllers/PeriodoController.php?ope=ConsulAll",
         dataSrc: "data"
       },
-      columns:[
-        { data: "id_periodo_escolar" },
-        { data: "periodoescolar"},
-        { data: "fecha_inicio",
-          render: function(data){
+      columns: [{
+          data: "id_periodo_escolar"
+        },
+        {
+          data: "periodoescolar"
+        },
+        {
+          data: "fecha_inicio",
+          render: function(data) {
             return moment(data).format("DD/MM/YYYY")
-          }},
-        { data: "fecha_cierre", 
-          render: function(data){
+          }
+        },
+        {
+          data: "fecha_cierre",
+          render: function(data) {
             return moment(data).format("DD/MM/YYYY")
-          }},
-        { data: "estatus_periodo_escolar",
-          render: function(data){
+          }
+        },
+        {
+          data: "estatus_periodo_escolar",
+          render: function(data) {
             return data == 1 ? "Activo" : "Inactivo"
           }
         },
-        { defaultContent: '',
-          render: function(data, type, row){
+        {
+          defaultContent: '',
+          render: function(data, type, row) {
             let classStatus = row.estatus_periodo_escolar == 1 ? 'success' : 'danger';
             let btns = `
               <div class="">
@@ -243,7 +261,7 @@
       info: true,
       autoWidth: false,
       responsive: true,
-      language:{
+      language: {
         url: `./Views/js/DataTables.config.json`
       }
     });
@@ -254,57 +272,56 @@
 
     document.querySelectorAll('.form-box').forEach((box) => {
       const boxInput = box.querySelector('input');
-      
-      boxInput.addEventListener("keypress", (event) => {
-          clearTimeout(tiempoFuera);
-          tiempoFuera = setTimeout(() => {
-          console.log(`input ${boxInput.name} value: `, boxInput.value)
-          validacion(box, boxInput,null)
 
-          });
+      boxInput.addEventListener("keypress", (event) => {
+        clearTimeout(tiempoFuera);
+        tiempoFuera = setTimeout(() => {
+          console.log(`input ${boxInput.name} value: `, boxInput.value)
+          validacion(box, boxInput, null)
+
         });
       });
+    });
 
-      function validacion(box, boxInput){
-        if(boxInput!= null & boxInput.name == "fecha_inicio"){
-              console.log('Validacion fecha inicio')
+    function validacion(box, boxInput) {
+      if (boxInput != null & boxInput.name == "fecha_inicio") {
+        console.log('Validacion fecha inicio')
 
-              if (!moment(boxInput.value).isValid()) {
-                app.formulario_valido = false
-                mostrarError(true, box);
-                fechaValida = false;
-                return false
-              }
-                            
-              /* Comprobar que el año no sea superior al actual*/
-              if (moment(boxInput.value).isAfter(moment())) {
-                app.formulario_valido = false
-                mostrarError(true, box);
-                fechaIValida = false;
-                return false
-              }
-              else{
-                app.formulario_valido = true
-                mostrarError(false, box);
-                fechaValida = true;
-                return true
-              }
+        if (!moment(boxInput.value).isValid()) {
+          app.formulario_valido = false
+          mostrarError(true, box);
+          fechaValida = false;
+          return false
+        }
+
+        /* Comprobar que el año no sea superior al actual*/
+        if (moment(boxInput.value).isAfter(moment())) {
+          app.formulario_valido = false
+          mostrarError(true, box);
+          fechaIValida = false;
+          return false
+        } else {
+          app.formulario_valido = true
+          mostrarError(false, box);
+          fechaValida = true;
+          return true
         }
       }
-      function mostrarError(check, box){
-        // console.log("MOSTRAR ERROR");
-        if(check){
-            box.classList.remove('div-error');
-            box.classList.add('form-error');
-        }  
-        else{
-            box.classList.add('div-error');
-            box.classList.remove('form-error');
-        }
-      }
+    }
 
+    function mostrarError(check, box) {
+      // console.log("MOSTRAR ERROR");
+      if (check) {
+        box.classList.remove('div-error');
+        box.classList.add('form-error');
+      } else {
+        box.classList.add('div-error');
+        box.classList.remove('form-error');
+      }
+    }
   </script>
 
-  
+
 </body>
+
 </html>

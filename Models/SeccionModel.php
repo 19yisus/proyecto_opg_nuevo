@@ -29,10 +29,9 @@
 					$pdo->bindParam(':anio', $this->anio);
 					$pdo->bindParam(':estatus', $this->status);
 					$pdo->bindParam(':id_periodo', $this->id_sec_periodo);
-
-					if($pdo->execute()) $this->ResJSON("Operacion Exitosa!","success");
-					else $this->ResJSON("Operacion Fallida!", "error");	
-				}else $this->ResJSON("La seccion ingresada ya ha sido registrada", "error");
+					if($pdo->execute()) return true;
+					else return false;
+				}else return false;
 
 				
 			}catch(PDOException $e){

@@ -31,8 +31,8 @@
           <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordionExample">
             <ul class="list-group">
               <a class="list-group-item list-group-item-action" href="./VisPeriodo">Gestión de Periodo Escolar</a>
-              <a class="list-group-item list-group-item-action" href="./VisSeccion">Gestión de Secciones</a>
               <a class="list-group-item list-group-item-action" href="./VisPensum">Gestión de Pensum</a>
+              <a class="list-group-item list-group-item-action" href="./VisSeccion">Gestión de Secciones</a>
               <a class="list-group-item list-group-item-action" href="./VisMaterias">Gestión de Materias</a>
               <a class="list-group-item list-group-item-action" href="./VisEstudiantes">Gestión de Estudiantes</a>
               <a class="list-group-item list-group-item-action" href="./VisProfesor">Gestión de Profesores</a>

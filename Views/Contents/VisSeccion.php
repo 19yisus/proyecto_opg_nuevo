@@ -63,23 +63,38 @@
                   <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div> 
               -->
-            <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" novalidate autocomplete="off">
+
+            <form action="#" @submit.preventDefault="SendData" method="POST" id="Formulario" class="needs-validation" novalidate autocomplete="off">
               <div class="modal-body row " style="padding: 0 70px ;">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
                 <input type="hidden" name="id_periodo" v-model="id_periodo">
+                <input type="hidden" name="letras" :value="letras">
 
                 <div class="col-6 col-sm-12" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Año:</span>
-                    <input type="text" min="1" max="6" v-model="anio" name="anio" class="form-control form-control-sm" required id="" placeholder="1 - 6" style="width:70%;">
+                    <input type="number" min="1" max="6" v-model="anio" name="anio" class="form-control form-control-sm" required id="" placeholder="1 - 6" style="width:70%;">
                     <span class="error-text">Campo vacío o año inválido</span>
                   </div>
                 </div>
-                <div class="col-6 col-sm-12" style="margin:0; padding:5px;">
-                  <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Seccion:</span>
-                    <input type="text" v-model="seccion" maxlength="1" name="seccion" class="form-control form-control-sm" id="" placeholder="A - Z" required style="width:70%;">
-                    <span class="error-text">Campo vacío o dato inválido</span>
+                <div class="col-md-6" style="margin:0; padding:5px;">
+                  <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Seccion (inicio):</span>
+                    <select name="seccion_inicial" id="seccion_inicio" class="form-select" aria-label="Default select example" required>
+                      <option value="">Seleccione una opción</option>
+                      <option :value="item" v-for="(item, index) in letras" :key="index">{{item}}</option>
+                    </select>
+                    <span class="error-text">Selecciona año y sección</span>
+                  </div>
+                </div>
+                <div class="col-md-6" style="margin:0; padding:5px;">
+                  <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Seccion (final):</span>
+                    <select name="seccion_final" id="seccion_final" class="form-select" aria-label="Default select example" required>
+                      <option value="">Seleccione una opción</option>
+                      <option :value="item" v-for="(item, index) in letras" :key="index">{{item}}</option>
+                    </select>
+                    <span class="error-text">Selecciona año y sección</span>
                   </div>
                 </div>
               </div>
@@ -113,6 +128,7 @@
           datos: [],
           formulario_valido: false,
           action: "Save",
+          letras: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z']
         }
       },
       methods: {
@@ -203,8 +219,7 @@
         url: "./Controllers/SeccionController.php?ope=ConsulAll",
         dataSrc: "data"
       },
-      columns: [
-        {
+      columns: [{
           data: "idSeccion"
         },
         {
@@ -284,39 +299,8 @@
           anioValida = true;
         }
       }
-      if (boxInput != null && boxInput.name == "seccion") {
-        const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬", " "];
-        const numeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-        let contieneLetraEspecial = 0;
-        let contieneNumeros = 0;
-
-        for (let i = 0; i < boxInput.value.length; i++) {
-          for (let j = 0; j < letrasEspeciales.length; j++) {
-            if (boxInput.value[i] === letrasEspeciales[j]) {
-              contieneLetraEspecial++;
-            }
-          }
-        }
-
-        for (let i = 0; i < boxInput.value.length; i++) {
-          for (let j = 0; j < numeros.length; j++) {
-            if (boxInput.value[i] === numeros[j]) {
-              contieneNumeros++;
-            }
-          }
-        }
-        console.log("validacion seccion")
-        if (boxInput.value < 1 || contieneLetraEspecial > 0 || contieneNumeros > 0) {
-          mostrarError(true, box);
-          seccionValida = false;
-        } else {
-          boxInput.value = boxInput.value.toUpperCase();
-          mostrarError(false, box);
-          seccionValida = true;
-        }
-      }
       let button = document.querySelector('#btn-g');
-      if (anioValida && seccionValida) {
+      if (anioValida) {
         app.formulario_valido = true;
         // button.addEventListener('click', e =>{
         //   app.ToggleModal();

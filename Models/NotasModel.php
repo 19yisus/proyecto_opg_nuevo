@@ -275,11 +275,20 @@ class NotasModel extends DB
     $periodo = $result_consulta_estudiante['id_periodo_escolar'];
     $seccion = $result_consulta_estudiante['idSeccion'];
     $seguimiento = $result_consulta_estudiante['ano_seguimiento'];
-
-    if (intval($seguimiento) < 4) $seguimiento = 'B';
-    else $seguimiento = 'D';
-    // $sql_pensum = "SELECT * FROM pensum WHERE anios_abarcados = '$seguimiento' ;";
-    $resultPensum = $this->consultAll("SELECT materia.* FROM materia INNER JOIN pensum ON pensum.id = materia.id_pensum_ma WHERE pensum.anios_abarcados = '$seguimiento' ;");
+    $seguimiento = intval($seguimiento);
+    if ($seguimiento < 4){
+      if($seguimiento == 1) $string = "materia.primero = 1";
+      if($seguimiento == 2) $string = "materia.segundo = 1";
+      if($seguimiento == 3) $string = "materia.tercero = 1";
+      $clasificacion = 'B';
+    }else{
+      $clasificacion = 'D';
+      if($seguimiento == 4) $string = "materia.cuarto = 1";
+      if($seguimiento == 5) $string = "materia.quinto = 1";
+      if($seguimiento == 6) $string = "materia.sexto = 1";
+    }
+    // $sql_pensum = "SELECT * FROM pensum WHERE anios_abarcados = '$clasificacion' ;";
+    $resultPensum = $this->consultAll("SELECT materia.* FROM materia INNER JOIN pensum ON pensum.id = materia.id_pensum_ma WHERE pensum.anios_abarcados = '$clasificacion' AND $string;");
 
     if ($resultPensum == false) {
       $this->ResJSON("Operacion Fallida! No hay pensum para el año a trabajar", "error");

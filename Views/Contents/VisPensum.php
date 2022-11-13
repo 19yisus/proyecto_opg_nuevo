@@ -54,10 +54,11 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Registro Pensum</h5>
+              <h5 class="modal-title" id="staticBackdropLabel">Registro Pensum {{action}}</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation">
+            <!-- "./Controllers/PensumController.php" -->
+            <form action="#" @submit.preventDefault="SendData" method="POST" id="Formulario" class="needs-validation">
               <div class="modal-body row ">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
                 <input type="hidden" name="id_periodo" v-model="id_periodo">
@@ -73,12 +74,49 @@
                   <label for="" class="form-label">Años que abarca este pensum</label>
                   <div class="d-flex justify-content-around mx-2">
                     <div class="form-check">
-                      <input type="radio" name="anios_abarcados" v-bind:checked="anios_abarcados == 'B'" id="" value="B" class="form-check-input">
+                      <input type="radio" name="anios_abarcados" v-model="anios_abarcados" v-bind:checked="anios_abarcados == 'B'" id="" value="B" class="form-check-input">
                       <small class="form-check-label">Basica</small>
                     </div>
                     <div class="form-check">
-                      <input type="radio" name="anios_abarcados" v-bind:checked="anios_abarcados == 'D'" id="" value="D" class="form-check-input">
+                      <input type="radio" name="anios_abarcados" v-model="anios_abarcados" v-bind:checked="anios_abarcados == 'D'" id="" value="D" class="form-check-input">
                       <small class="form-check-label">Diversificado</small>
+                    </div>
+                  </div>
+                </div>
+                <div v-for="(item, index) in materias" class="row my-1" v-show="action != 'Consult'">
+                  <div class="col-6">
+                    <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Descripción:</span>
+                      <input type="text" v-bind:disabled="action = 'Consult'" name="materia[]" v-model="materias[index].des_materia" class="form-control form-control-sm" required id="" placeholder="descripción de la materia">
+                      <span class="error-text">Campo vacío o año inválido</span>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="d-flex justify-content-around">
+                      <div class="form-check">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'D' || anios_abarcados == ''" name="primero[]" id="" value="1" class="form-check-input">
+                        <small class="form-check-label">1er</small>
+                      </div>
+                      <div class="form-check">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'D' || anios_abarcados == ''" name="segundo[]" id="" value="1" class="form-check-input">
+                        <small class="form-check-label">2do</small>
+                      </div>
+                      <div class="form-check">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'D' || anios_abarcados == ''" name="tercero[]" id="" value="1" class="form-check-input">
+                        <small class="form-check-label">3ro</small>
+                      </div>
+                      <div class="form-check">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'B' || anios_abarcados == ''" name="cuarto[]" id="" value="1" class="form-check-input">
+                        <small class="form-check-label">4to</small>
+                      </div>
+                      <div class="form-check">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'B' || anios_abarcados == ''" name="quinto[]" id="" value="1" class="form-check-input">
+                        <small class="form-check-label">5to</small>
+                      </div>
+                      <div class="form-check">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'B' || anios_abarcados == ''" name="sexto[]" id="" value="1" class="form-check-input">
+                        <small class="form-check-label">6to</small>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -86,8 +124,15 @@
 
               <div class="modal-footer mx-auto">
                 <input type="hidden" name="ope" v-model="action">
-                <button type="submit" class="btn btn-sm btn-primary" v-bind:disabled="action != 'Save'" :disabled="id_periodo == '' ">
+                <!-- v-bind:disabled="action != 'Save'" -->
+                <button type="submit" class="btn btn-sm btn-primary"  :disabled="id_periodo == '' ">
                   <i class="fa-regular fa-circle-check"></i>GUARDAR
+                </button>
+                <button v-show="action != 'Consult'" type="button" class="btn btn-sm btn-success" @click="aumentar">
+                  <i class="fa-regular fa-circle-xmark"></i>Mas materias
+                </button>
+                <button v-show="action != 'Consult'" type="button" class="btn btn-sm btn-warning" @click="materias.pop();" v-show="materias.length > 1">
+                  <i class="fa-regular fa-circle-xmark"></i>Menos materias
                 </button>
                 <button type="button" @click="LimpiarForm" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
                   <i class="fa-regular fa-circle-xmark"></i>SALIR
@@ -125,7 +170,12 @@
               </div>
             </div>
 
+
             <div class="modal-footer mx-auto">
+              <input type="hidden" name="ope" v-model="action">
+              <button type="submit" class="btn btn-sm btn-primary" id="btn-g">
+                <i class="fa-regular fa-circle-check"></i>GUARDAR
+              </button>
               <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
                 <i class="fa-regular fa-circle-xmark"></i>SALIR
               </button>
@@ -150,11 +200,20 @@
           estatus: "",
           id_periodo: "",
           action: "Save",
+          materias: [{
+            des_materia: "",
+            primero: false,
+            segundo: false,
+            tercero: false,
+            cuarto: false,
+            quinto: false,
+            sexto: false
+          }]
         }
       },
       methods: {
         SendData(e) {
-
+          this.action = "Save"
           e.preventDefault();
           // if(!$("#Formulario").valid()) return false;
           let form = new FormData(e.target);
@@ -163,7 +222,7 @@
             method: "POST",
             body: form
           }).then(res => res.json()).then(result => {
-            
+
             this.id = "";
             this.estatus = "";
             $("#datatable").DataTable().ajax.reload(null, false);
@@ -173,8 +232,19 @@
             this.LimpiarForm();
           }).catch(Error => console.error(Error))
         },
+        aumentar() {
+          this.materias.push([{
+            des_materia: "",
+            primero: false,
+            segundo: false,
+            tercero: false,
+            cuarto: false,
+            quinto: false,
+            sexto: false
+          }])
+        },
         async GetData(id) {
-          this.action = "Consult";
+          this.action = "Update";
           await fetch(`./Controllers/PensumController.php?ope=ConsultOne&&id=${id}`)
             .then(res => res.json()).then(({
               data
