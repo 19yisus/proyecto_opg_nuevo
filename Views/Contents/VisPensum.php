@@ -54,7 +54,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Registro Pensum {{action}}</h5>
+              <h5 class="modal-title" id="staticBackdropLabel">Registro Pensum </h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- "./Controllers/PensumController.php" -->
@@ -87,7 +87,7 @@
                   <div class="col-6">
                     <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Descripción:</span>
-                      <input type="text" v-bind:disabled="action = 'Consult'" name="materia[]" v-model="materias[index].des_materia" class="form-control form-control-sm" required id="" placeholder="descripción de la materia">
+                      <input type="text" v-bind:disabled="action == 'Consult'" name="materia[]" v-model="materias[index].des_materia" class="form-control form-control-sm" required id="" placeholder="descripción de la materia">
                       <span class="error-text">Campo vacío o año inválido</span>
                     </div>
                   </div>
