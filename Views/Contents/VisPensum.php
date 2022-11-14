@@ -15,7 +15,7 @@
           <!-- input de busqueda -->
           <div class="col-md-12 row " style="margin: 0; padding: 0;">
             <div class="col-md-3" style="margin: 0; padding: 0;">
-              <h6 class="fw-bold text-danger">Periodo: {{des_periodo}}</h6>
+              <h6 class="fw-bold text-dark">Periodo: {{des_periodo}}</h6>
             </div>
 
             <div class="col-md-7">
@@ -54,7 +54,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Registro Pensum </h5>
+              <h5 class="modal-title" id="staticBackdropLabel">Registro Pensum {{action}}</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- "./Controllers/PensumController.php" -->
@@ -86,35 +86,36 @@
                 <div v-for="(item, index) in materias" class="row my-1" v-show="action != 'Consult'">
                   <div class="col-6">
                     <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
+                      <input type="hidden" name="id_materia[]" v-model="materias[index].id_materia">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Descripción:</span>
-                      <input type="text" v-bind:disabled="action == 'Consult'" name="materia[]" v-model="materias[index].des_materia" class="form-control form-control-sm" required id="" placeholder="descripción de la materia">
+                      <input type="text" v-bind:disabled="action == 'Consult' || action == 'Update'" name="materia[]" v-model="materias[index].des_materia" class="form-control form-control-sm" required id="" placeholder="descripción de la materia">
                       <span class="error-text">Campo vacío o año inválido</span>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="d-flex justify-content-around">
                       <div class="form-check">
-                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'D' || anios_abarcados == ''" name="primero[]" id="" value="1" class="form-check-input">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'D' || anios_abarcados == '' || action == 'Update'" v-bind:checked="materias[index].primero == 1" name="primero[]" id="" value="1" class="form-check-input">
                         <small class="form-check-label">1er</small>
                       </div>
                       <div class="form-check">
-                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'D' || anios_abarcados == ''" name="segundo[]" id="" value="1" class="form-check-input">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'D' || anios_abarcados == '' || action == 'Update'" v-bind:checked="materias[index].segundo == 1" name="segundo[]" id="" value="1" class="form-check-input">
                         <small class="form-check-label">2do</small>
                       </div>
                       <div class="form-check">
-                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'D' || anios_abarcados == ''" name="tercero[]" id="" value="1" class="form-check-input">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'D' || anios_abarcados == '' || action == 'Update'" v-bind:checked="materias[index].tercero == 1" name="tercero[]" id="" value="1" class="form-check-input">
                         <small class="form-check-label">3ro</small>
                       </div>
                       <div class="form-check">
-                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'B' || anios_abarcados == ''" name="cuarto[]" id="" value="1" class="form-check-input">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'B' || anios_abarcados == '' || action == 'Update'" v-bind:checked="materias[index].cuarto == 1" name="cuarto[]" id="" value="1" class="form-check-input">
                         <small class="form-check-label">4to</small>
                       </div>
                       <div class="form-check">
-                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'B' || anios_abarcados == ''" name="quinto[]" id="" value="1" class="form-check-input">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'B' || anios_abarcados == '' || action == 'Update'" v-bind:checked="materias[index].quinto == 1" name="quinto[]" id="" value="1" class="form-check-input">
                         <small class="form-check-label">5to</small>
                       </div>
                       <div class="form-check">
-                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'B' || anios_abarcados == ''" name="sexto[]" id="" value="1" class="form-check-input">
+                        <input type="checkbox" v-bind:disabled="anios_abarcados == 'B' || anios_abarcados == '' || action == 'Update'" v-bind:checked="materias[index].sexto == 1" name="sexto[]" id="" value="1" class="form-check-input">
                         <small class="form-check-label">6to</small>
                       </div>
                     </div>
@@ -125,13 +126,13 @@
               <div class="modal-footer mx-auto">
                 <input type="hidden" name="ope" v-model="action">
                 <!-- v-bind:disabled="action != 'Save'" -->
-                <button type="submit" class="btn btn-sm btn-primary"  :disabled="id_periodo == '' ">
+                <button type="submit" class="btn btn-sm btn-primary" :disabled="id_periodo == '' ">
                   <i class="fa-regular fa-circle-check"></i>GUARDAR
                 </button>
-                <button v-show="action != 'Consult'" type="button" class="btn btn-sm btn-success" @click="aumentar">
+                <button v-show="action == 'Save'" type="button" class="btn btn-sm btn-success" @click="aumentar">
                   <i class="fa-regular fa-circle-xmark"></i>Mas materias
                 </button>
-                <button v-show="action != 'Consult'" type="button" class="btn btn-sm btn-warning" @click="materias.pop();" v-show="materias.length > 1">
+                <button v-show="action == 'Save'" type="button" class="btn btn-sm btn-warning" @click="materias.pop();" v-show="materias.length > 1">
                   <i class="fa-regular fa-circle-xmark"></i>Menos materias
                 </button>
                 <button type="button" @click="LimpiarForm" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
@@ -200,15 +201,9 @@
           estatus: "",
           id_periodo: "",
           action: "Save",
-          materias: [{
-            des_materia: "",
-            primero: false,
-            segundo: false,
-            tercero: false,
-            cuarto: false,
-            quinto: false,
-            sexto: false
-          }]
+          materias: [
+            // {des_materia: "",primero: false,segundo: false,tercero: false,cuarto: false,quinto: false,sexto: false}
+          ]
         }
       },
       methods: {
@@ -232,8 +227,23 @@
             this.LimpiarForm();
           }).catch(Error => console.error(Error))
         },
-        aumentar() {
-          this.materias.push([{
+        aumentar(materia = []) {
+
+          if (materia['des']) {
+            this.materias.push({
+              id_materia: materia['id'],
+              des_materia: materia['des'],
+              primero: materia['primero'],
+              segundo: materia['segundo'],
+              tercero: materia['tercero'],
+              cuarto: materia['cuarto'],
+              quinto: materia['quinto'],
+              sexto: materia['sexto']
+            })
+            return false;
+          }
+          this.materias.push({
+            id_materia: "",
             des_materia: "",
             primero: false,
             segundo: false,
@@ -241,7 +251,7 @@
             cuarto: false,
             quinto: false,
             sexto: false
-          }])
+          })
         },
         async GetData(id) {
           this.action = "Update";
@@ -249,11 +259,24 @@
             .then(res => res.json()).then(({
               data
             }) => {
+              let [pensum, materias] = data;
+              materias.forEach(item => {
+                let list = [];
+                list['id'] = item.id_materia;
+                list['des'] = item.des_materia;
+                list['primero'] = item.primero;
+                list['segundo'] = item.segundo;
+                list['tercero'] = item.tercero;
+                list['cuarto'] = item.cuarto;
+                list['quinto'] = item.quinto;
+                list['sexto'] = item.sexto;
 
+                this.aumentar(list);
+              });
               this.materias_select = [];
-              this.cod_pensum = data.cod_pensum;
-              this.anios_abarcados = data.anios_abarcados;
-              this.periodo_escolar_consultado = data.periodoescolar;
+              this.cod_pensum = pensum.cod_pensum;
+              this.anios_abarcados = pensum.anios_abarcados;
+              this.periodo_escolar_consultado = pensum.periodoescolar;
             }).catch(error => console.error(error))
         },
         async ChangeState(id) {

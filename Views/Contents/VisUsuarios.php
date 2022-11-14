@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
-  if($_SESSION['id_rol'] == '2') header("Location: ./VisInicio?codigo=400&mensaje=No tienes permisos para este modulo");
-  $this->Head(); 
-  require_once("./Models/AuthModel.php");
-  $mod = new AuthModel();
-  $preguntas = $mod->GetPreguntas();
+<?php
+if ($_SESSION['id_rol'] == '2') header("Location: ./VisInicio?codigo=400&mensaje=No tienes permisos para este modulo");
+$this->Head();
+require_once("./Models/AuthModel.php");
+$mod = new AuthModel();
+$preguntas = $mod->GetPreguntas();
 ?>
+
 <body>
   <div class="col-md-12" id="App_vue">
     <div class="row">
@@ -14,27 +15,34 @@
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
       <div class="col-md-12">
+        <div class="col-md-12 mx-auto px-2">
+          <div class="col-md-3 p-3 card ml-3 bg-hero mt-2">
+            <h5 class="fw-bold text-light text-center my-auto">Periodo: {{des_periodo}}</h5>
+          </div>
+        </div>
+
 
         <div class="col-md-8 mx-auto " style="margin-top:5%;">
 
           <!-- input de busqueda -->
-          <div class="col-md-12 row " style="margin: 0; padding: 0;">
-            <div class="col-md-3" style="margin: 0; padding: 0;">
-              <h6 class="fw-bold text-danger">Periodo: {{des_periodo}}</h6>
+          <div class="col-md-12 mx-auto">
+            <div class="col-md-7 mx-auto">
+              <h3 class="fw-bold text-center text-success">Gestión de Usuarios</h3>
             </div>
+          </div>
+          <div class="col-md-12 row justify-content-end" style="margin: 0; padding: 0;">
 
-            <div class="col-md-7">
-              <h3 class="fw-bold text-success">Gestión de Usuarios</h3>
-            </div>
+
+
             <div class="col-md-2 justify-content-end" style="margin: 0; padding: 0;">
-              <button type="button" disabled class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px;">
+              <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px">
                 <i class="fa-regular fa-user"></i> AGREGAR
               </button>
             </div>
           </div>
 
           <!-- contenedor de la tabla -->
-          <div class="col-md-12 ">
+          <div class="col-md-12 card p-2 shadow">
             <div class="col ">
               <table class="table border" id="datatable">
                 <thead>
@@ -55,8 +63,7 @@
       </div>
 
       <!-- Modal -->
-      <div class="modal modal-xl fade" id="staticBackdrop" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal modal-xl fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -91,13 +98,13 @@
                     <span class="input-group-text" id="inputGroup-sizing-sm">Pregunta (1):</span>
                     <select class="form-select" v-model="pregunta1" name="pregunta1" id="pregunta1" aria-label="Default select example" style="width: 50%;" required>
                       <option value="" selected>Seleccionar</option>
-                      <?php foreach($preguntas as $pg){?>
-                        <option value="<?php echo $pg['id_pregun'];?>"><?php echo $pg['des_pregun'];?></option>
-                      <?php }?>
+                      <?php foreach ($preguntas as $pg) { ?>
+                        <option value="<?php echo $pg['id_pregun']; ?>"><?php echo $pg['des_pregun']; ?></option>
+                      <?php } ?>
                     </select>
-                      <span class="error-text">Selecciona tu nacionalidad</span>
+                    <span class="error-text">Selecciona tu nacionalidad</span>
                   </div>
-                </div> 
+                </div>
                 <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Respuesta (1):</span>
@@ -110,13 +117,13 @@
                     <span class="input-group-text" id="inputGroup-sizing-sm">Pregunta (2):</span>
                     <select class="form-select" v-model="pregunta2" name="pregunta2" id="pregunta2" aria-label="Default select example" style="width: 50%;" required>
                       <option value="" selected>Seleccionar</option>
-                      <?php foreach($preguntas as $pg){?>
-                        <option value="<?php echo $pg['id_pregun'];?>"><?php echo $pg['des_pregun'];?></option>
-                      <?php }?>
+                      <?php foreach ($preguntas as $pg) { ?>
+                        <option value="<?php echo $pg['id_pregun']; ?>"><?php echo $pg['des_pregun']; ?></option>
+                      <?php } ?>
                     </select>
-                      <span class="error-text">Selecciona tu nacionalidad</span>
+                    <span class="error-text">Selecciona tu nacionalidad</span>
                   </div>
-                </div> 
+                </div>
                 <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Respuesta (2):</span>
@@ -144,11 +151,11 @@
   <?php $this->Script(); ?>
   <script>
     const app = Vue.createApp({
-      data(){
-        return{
-          des_periodo:"actual",
+      data() {
+        return {
+          des_periodo: "actual",
           id: "",
-          usuario:"",
+          usuario: "",
           password: "",
           pregunta1: "",
           respuesta1: "",
@@ -159,64 +166,69 @@
           action: "Update",
         }
       },
-      methods:{
-        SendData(e){
-          
+      methods: {
+        SendData(e) {
+
           e.preventDefault();
           // if(!$("#Formulario").valid()) return false;
           let form = new FormData(e.target);
           // if(!this.formulario_valido) return false;
-          fetch("./Controllers/AuthController.php",{
+          fetch("./Controllers/AuthController.php", {
             method: "POST",
             body: form
-          }).then( res => res.json()).then( result => {
+          }).then(res => res.json()).then(result => {
             this.LimpiarForm()
-            $("#datatable").DataTable().ajax.reload(null,false);
+            $("#datatable").DataTable().ajax.reload(null, false);
             this.ToggleModal();
             ViewAlert(result.mensaje, result.estado);
             this.periodo_activo();
 
-            setTimeout( () => document.getElementById('cerrar').submit(), 3000);
+            setTimeout(() => document.getElementById('cerrar').submit(), 3000);
           }).catch(Error => console.error(Error))
         },
-        async GetData(id){
+        async GetData(id) {
           await fetch(`./Controllers/AuthController.php?ope=ConsultOne&&id=${id}`)
-          .then( res => res.json()).then( ({data}) => {
-            this.id = data.id;
-            this.usuario = data.usuario;
-            this.pregunta1 = data.pregunta1;
-            this.pregunta2 = data.pregunta2;
-            this.action = "Update";
-          }).catch( error => console.error(error))
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              this.id = data.id;
+              this.usuario = data.usuario;
+              this.pregunta1 = data.pregunta1;
+              this.pregunta2 = data.pregunta2;
+              this.action = "Update";
+            }).catch(error => console.error(error))
         },
-        async ChangeState(id){
+        async ChangeState(id) {
           this.id = id;
           this.action = "ChangeStatus";
-          
-          setTimeout( async () => {
+
+          setTimeout(async () => {
             let form = new FormData(document.getElementById("Formulario"));
-            await fetch(`./Controllers/MateriasController.php`,{
+            await fetch(`./Controllers/MateriasController.php`, {
               method: "POST",
               body: form
-            }).then( res => res.json()).then( result => {
+            }).then(res => res.json()).then(result => {
               ViewAlert(result.mensaje, result.estado);
-              $("#datatable").DataTable().ajax.reload(null,false);
+              $("#datatable").DataTable().ajax.reload(null, false);
               this.action = "Save";
-            }).catch( error => console.error(error))  
+            }).catch(error => console.error(error))
           }, 100);
         },
-        async periodo_activo(){
+        async periodo_activo() {
           await fetch(`./Controllers/PeriodoController.php?ope=ConsultPeriodoActivo`)
-          .then( res => res.json()).then( ({data}) => {
-            if(data[0] != undefined) this.des_periodo = data.periodoescolar; else this.des_periodo = "No hay Periodo Escolar Activo";
-          }).catch( Error => console.error(Error))
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              if (data[0] != undefined) this.des_periodo = data.periodoescolar;
+              else this.des_periodo = "No hay Periodo Escolar Activo";
+            }).catch(Error => console.error(Error))
         },
-        ToggleModal(){
+        ToggleModal() {
           $("#staticBackdrop").modal("hide");
           $("body").removeClass("modal-open");
           $(".modal-backdrop").remove();
         },
-        LimpiarForm(){
+        LimpiarForm() {
           this.id = ""
           this.usuario = ""
           this.password = ""
@@ -228,7 +240,7 @@
           this.action = "Save";
         }
       },
-      async mounted(){
+      async mounted() {
         await this.periodo_activo();
       }
     }).mount("#App_vue");
@@ -237,23 +249,34 @@
     const Consult = (e) => app.GetData(e.dataset.id)
 
     $("#datatable").DataTable({
-      ajax:{
+      ajax: {
         url: "./Controllers/AuthController.php?ope=ConsulAll",
         dataSrc: "data"
       },
-      columns:[
-        { data: "id" },
-        { data: "usuario",
-          render(data){ return data.toUpperCase() }
+      columns: [{
+          data: "id"
         },
-        { data: "rol",
-          render(data){ return data.toUpperCase() }
+        {
+          data: "usuario",
+          render(data) {
+            return data.toUpperCase()
+          }
         },
-        { data: "estatus_usuario",
-          render(data){ return data == 1 ? "Activo" : "Inactivo" }
+        {
+          data: "rol",
+          render(data) {
+            return data.toUpperCase()
+          }
         },
-        { defaultContent: '',
-          render: function(data, type, row){
+        {
+          data: "estatus_usuario",
+          render(data) {
+            return data == 1 ? "Activo" : "Inactivo"
+          }
+        },
+        {
+          defaultContent: '',
+          render: function(data, type, row) {
             // let classStatus = row.estatus_materia == 1 ? 'success' : 'danger';
             // <button type="button" onClick="CambiarEstatus(this)" data-id='${row.id_materia}' class="btn btn-sm btn-${classStatus}">
             //       <i class="fas fa-power-off"></i>
@@ -276,10 +299,11 @@
       info: true,
       autoWidth: false,
       responsive: true,
-      language:{
+      language: {
         url: `./Views/js/DataTables.config.json`
       }
     });
   </script>
 </body>
+
 </html>

@@ -69,15 +69,43 @@ class PensumModel extends DB
 	public function UpdateDatos()
 	{
 		try {
-			$pdo = $this->driver->prepare("UPDATE pensum SET des_materia = :descripcion WHERE id_materia = :id ;");
-			$pdo->bindParam(':descripcion', $this->des_materia);
+			$pdo = $this->driver->prepare("UPDATE pensum SET cod_pensum = :code WHERE id = :id ;");
+			$pdo->bindParam(':code', $this->cod_pensum);
 			$pdo->bindParam(':id', $this->id);
 
-			if ($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
-			else $this->ResJSON("Operacion Fallida!", "error");
+			if ($pdo->execute()) {
+				// $this->UpdateMaterias();
+				$this->ResJSON("Operacion Exitosa!", "success");
+			} else $this->ResJSON("Operacion Fallida!", "error");
 		} catch (PDOException $e) {
 			error_log("PensumModel(line0------) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida!", "error");
+		}
+	}
+
+	public function UpdateMaterias()
+	{
+		foreach ($this->materias as $item) {
+			$pdo = $this->driver->prepare("UPDATE materia SET 
+			des_materia = :descripcion,
+			primero = :pri,
+			segundo = :seg,
+			tercero = :ter,
+			cuarto = :cuar,
+			quinto = :quin,
+			sexto = :sext
+			WHERE id_materia = :id ;");
+			$pdo->bindParam(':id', $item['id']);
+			$pdo->bindParam(':descripcion', $this->des_materia);
+			$pdo->bindParam(':pensum', $this->id_pensum_ma);
+			$pdo->bindParam(':pri', $item['primero']);
+			$pdo->bindParam(':seg', $item['segundo']);
+			$pdo->bindParam(':ter', $item['tercero']);
+			$pdo->bindParam(':cuar', $item['cuarto']);
+			$pdo->bindParam(':quin', $item['quinto']);
+			$pdo->bindParam(':sext', $item['sexto']);
+
+			$pdo->execute();
 		}
 	}
 
@@ -113,8 +141,10 @@ class PensumModel extends DB
 	{
 		try {
 			$result = $this->consult("SELECT * FROM pensum INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = pensum.periodo_id WHERE id = '$id' ;");
+			$id = $result['id'];
+			$result2 = $this->consultAll("SELECT * FROM materia WHERE id_pensum_ma = $id");
 
-			if (isset($result[0])) $this->ResDataJSON($result);
+			if (isset($result[0])) $this->ResDataJSON([$result, $result2]);
 			else $this->ResDataJSON([]);
 		} catch (PDOException $e) {
 			error_log("PensumModel(78) => " . $e->getMessages());
