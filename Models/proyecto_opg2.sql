@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 13-11-2022 a las 22:57:40
+-- Tiempo de generación: 17-11-2022 a las 01:25:24
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.4.22
 
@@ -77,6 +77,19 @@ CREATE TABLE `estudiante` (
   `cedula_estudiante` char(8) COLLATE utf8_spanish_ci NOT NULL,
   `seguimiento_estudiante` int(11) NOT NULL,
   `estatus_estudiante` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `institucion`
+--
+
+CREATE TABLE `institucion` (
+  `id_institución` int(11) NOT NULL,
+  `des_institucion` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
+  `codigo_institucion` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+  `direccion_institucion` varchar(60) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
@@ -169,6 +182,13 @@ CREATE TABLE `personas` (
   `telefono_persona` varchar(12) COLLATE utf8_spanish_ci DEFAULT NULL,
   `direccion_n_persona` varchar(120) COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `personas`
+--
+
+INSERT INTO `personas` (`cedula_persona`, `nombre_persona`, `apellido_persona`, `nacionalidad_persona`, `sexo_persona`, `correo_persona`, `fecha_n_persona`, `direccion_persona`, `telefono_persona`, `direccion_n_persona`) VALUES
+('46465456', 'hkjhjkhjkh', 'kjhkjhjkh', 'V', 'M', NULL, '1999-10-10', 'kjhjkhjkhj', '46465456', 'lkjkjkjkjl');
 
 -- --------------------------------------------------------
 
@@ -299,6 +319,12 @@ ALTER TABLE `estudiante`
   ADD PRIMARY KEY (`cedula_estudiante`);
 
 --
+-- Indices de la tabla `institucion`
+--
+ALTER TABLE `institucion`
+  ADD PRIMARY KEY (`id_institución`);
+
+--
 -- Indices de la tabla `materia`
 --
 ALTER TABLE `materia`
@@ -392,6 +418,12 @@ ALTER TABLE `asignacion_profesor_seccion`
 --
 ALTER TABLE `bitacora_notas`
   MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `institucion`
+--
+ALTER TABLE `institucion`
+  MODIFY `id_institución` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `materia`

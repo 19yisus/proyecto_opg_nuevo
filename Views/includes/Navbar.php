@@ -30,6 +30,7 @@
           </h2>
           <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordionExample">
             <ul class="list-group">
+              <a class="list-group-item list-group-item-action" href="./VisInstitucion">Gestión datos de la institución</a>
               <a class="list-group-item list-group-item-action" href="./VisPeriodo">Gestión de Periodo Escolar</a>
               <a class="list-group-item list-group-item-action" href="./VisPensum">Gestión de Pensum</a>
               <a class="list-group-item list-group-item-action" href="./VisSeccion">Gestión de Secciones</a>

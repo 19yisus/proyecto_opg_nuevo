@@ -41,41 +41,40 @@ if (isset($_GET['ope'])) {
 
 function SaveData()
 {
-	$materias = [];
-	for ($i = 0; $i < sizeof($_POST['materia']); $i++) {
-		array_push($materias, [
-			'des' => $_POST['materia'][$i],
-			'primero' => isset($_POST['primero'][$i]) ? "1" : "0",
-			'segundo' => isset($_POST['segundo'][$i]) ? "1" : "0",
-			'tercero' => isset($_POST['tercero'][$i]) ? "1" : "0",
-			'cuarto' => isset($_POST['cuarto'][$i]) ? "1" : "0",
-			'quinto' => isset($_POST['quinto'][$i]) ? "1" : "0",
-			'sexto' => isset($_POST['sexto'][$i]) ? "1" : "0",
-		]);
-	}
+	// for ($i = 0; $i < sizeof($_POST['materia']); $i++) {
+	// 	array_push($materias, [
+	// 		'des' => $_POST['materia'][$i],
+	// 		'primero' => isset($_POST['primero'][$i]) ? "1" : "0",
+	// 		'segundo' => isset($_POST['segundo'][$i]) ? "1" : "0",
+	// 		'tercero' => isset($_POST['tercero'][$i]) ? "1" : "0",
+	// 		'cuarto' => isset($_POST['cuarto'][$i]) ? "1" : "0",
+	// 		'quinto' => isset($_POST['quinto'][$i]) ? "1" : "0",
+	// 		'sexto' => isset($_POST['sexto'][$i]) ? "1" : "0",
+	// 	]);
+	// }
 	$PensumModel = new PensumModel();
-	$PensumModel->SetData($_POST, $materias);
+	$PensumModel->SetData($_POST);
 	$PensumModel->SaveDatos();
 }
 
 function UpdateData()
 {
-	$materias = [];
-	for ($i = 0; $i < sizeof($_POST['materia']); $i++) {
-		array_push($materias, [
-			'id' => $_POST['id_materia'][$i],
-			'des' => $_POST['materia'][$i],
-			'primero' => isset($_POST['primero'][$i]) ? "1" : "0",
-			'segundo' => isset($_POST['segundo'][$i]) ? "1" : "0",
-			'tercero' => isset($_POST['tercero'][$i]) ? "1" : "0",
-			'cuarto' => isset($_POST['cuarto'][$i]) ? "1" : "0",
-			'quinto' => isset($_POST['quinto'][$i]) ? "1" : "0",
-			'sexto' => isset($_POST['sexto'][$i]) ? "1" : "0",
-		]);
-	}
+	// $materias = [];
+	// for ($i = 0; $i < sizeof($_POST['materia']); $i++) {
+	// 	array_push($materias, [
+	// 		'id' => $_POST['id_materia'][$i],
+	// 		'des' => $_POST['materia'][$i],
+	// 		'primero' => isset($_POST['primero'][$i]) ? "1" : "0",
+	// 		'segundo' => isset($_POST['segundo'][$i]) ? "1" : "0",
+	// 		'tercero' => isset($_POST['tercero'][$i]) ? "1" : "0",
+	// 		'cuarto' => isset($_POST['cuarto'][$i]) ? "1" : "0",
+	// 		'quinto' => isset($_POST['quinto'][$i]) ? "1" : "0",
+	// 		'sexto' => isset($_POST['sexto'][$i]) ? "1" : "0",
+	// 	]);
+	// }
 
 	$PensumModel = new PensumModel();
-	$PensumModel->SetData($_POST, $materias);
+	$PensumModel->SetData($_POST);
 	$PensumModel->UpdateDatos();
 }
 

@@ -83,7 +83,7 @@
                     </div>
                   </div>
                 </div>
-                <div v-for="(item, index) in materias" class="row my-1" v-show="action != 'Consult'">
+                <!-- <div v-for="(item, index) in materias" class="row my-1" v-show="action != 'Consult'">
                   <div class="col-6">
                     <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                       <input type="hidden" name="id_materia[]" v-model="materias[index].id_materia">
@@ -120,7 +120,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
 
               <div class="modal-footer mx-auto">
@@ -129,12 +129,12 @@
                 <button type="submit" class="btn btn-sm btn-primary" :disabled="id_periodo == '' ">
                   <i class="fa-regular fa-circle-check"></i>GUARDAR
                 </button>
-                <button v-show="action == 'Save'" type="button" class="btn btn-sm btn-success" @click="aumentar">
+                <!-- <button v-show="action == 'Save'" type="button" class="btn btn-sm btn-success" @click="aumentar">
                   <i class="fa-regular fa-circle-xmark"></i>Mas materias
                 </button>
                 <button v-show="action == 'Save'" type="button" class="btn btn-sm btn-warning" @click="materias.pop();" v-show="materias.length > 1">
                   <i class="fa-regular fa-circle-xmark"></i>Menos materias
-                </button>
+                </button> -->
                 <button type="button" @click="LimpiarForm" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
                   <i class="fa-regular fa-circle-xmark"></i>SALIR
                 </button>

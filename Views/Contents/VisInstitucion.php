@@ -22,10 +22,13 @@
           <!-- input de busqueda -->
           <div class="col-md-12 mx-auto">
             <div class="col-md-7 mx-auto">
-              <h3 class="fw-bold text-center text-success">Gestión de Materias</h3>
+              <h3 class="fw-bold text-center text-success">Gestión de Datos de la Institución</h3>
             </div>
           </div>
           <div class="col-md-12 row justify-content-end" style="margin: 0; padding: 0;">
+
+
+
             <div class="col-md-2 justify-content-end" style="margin: 0; padding: 0;">
               <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px">
                 <i class="fa-regular fa-user"></i> AGREGAR
@@ -39,11 +42,9 @@
               <table class="table border" id="datatable">
                 <thead>
                   <tr>
-                    <th class="text-center" scope="col">N°</th>
+                    <th class="text-center" scope="col">Código</th>
                     <th class="text-center" scope="col">Descripción</th>
-                    <th class="text-center" scope="col">Perido Escolar</th>
-                    <th class="text-center" scope="col">Pensum</th>
-                    <th class="text-center" scope="col">Estado</th>
+                    <th class="text-center" scope="col">Dirección</th>
                     <th class="text-center" scope="col">Opciones</th>
                   </tr>
                 </thead>
@@ -60,60 +61,32 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Registro Materias</h5>
+              <h5 class="modal-title" id="staticBackdropLabel">Registro datos de la institución</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <!--
-               <div class="input-group input-group-sm">
-                  <span class="input-group-text" id="inputGroup-sizing-sm">Small</span>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                </div> 
-              -->
             <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" novalidate autocomplete="off">
               <div class="modal-body row py-2" style="padding: 0 70px ;">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
                 <input type="hidden" name="id_periodo" v-model="id_periodo">
-                <div class="col-md-6 mt-3">
+                <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Descripción:</span>
-                    <input type="text" minlength="1" maxlength="30" v-model="des_materia" name="des_materia" class="form-control form-control-sm" required id="des_materia" placeholder="Descripción de la materia" style="width:70%; text-transform:uppercase;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Código de la institución:</span>
+                    <input type="text" minlength="1" maxlength="30" v-model="codigo_institucion" name="codigo_institucion" class="form-control form-control-sm" required id="des_materia" placeholder="Descripción de la materia" style="width:70%; text-transform:uppercase;">
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label">Pensum</label>
-                  <select class="form-select form-select-sm" name="id_pensum" v-model="id_pensum" required aria-label="Default select example">
-                    <option value="" selected>Seleccionar</option>
-                    <option v-for="item in pensums" :value="item.id">{{ item.cod_pensum }} {{ (item.anios_abarcados == 'B') ? 'Basica' : 'Diversificado' }}</option>
-                  </select>
+                <div class="col-md-12 mt-3">
+                  <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Nombre de la institución:</span>
+                    <input type="text" minlength="1" maxlength="30" v-model="des_institucion" name="des_institucion" class="form-control form-control-sm" required id="des_materia" placeholder="Descripción de la materia" style="width:70%; text-transform:uppercase;">
+                    <span class="error-text">Rellene el campo correctamente</span>
+                  </div>
                 </div>
-                <div class="col-12">
-                  <label for="">Años abarcados</label>
-                  <div class="d-flex justify-content-around">
-                    <div class="form-check">
-                      <input type="checkbox" v-bind:checked="primero == 1" name="primero" id="" value="1" class="form-check-input">
-                      <small class="form-check-label">1er</small>
-                    </div>
-                    <div class="form-check">
-                      <input type="checkbox" v-bind:checked="segundo == 1" name="segundo" id="" value="1" class="form-check-input">
-                      <small class="form-check-label">2do</small>
-                    </div>
-                    <div class="form-check">
-                      <input type="checkbox" v-bind:checked="tercero == 1" name="tercero" id="" value="1" class="form-check-input">
-                      <small class="form-check-label">3ro</small>
-                    </div>
-                    <div class="form-check">
-                      <input type="checkbox" v-bind:checked="cuarto == 1" name="cuarto" id="" value="1" class="form-check-input">
-                      <small class="form-check-label">4to</small>
-                    </div>
-                    <div class="form-check">
-                      <input type="checkbox" v-bind:checked="quinto == 1" name="quinto" id="" value="1" class="form-check-input">
-                      <small class="form-check-label">5to</small>
-                    </div>
-                    <div class="form-check">
-                      <input type="checkbox" v-bind:checked="sexto == 1" name="sexto" id="" value="1" class="form-check-input">
-                      <small class="form-check-label">6to</small>
-                    </div>
+                <div class="col-md-12 mt-3">
+                  <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Dirección de la institución:</span>
+                    <textarea minlength="1" maxlength="120" v-model="direccion_institucion" name="direccion_institucion" class="form-control form-control-sm" id="direccion_institucion" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;"></textarea>
+                    <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
               </div>
@@ -139,35 +112,28 @@
       data() {
         return {
           des_periodo: "actual",
-          id: "",
-          des_materia: "",
-          id_periodo: "",
-          id_pensum: "",
-          estatus: "",
-          primero: "",
-          segundo: "",
-          tercero: "",
-          cuarto: "",
-          quinto: "",
-          sexto: "",
+          id_institucion: "",
+          des_institucion: "",
+          codigo_institucion: "",
+          direccion_institucion: "",
           formulario_valido: false,
-          pensums: [],
           action: "Save",
         }
       },
       methods: {
         SendData(e) {
+
           e.preventDefault();
           // if(!$("#Formulario").valid()) return false;
           let form = new FormData(e.target);
 
           if (!this.formulario_valido) return false;
-          fetch("./Controllers/MateriasController.php", {
+          fetch("./Controllers/InstitucionController.php", {
             method: "POST",
             body: form
           }).then(res => res.json()).then(result => {
-
             $("#datatable").DataTable().ajax.reload(null, false);
+            this.LimpiarForm();
             this.ToggleModal();
             ViewAlert(result.mensaje, result.estado);
             this.formulario_valido = false;
@@ -175,37 +141,16 @@
           }).catch(Error => console.error(Error))
         },
         async GetData(id) {
-          await fetch(`./Controllers/MateriasController.php?ope=ConsultOne&&id=${id}`)
+          await fetch(`./Controllers/InstitucionController.php?ope=ConsultOne&&id=${id}`)
             .then(res => res.json()).then(({
               data
             }) => {
-              this.id = data.id_materia;
-              this.des_materia = data.des_materia;
-              this.id_pensum = data.id_pensum_ma;
-              this.primero = data.primero;
-              this.segundo = data.segundo;
-              this.tercero = data.tercero;
-              this.cuarto = data.cuarto;
-              this.quinto = data.quinto;
-              this.sexto = data.sexto;
+              this.id_institucion = data.id_institucion;
+              this.des_institucion = data.des_institucion;
+              this.codigo_institucion = data.codigo_institucion;
+              this.direccion_institucion = data.direccion_institucion;
               this.action = "Update";
             }).catch(error => console.error(error))
-        },
-        async ChangeState(id) {
-          this.id = id;
-          this.action = "ChangeStatus";
-
-          setTimeout(async () => {
-            let form = new FormData(document.getElementById("Formulario"));
-            await fetch(`./Controllers/MateriasController.php`, {
-              method: "POST",
-              body: form
-            }).then(res => res.json()).then(result => {
-              ViewAlert(result.mensaje, result.estado);
-              $("#datatable").DataTable().ajax.reload(null, false);
-              this.action = "Save";
-            }).catch(error => console.error(error))
-          }, 100);
         },
         async periodo_activo() {
           await fetch(`./Controllers/PeriodoController.php?ope=ConsultPeriodoActivo`)
@@ -213,20 +158,10 @@
               data
             }) => {
               if (data[0] != undefined) {
-                this.id_periodo = data.id_periodo_escolar
                 this.des_periodo = data.periodoescolar;
               } else {
-                this.id_periodo = "";
                 this.des_periodo = "No hay Periodo Escolar Activo";
               }
-            }).catch(Error => console.error(Error))
-        },
-        async getPemsun() {
-          await fetch(`./Controllers/PensumController.php?ope=ConsulAll`)
-            .then(res => res.json()).then(({
-              data
-            }) => {
-              this.pensums = data;
             }).catch(Error => console.error(Error))
         },
         ToggleModal() {
@@ -235,21 +170,15 @@
           $(".modal-backdrop").remove();
         },
         LimpiarForm() {
-          this.id = "";
-          this.des_materia = "";
-          this.id_pensum = "";
-          this.primero = "";
-          this.segundo = "";
-          this.tercero = "";
-          this.cuarto = "";
-          this.quinto = "";
-          this.sexto = "";
+          this.id_institucion = "";
+          this.des_institucion = "";
+          this.codigo_institucion = "";
+          this.direccion_institucion = "";
           this.action = "Save";
         }
       },
       async mounted() {
         await this.periodo_activo();
-        await this.getPemsun();
       }
     }).mount("#App_vue");
 
@@ -258,47 +187,29 @@
 
     $("#datatable").DataTable({
       ajax: {
-        url: "./Controllers/MateriasController.php?ope=ConsulAll",
+        url: "./Controllers/InstitucionController.php?ope=ConsulAll",
         dataSrc: "data"
       },
       columns: [{
-          data: "id_materia"
+          data: "codigo_institucion"
         },
         {
-          data: "des_materia",
+          data: "des_institucion",
           render(data) {
             return data.toUpperCase()
           }
         },
         {
-          data: "periodoescolar"
-        },
-        {
-          data: "anios_abarcados",
-          render(data) {
-            if (data == "B") return "Basico";
-            if (data == "D") return "Diversificado";
-          }
-        },
-        {
-          data: "estatus_materia",
-          render(data) {
-            return data == 1 ? "Activo" : "Inactivo"
-          }
+          data: "direccion_institucion"
         },
         {
           defaultContent: '',
           render: function(data, type, row) {
-            let classStatus = row.estatus_materia == 1 ? 'success' : 'danger';
             let btns = `
               <div class="d-flex justify-content-center">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.id_materia}' class="btn btn-sm btn-info">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.id_institucion}' class="btn btn-sm btn-info">
                   <i class="fa-solid fa-edit"></i>
                 </button>
-                
-                <!-- <button type="button" onClick="CambiarEstatus(this)" data-id='${row.id_materia}' class="btn btn-sm btn-${classStatus}">
-                  <i class="fas fa-power-off"></i>
-                </button> -->
               </div>`;
             return btns;
           }
@@ -317,7 +228,9 @@
     });
 
     let tiempoFuera = null;
-    let materiaValida = false;
+    let descripcionValida = false;
+    let direccionValida = false;
+    let codigoValida = false;
 
     document.querySelectorAll('.form-box').forEach((box) => {
       app.formulario_valido = false;
@@ -333,10 +246,12 @@
 
       let button = document.querySelector('#btn-g');
       button.addEventListener('click', e => {
-        console.log(document.getElementById("Formulario").des_materia)
+        console.log(document.getElementById("Formulario").des_institucion)
         validacion(box, boxInput);
         // app.ToggleModal();
-        materiaValida = false;
+        descripcionValida = false;
+        direccionValida = false;
+        codigoValida = false;
       })
     });
 
@@ -344,19 +259,41 @@
 
     function validacion(box, boxInput) {
 
-      if (boxInput != null && boxInput.name == "des_materia") {
+      if (boxInput != null && boxInput.name == "des_institucion") {
         if (boxInput.value.length < 1) {
-          console.log('Materia')
+          console.log('descripcion')
           mostrarError(true, box);
-          materiaValida = false;
+          descripcionValida = false;
         } else {
-          console.log('Materia')
+          console.log('descripcion')
           mostrarError(false, box);
-          materiaValida = true;
+          descripcionValida = true;
         }
       }
-
-      if (materiaValida) {
+      if (boxInput != null && boxInput.name == "codigo_institucion") {
+        if (boxInput.value.length < 1) {
+          console.log('codigo')
+          mostrarError(true, box);
+          descripcionValida = false;
+        } else {
+          console.log('codigo')
+          mostrarError(false, box);
+          descripcionValida = true;
+        }
+      }
+      // if (boxInput != null && boxInput.name == "direccion_institucion") {
+      //   if (boxInput.value.length < 1) {
+      //     console.log('direccion')
+      //     mostrarError(true, box);
+      //     descripcionValida = false;
+      //   } else {
+      //     console.log('direccion')
+      //     mostrarError(false, box);
+      //     descripcionValida = true;
+      //   }
+      // }direccionValida codigoValida
+      console.log(descripcionValida, codigoValida)
+      if (descripcionValida) {
         app.formulario_valido = true;
 
 
