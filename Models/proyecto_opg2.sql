@@ -86,7 +86,7 @@ CREATE TABLE `estudiante` (
 --
 
 CREATE TABLE `institucion` (
-  `id_institución` int(11) NOT NULL,
+  `id_institucion` int(11) NOT NULL,
   `des_institucion` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
   `codigo_institucion` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
   `direccion_institucion` varchar(60) COLLATE utf8_spanish_ci NOT NULL
