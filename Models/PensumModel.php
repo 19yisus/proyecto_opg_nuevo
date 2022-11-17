@@ -21,8 +21,14 @@ class PensumModel extends DB
 	public function SaveDatos()
 	{
 		try {
-			$result = $this->consult("SELECT * FROM pensum WHERE periodo_id = '$this->id_periodo' AND 
-				anios_abarcados = '$this->anios_abarcados' AND estatus_pensum = 1;");
+
+			$result = $this->consult("SELECT * FROM pensum WHERE 
+				periodo_id = $this->id_periodo AND 
+				anios_abarcados = '$this->anios_abarcados' AND 
+				estatus_pensum = 1 OR
+				periodo_id = $this->id_periodo AND 
+				cod_pensum = '$this->cod_pensum' AND
+				estatus_pensum = 1;");
 			if (isset($result[0])) return $this->ResJSON("No se pueden duplicar las pensums en el mismo periodo", "error");
 
 			$sql = "INSERT INTO pensum(cod_pensum,anios_abarcados,periodo_id,estatus_pensum) 

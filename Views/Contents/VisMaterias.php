@@ -166,7 +166,7 @@
             method: "POST",
             body: form
           }).then(res => res.json()).then(result => {
-
+            this.LimpiarForm();
             $("#datatable").DataTable().ajax.reload(null, false);
             this.ToggleModal();
             ViewAlert(result.mensaje, result.estado);

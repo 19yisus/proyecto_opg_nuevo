@@ -47,11 +47,12 @@ class InstitucionModel extends DB
 
   public function UpdateDatos()
   {
-    try {
+    try {     
+      
       $pdo = $this->driver->prepare("UPDATE institucion SET 
           des_institucion = :descripcion ,
           codigo_institucion = :codigo,
-          direccion = :direccion
+          direccion_institucion = :direccion
           WHERE id_institucion = :id_institucion ;");
 
       $pdo->bindParam(':descripcion', $this->des_institucion);

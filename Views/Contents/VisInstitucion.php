@@ -66,7 +66,7 @@
             </div>
             <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" novalidate autocomplete="off">
               <div class="modal-body row py-2" style="padding: 0 70px ;">
-                <input type="hidden" name="id" v-model="id" v-if="id != '' ">
+                <input type="hidden" name="id_institucion" v-model="id_institucion" v-if="id_institucion != '' ">
                 <input type="hidden" name="id_periodo" v-model="id_periodo">
                 <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
@@ -145,6 +145,7 @@
             .then(res => res.json()).then(({
               data
             }) => {
+              console.log(data)
               this.id_institucion = data.id_institucion;
               this.des_institucion = data.des_institucion;
               this.codigo_institucion = data.codigo_institucion;
