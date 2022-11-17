@@ -3,52 +3,54 @@
 <?php $this->Head(); ?>
 
 <body>
-  <div class="col-md-12" id="App_vue">
+  <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
     <div class="row">
       <!-- CONTENEDOR DE NAVBAR -->
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
       <div class="col-md-12">
-        <div class="col-md-12 mx-auto px-2">
-          <div class="col-md-3 p-3 card ml-3 bg-hero mt-2">
-            <h5 class="fw-bold text-light text-center my-auto">Periodo: {{des_periodo}}</h5>
+        <div class="col-md-12  mt-2 py-2 mx-auto px-2">
+          <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
+            <div class="col-md-7 my-auto px-3  ">
+              <h2 class="fw-bold text-start my-auto text-dark">Gestión de Notas</h3>
+            </div>
+            <div class="col-md-2 p-3 card bg-primary ">
+              <h5 class="fw-bold text-light text-center my-auto">Periodo: {{des_periodo}}</h5>
+            </div>
           </div>
         </div>
 
-        <div class="col-md-8 mx-auto " style="margin-top:5%;">
-          <div class="col-md-12 mx-auto mb-3">
-            <div class="col-md-7 mx-auto">
-              <h3 class="fw-bold text-center text-success">Gestión de Notas</h3>
-            </div>
-          </div>
-          <!-- input de busqueda -->
-          <div class="col-md-12 d-flex justify-content-between container-fluid row " style="margin: 0; padding: 0;">
-            <div class="col-md-5" style="margin: 0; padding: 0;">
-              <div class="input-group input-group-sm mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-sm">Año/Seccion:</span>
-                <select class="form-select" v-model="id_seccion" aria-label="Default select example">
-                  <option value="" selected>Seleccionar</option>
-                  <option :value="item.idSeccion" v-for="item in seccionesFiltro">{{item.id_seccion}}</option>
-                </select>
-              </div>
+        <div class="col-md-12 mx-auto px-2 ">
 
-            </div>
-            <div class="col-md-5 d-flex justify-content-end">
-              <form action="./Controllers/CreatePdfEstudiantes.php" method="POST" target="__blank">
-                <input type="hidden" name="id_seccion" v-model="id_seccion">
-                <input type="hidden" name="id_periodo" v-model="id_periodo">
-                <button type="submit" class="btn btn-danger" v-bind:disabled="id_seccion == '' || id_periodo == ''">
-                  Reporte por sección
-                  <i class="fas fa-file-pdf"></i>
-                </button>
-              </form>
-            </div>
-          </div>
-          <form action="./VisCreatePdfNotas" method="GET" target="__blank" id="Form_pdf">
-            <input type="hidden" name="cedula" v-model="cedula_estudiante">
-          </form>
+          <!-- input de busqueda -->
+
           <!-- contenedor de la tabla -->
           <div class="col-md-12 card p-2 shadow ">
+            <div class="col-md-12 d-flex justify-content-between container-fluid row " style="margin: 0; padding: 0;">
+              <div class="col-md-5" style="margin: 0; padding: 0;">
+                <div class="input-group input-group-sm mb-3">
+                  <span class="input-group-text" id="inputGroup-sizing-sm">Año/Seccion:</span>
+                  <select class="form-select" v-model="id_seccion" aria-label="Default select example">
+                    <option value="" selected>Seleccionar</option>
+                    <option :value="item.idSeccion" v-for="item in seccionesFiltro">{{item.id_seccion}}</option>
+                  </select>
+                </div>
+
+              </div>
+              <div class="col-md-5 d-flex justify-content-end">
+                <form action="./Controllers/CreatePdfEstudiantes.php" method="POST" target="__blank">
+                  <input type="hidden" name="id_seccion" v-model="id_seccion">
+                  <input type="hidden" name="id_periodo" v-model="id_periodo">
+                  <button type="submit" class="btn btn-danger" v-bind:disabled="id_seccion == '' || id_periodo == ''">
+                    Reporte por sección
+                    <i class="fas fa-file-pdf"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+            <form action="./VisCreatePdfNotas" method="GET" target="__blank" id="Form_pdf">
+              <input type="hidden" name="cedula" v-model="cedula_estudiante">
+            </form>
             <div class="col ">
               <table class="table border" id="datatable">
                 <thead>

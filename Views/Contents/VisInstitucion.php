@@ -145,7 +145,6 @@
             .then(res => res.json()).then(({
               data
             }) => {
-              console.log(data)
               this.id_institucion = data.id_institucion;
               this.des_institucion = data.des_institucion;
               this.codigo_institucion = data.codigo_institucion;

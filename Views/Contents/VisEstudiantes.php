@@ -3,52 +3,39 @@
 <?php $this->Head(); ?>
 
 <body>
-  <div class="col-md-12">
-    <div class="row" id="App_vue">
+  <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
+    <div class="row">
       <!-- CONTENEDOR DE NAVBAR -->
       <?php $this->Navbar(); ?>
-
-      <!-- input de busqueda  <div class="input-group input-group-sm mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-sm">Periodo escolar:</span>
-                <select class="form-select" v-model="id_periodoFiltro" aria-label="Default select example">
-                  <option value="" selected>Seleccione un periodo escolar</option>
-                  <option :value="item.id_periodo_escolar" v-for="item in periodosFiltro">{{item.periodoescolar}}</option>
-                </select>
-              </div> -->
-
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
-      <div class="col-md-12">
-
-        <div class="col-md-12 mx-auto px-2">
-          <div class="col-md-3 p-3 card ml-3 bg-hero mt-2">
-            <h5 class="fw-bold text-dark text-center my-auto">Periodo: {{des_periodo}}</h5>
+      <div class="col-md-12 px-2">
+        <div class="col-md-12  mt-2 py-2 mx-auto px-2">
+          <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
+            <div class="col-md-7 my-auto px-3  ">
+              <h2 class="fw-bold text-start my-auto text-dark">Gestión de Estudiantes</h3>
+            </div>
+            <div class="col-md-2 p-3 card bg-primary ">
+              <h5 class="fw-bold text-light text-center my-auto">Periodo: {{des_periodo}}</h5>
+            </div>
           </div>
         </div>
 
 
-        <div class="col-md-8 mx-auto " style="margin-top:5%;">
-
-          <!-- input de busqueda -->
-          <div class="col-md-12 mx-auto">
-            <div class="col-md-7 mx-auto">
-              <h3 class="fw-bold text-center text-success">Gestión de Estudiantes</h3>
-            </div>
-          </div>
-          <div class="col-md-12 row justify-content-end" style="margin: 0; padding: 0;">
+        <div class="col-md-12 mx-auto px-2 ">
 
 
 
-            <div class="col-md-2 justify-content-end" style="margin: 0; padding: 0;">
+
+
+          <!-- contenedor de la tabla -->
+          <div class="col-md-12 card p-3 shadow ">
+            <div class="col-md-12 d-flex justify-content-end" style="margin: 0; padding: 0;">
               <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px">
                 <i class="fa-regular fa-user"></i> AGREGAR
               </button>
             </div>
-          </div>
-
-          <!-- contenedor de la tabla -->
-          <div class="col-md-12 card p-2 shadow ">
             <div class="col ">
-              <table class="table border" id="datatable">
+              <table class="table border table-sm" id="datatable">
                 <thead>
                   <tr>
                     <!-- <th class="text-center" scope="col">N°</th> -->
@@ -72,11 +59,15 @@
       <div class="modal modal-lg fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header  bg-hero-azul fw-bold">
               <h5 class="modal-title" id="staticBackdropLabel">Registro Estudiantes</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" name="formulario" novalidate>
+              <div class="col-md-12 mx-auto rounded border d-flex justify-content-between mt-2 row">
+                <h5 class="text-start col-md-4">Pensum: </h5>
+                <h5 class="text-end col-md-4">Periodo: {{des_periodo}}</h5>
+              </div>
               <input type="hidden" name="id_periodo" v-model="id_periodo">
               <div class="modal-body row " style="padding: 0 70px;">
 

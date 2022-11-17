@@ -3,35 +3,36 @@
 <?php $this->Head(); ?>
 
 <body>
-  <div class="col-md-12" id="App_vue">
+  <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
     <div class="row">
       <!-- CONTENEDOR DE NAVBAR -->
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
-      <div class="col-md-12">
-
-        <div class="col-md-8 mx-auto " style="margin-top:5%;">
-
-          <!-- input de busqueda -->
-          <div class="col-md-12 row " style="margin: 0; padding: 0;">
-            <div class="col-md-3" style="margin: 0; padding: 0;">
-              <h6 class="fw-bold text-dark">Periodo: {{des_periodo}}</h6>
+      <div class="col-md-12 px-2">
+        <div class="col-md-12  mt-2 py-2 mx-auto px-2">
+          <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
+            <div class="col-md-7 my-auto px-3  ">
+              <h2 class="fw-bold text-start my-auto text-dark">Gestión de Pensum</h3>
             </div>
-
-            <div class="col-md-7">
-              <h3 class="fw-bold text-success">Gestión de Pensum</h3>
+            <div class="col-md-2 p-3 card bg-primary ">
+              <h5 class="fw-bold text-light text-center my-auto">Periodo: {{des_periodo}}</h5>
             </div>
-            <div class="col-md-2 justify-content-end" style="margin: 0; padding: 0;">
-              <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+          </div>
+        </div>
+
+
+        <div class="col-md-12 px-2 mx-auto  ">
+
+          <!-- contenedor de la tabla -->
+          <div class="col-md-12 card p-3 shadow ">
+            <div class="col-md-12 d-flex justify-content-end" style="margin: 0; padding: 0;">
+              <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px">
                 <i class="fa-regular fa-user"></i> AGREGAR
               </button>
             </div>
-          </div>
 
-          <!-- contenedor de la tabla -->
-          <div class="col-md-12 ">
             <div class="col ">
-              <table class="table border" id="datatable">
+              <table class="table table-sm border" id="datatable">
                 <thead>
                   <tr>
                     <th class="text-center" scope="col">Código</th>
@@ -53,12 +54,16 @@
       <div class="modal fade modal-lg" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-hero-azul fw-bold">
               <h5 class="modal-title" id="staticBackdropLabel">Registro Pensum {{action}}</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- "./Controllers/PensumController.php" -->
             <form action="#" @submit.preventDefault="SendData" method="POST" id="Formulario" class="needs-validation">
+              <div class="col-md-12 mx-auto rounded border d-flex justify-content-between mt-2 row">
+                <h5 class="text-start col-md-4">Pensum: </h5>
+                <h5 class="text-end col-md-4">Periodo: {{des_periodo}}</h5>
+              </div>
               <div class="modal-body row ">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
                 <input type="hidden" name="id_periodo" v-model="id_periodo">
@@ -227,32 +232,32 @@
             this.LimpiarForm();
           }).catch(Error => console.error(Error))
         },
-        aumentar(materia = []) {
+        // aumentar(materia = []) {
 
-          if (materia['des']) {
-            this.materias.push({
-              id_materia: materia['id'],
-              des_materia: materia['des'],
-              primero: materia['primero'],
-              segundo: materia['segundo'],
-              tercero: materia['tercero'],
-              cuarto: materia['cuarto'],
-              quinto: materia['quinto'],
-              sexto: materia['sexto']
-            })
-            return false;
-          }
-          this.materias.push({
-            id_materia: "",
-            des_materia: "",
-            primero: false,
-            segundo: false,
-            tercero: false,
-            cuarto: false,
-            quinto: false,
-            sexto: false
-          })
-        },
+        //   if (materia['des']) {
+        //     this.materias.push({
+        //       id_materia: materia['id'],
+        //       des_materia: materia['des'],
+        //       primero: materia['primero'],
+        //       segundo: materia['segundo'],
+        //       tercero: materia['tercero'],
+        //       cuarto: materia['cuarto'],
+        //       quinto: materia['quinto'],
+        //       sexto: materia['sexto']
+        //     })
+        //     return false;
+        //   }
+        //   this.materias.push({
+        //     id_materia: "",
+        //     des_materia: "",
+        //     primero: false,
+        //     segundo: false,
+        //     tercero: false,
+        //     cuarto: false,
+        //     quinto: false,
+        //     sexto: false
+        //   })
+        // },
         async GetData(id) {
           this.action = "Update";
           await fetch(`./Controllers/PensumController.php?ope=ConsultOne&&id=${id}`)
@@ -260,20 +265,20 @@
               data
             }) => {
               let [pensum, materias] = data;
-              materias.forEach(item => {
-                let list = [];
-                list['id'] = item.id_materia;
-                list['des'] = item.des_materia;
-                list['primero'] = item.primero;
-                list['segundo'] = item.segundo;
-                list['tercero'] = item.tercero;
-                list['cuarto'] = item.cuarto;
-                list['quinto'] = item.quinto;
-                list['sexto'] = item.sexto;
+              // materias.forEach(item => {
+              //   let list = [];
+              //   list['id'] = item.id_materia;
+              //   list['des'] = item.des_materia;
+              //   list['primero'] = item.primero;
+              //   list['segundo'] = item.segundo;
+              //   list['tercero'] = item.tercero;
+              //   list['cuarto'] = item.cuarto;
+              //   list['quinto'] = item.quinto;
+              //   list['sexto'] = item.sexto;
 
-                this.aumentar(list);
-              });
-              this.materias_select = [];
+              //   this.aumentar(list);
+              // });
+              // this.materias_select = [];
               this.cod_pensum = pensum.cod_pensum;
               this.anios_abarcados = pensum.anios_abarcados;
               this.periodo_escolar_consultado = pensum.periodoescolar;
