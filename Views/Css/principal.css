@@ -5,17 +5,38 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: 'titulo';
+  src: url(../plugins/fonts/JandaManateeSolid.ttf);
+}
+@font-face {
+  font-family: 'titulo2';
+  src: url(../plugins/fonts/KGRedHands.ttf);
+}
+
 body{
   font-family: Arial, Helvetica, sans-serif;
   height: 100vh;
   overflow: hidden;
+  
+}
+
+
+
+.bg-hero{
+  background: #c5ddff;  /* fallback for old browsers */
+}
+
+.bg-hero-azul{
+  background: #c5ddff;  /* fallback for old browsers */
+  
 }
 
 .hero{
   height: 100vh;
   width: 100vw;
   /* background-image: url(./wave\ \(2\).svg); */
-  background-image:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #c5ddff;  /* fallback for old browsers */
   position: relative;
   /* background-size: cover;
   background-position: bottom;
@@ -52,13 +73,13 @@ body{
 }
 
 .hero__title{
-  font-size: 4rem;
-  color: #0606c0;
+  font-size: 2rem;
+  color: #264de4;
 }
 
 .hero__paragraph{
   margin: 12px 0 16px;
-  color: #fff;
+  color: #264de4;
 }
 
 .hero__cta{
@@ -82,7 +103,8 @@ body{
   position: absolute;
   width: 100vw;
   /* height: 100vh; */
-  background-image: url(../includes/wave.svg);
+  color:aliceblue;
+
   bottom: 0px;
   left: 0px;
   z-index: 0;
@@ -93,4 +115,40 @@ body{
   background-repeat: no-repeat;
   /* transform: translateY(100px); */
   /* aca para poder moverlo debemos agregarle un overflow hidden al padre, y darle un traslate a la wave */
+}
+
+.titulo-principal {
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 2rem;
+  font-family: 'titulo2';
+  text-shadow: 0.08em 0.08em 0.1em black;
+  margin: 0 auto;
+  border-right: 0.15em solid #18bdec;
+  color: rgb(255, 255, 255);
+  animation: typing 4s steps(38) 1s 1 normal both, blink 1s steps(1) infinite;
+}
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 48%;
+  }
+}
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.titulo-principal2{
+  font-size: 4rem;
+  font-family: 'titulo';
+  color: rgb(255, 255, 255);
+  text-shadow: 0.08em 0.08em 0.1em black;
+
+  
+
 }

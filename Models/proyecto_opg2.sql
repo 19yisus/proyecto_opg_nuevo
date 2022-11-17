@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 17-11-2022 a las 01:25:24
--- Versión del servidor: 10.4.20-MariaDB
--- Versión de PHP: 7.4.22
+-- Tiempo de generacion: 17-11-2022 a las 01:25:24
+-- Version del servidor: 10.4.20-MariaDB
+-- Version de PHP: 7.4.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -322,7 +322,7 @@ ALTER TABLE `estudiante`
 -- Indices de la tabla `institucion`
 --
 ALTER TABLE `institucion`
-  ADD PRIMARY KEY (`id_institución`);
+  ADD PRIMARY KEY (`id_institucion`);
 
 --
 -- Indices de la tabla `materia`
@@ -423,7 +423,7 @@ ALTER TABLE `bitacora_notas`
 -- AUTO_INCREMENT de la tabla `institucion`
 --
 ALTER TABLE `institucion`
-  MODIFY `id_institución` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `materia`
