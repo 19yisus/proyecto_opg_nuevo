@@ -69,7 +69,8 @@
                 <input type="hidden" name="id_periodo" v-model="id_periodo">
                 <div class="col-6">
                   <label class="form-label">Código: </label>
-                  <input type="text" minlength="5" maxlength="5" v-model="cod_pensum" name="cod_pensum" class="form-control form-control-sm" required id="" placeholder="Código del pensum">
+                  <input type="text" minlength="5" maxlength="5" v-model="cod_pensum" name="cod_pensum" class="form-control form-control-sm" required id="cod_pensum" placeholder="Código del pensum">
+                  <span class="error-text">Rellene el campo correctamente</span>
                 </div>
                 <div class="col-6">
                   <label class="form-label">Periodo Escolar: </label>
@@ -388,6 +389,79 @@
         url: `./Views/js/DataTables.config.json`
       }
     });
+
+    let tiempoFuera = null;
+    let codigoValida = false;
+
+    document.querySelectorAll('.form-box').forEach((box) => {
+      app.formulario_valido = false;
+      const boxInput = box.querySelector('input');
+
+      boxInput.addEventListener("blur", (event) => {
+        clearTimeout(tiempoFuera);
+        tiempoFuera = setTimeout(() => {
+          console.log(`input ${boxInput.name} value: `, boxInput.value)
+          validacion(box, boxInput, null)
+        });
+      });
+
+      let button = document.querySelector('#btn-g');
+      button.addEventListener('click', e => {
+        console.log(document.getElementById("Formulario").cod_pensum)
+        validacion(box, boxInput);
+        // app.ToggleModal();
+        codigoValida = false;
+      })
+    });
+
+
+
+    function validacion(box, boxInput) {
+
+
+      if (boxInput != null && boxInput.name == "cod_pensum") {
+        if (boxInput.value.length < 1) {
+          console.log('codigo')
+          mostrarError(true, box);
+          codigoValida = false;
+        } else {
+          console.log('codigo')
+          mostrarError(false, box);
+          codigoValida = true;
+        }
+      }
+    
+      console.log(codigoValida)
+      if (codigoValida) {
+        app.formulario_valido = true;
+
+
+      } else {
+        app.formulario_valido = false;
+      }
+
+    }
+
+    function mostrarError(check, box) {
+      // console.log("MOSTRAR ERROR");
+      if (check) {
+        box.classList.remove('div-error');
+        box.classList.add('form-error');
+      } else {
+        box.classList.add('div-error');
+        box.classList.remove('form-error');
+      }
+    }
+
+    $("#cod_pensum").bind('keypress', function(event) {
+      var regex = new RegExp("^[0-9]+$");
+      var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+      if (!regex.test(key)) {
+        event.preventDefault();
+        return false;
+      }
+    });
+
   </script>
 </body>
 

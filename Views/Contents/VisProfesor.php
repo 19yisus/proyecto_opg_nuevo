@@ -100,7 +100,7 @@
 
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Nombres:</span>
-                    <input type="text" name="nombre" v-model="nombre" maxlength="20" class="form-control form-control-sm" id="" required placeholder="Ingrese el nombre del profesor" :disabled="action == 'Asignar' " style="width:70%;">
+                    <input type="text" name="nombre" v-model="nombre" maxlength="20" class="form-control form-control-sm" id="nombre" required placeholder="Ingrese el nombre del profesor" :disabled="action == 'Asignar' " style="width:70%;">
                     <span class="error-text">Nombre no valido</span>
                   </div>
 
@@ -111,7 +111,7 @@
 
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Apellidos:</span>
-                    <input type="text" name="apellido" v-model="apellido" maxlength="20" class="form-control form-control-sm" id="" required placeholder="Ingrese el apellido del profesor" :disabled="action == 'Asignar' " style="width:70%;">
+                    <input type="text" name="apellido" v-model="apellido" maxlength="20" class="form-control form-control-sm" id="apellido" required placeholder="Ingrese el apellido del profesor" :disabled="action == 'Asignar' " style="width:70%;">
                     <span class="error-text">Apellido no valido</span>
                   </div>
 
@@ -121,7 +121,7 @@
 
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Fecha de Nacimiento:</span>
-                    <input type="text" name="fecha_n_persona" v-model="fecha_n" class="form-control form-control-sm" id="" placeholder="dd/mm/aaaa" required style="width:50%;">
+                    <input type="date" min="1987-01-01" max="1999-12-31" name="fecha_n_persona" v-model="fecha_n" class="form-control form-control-sm" id="" placeholder="dd/mm/aaaa" required style="width:50%;">
                     <span class="error-text">Formato o fecha inválida</span>
                   </div>
 
@@ -645,7 +645,22 @@
     }
 
 
-    function validacion(box, boxInput) {
+    async function validacion(box, boxInput) {
+      let cedulaRepetida = false;
+
+      if (boxInput.value.length >= 7) {
+        await fetch(`./Controllers/EstudiantesController.php?ope=VerificarCedula&&id=${boxInput.value}`)
+          .then(response => response.json())
+          .then(result => {
+            if (result.data.cedula_persona) {
+              alert("Esta cedula ya esta registrada")
+              cedulaRepetida = true;
+            } else {
+              cedulaRepetida = false;
+            }
+          }).catch(error => console.error(error))
+      } else cedulaRepetida = false;
+
       if (boxInput != null && boxInput.name == "cedula") {
         if (boxInput.value.length < 7 || boxInput.value.length > 8) {
           console.error('Campo vacío o cédula inválida')
@@ -653,6 +668,10 @@
           cedulaValida = false;
         } else if (isNaN(boxInput.value)) {
           console.error(`${boxInput.value} no es un numero`);
+          mostrarError(true, box);
+          cedulaValida = false
+        } else if (cedulaRepetida) {
+          console.error(`${boxInput.value} Ya esta registrado`);
           mostrarError(true, box);
           cedulaValida = false
         } else {
@@ -834,6 +853,15 @@
         box.classList.remove('form-error');
       }
     }
+
+    $("#nombre, #apellido").bind('keypress', function(event) {
+      var regex = new RegExp("^[a-zA-Z ]+$");
+      var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+      if (!regex.test(key)) {
+        event.preventDefault();
+        return false;
+      }
+    });
   </script>
 
   <!-- <script src="./views/js/Seccion/index.js"></script> -->

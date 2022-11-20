@@ -82,7 +82,7 @@
                 <div class="col-md-6 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Pensum:</span>
-                    <select class="form-select form-select-sm" name="id_pensum" v-model="id_pensum" required aria-label="Default select example">
+                    <select class="form-select form-select-sm" name="id_pensum" v-model="id_pensum" required aria-label="Default select example" disabled>
                       <option value="" selected>Seleccionar</option>
                       <option v-for="item in pensums" :value="item.id">{{ item.cod_pensum }} {{ (item.anios_abarcados == 'B') ? 'Basica' : 'Diversificado' }}</option>
                     </select>
@@ -352,10 +352,13 @@
           console.log('Materia')
           mostrarError(true, box);
           materiaValida = false;
+          document.querySelector('select').value = "";
+          document.querySelector('select').disabled = true;
         } else {
           console.log('Materia')
           mostrarError(false, box);
           materiaValida = true;
+          document.querySelector('select').disabled = false;
         }
       }
 

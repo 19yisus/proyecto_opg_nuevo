@@ -14,7 +14,7 @@
 			$this->apellido_persona = isset($datos['apellido']) ? $datos['apellido'] : null;
 			$this->nacionalidad_persona = isset($datos['nacionalidad']) ? $datos['nacionalidad'] : null;
 			$this->sexo_persona = isset($datos['sexo']) ? $datos['sexo'] : null;
-			$this->fecha_n_persona = isset($datos['fecha_n_persona']) ? DateTime::createFromFormat("d/m/Y",$datos['fecha_n_persona'])->format("Y-m-d") : null;
+			$this->fecha_n_persona = isset($datos['fecha_n_persona']) ? $datos['fecha_n_persona'] : null;
 			$this->direccion_persona = isset($datos['direccion']) ? $datos['direccion'] : null;
 			$this->telefono_persona = isset($datos['telefono_persona']) ? $datos['telefono_persona'] : null;
 			$this->direccion_n_persona = isset($datos['direccion_n_persona']) ? $datos['direccion_n_persona'] : null;
@@ -95,7 +95,7 @@
 
 		public function GetOne($id){
 			try{
-				$result = $this->consult("SELECT * FROM materia WHERE id_materia = '$id' ;");
+				$result = $this->consult("SELECT * FROM personas WHERE cedula_persona = '$id';");
 
 				if(isset($result[0])) $this->ResDataJSON($result);
 				else $this->ResDataJSON([]);

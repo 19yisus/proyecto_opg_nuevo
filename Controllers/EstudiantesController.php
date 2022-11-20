@@ -38,6 +38,10 @@
 			case 'ConsultOne':
 				GetData($_GET['id']);
 			break;
+
+			case 'VerificarCedula':
+				Verificar_cedula($_GET['id']);
+			break;
 		}
 	}
 
@@ -88,3 +92,9 @@
 		$EstudiantesModel = new EstudiantesModel();
 		$EstudiantesModel->GetOne($id);			
 	}
+
+	function Verificar_cedula($id){
+		$PersonasModel = new PersonasModel();
+		$PersonasModel->GetOne($id);			
+	}
+	

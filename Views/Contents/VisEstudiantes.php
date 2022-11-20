@@ -97,7 +97,7 @@
                 <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Nombres:</span>
-                    <input type="text" name="nombre" :disabled="action == 'Asignacion'" v-model="nombre" maxlength="20" class="form-control form-control-sm" id="nombre" required placeholder="Ingrese el nombre del estudiante" style="width:70%;">
+                    <input type="text" name="nombre" :disabled="action == 'Asignacion'" v-model="nombre" maxlength="20" class="form-control form-control-sm" id="nombre" required placeholder="Ingrese el nombre del estudiante" style="width:70%;" disabled>
                     <span class="error-text">Nombre no valido</span>
                   </div>
                 </div>
@@ -105,7 +105,7 @@
                 <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Apellidos:</span>
-                    <input type="text" name="apellido" :disabled="action == 'Asignacion'" v-model="apellido" maxlength="20" class="form-control form-control-sm" id="apellido" required placeholder="Ingrese el apellido del estudiante" style="width:70%;">
+                    <input type="text" name="apellido" :disabled="action == 'Asignacion'" v-model="apellido" maxlength="20" class="form-control form-control-sm" id="apellido" required placeholder="Ingrese el apellido del estudiante" style="width:70%;" disabled>
                     <span class="error-text">Apellido no valido</span>
                   </div>
                 </div>
@@ -113,7 +113,7 @@
                 <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Fecha de Nacimiento:</span>
-                    <input type="text" name="fecha_n_persona" :disabled="action == 'Asignacion'" v-model="fecha_n" class="form-control form-control-sm" id="fecha_n_persona" placeholder="dd/mm/aaaa" required style="width:50%;">
+                    <input type="date" :max="fecha_maxima" name="fecha_n_persona" :disabled="action == 'Asignacion'" v-model="fecha_n" class="form-control form-control-sm" id="fecha_n_persona" placeholder="dd/mm/aaaa" required style="width:50%;" disabled>
                     <span class="error-text">Formato o fecha inválida</span>
                   </div>
 
@@ -122,7 +122,7 @@
                 <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Lugar de Nacimiento:</span>
-                    <input type="text" name="direccion_n_persona" :disabled="action == 'Asignacion'" v-model="lugar_n" class="form-control form-control-sm" id="direccion_persona" placeholder="Ingrese el lugar de nacimiento" required style="width:50%;">
+                    <input type="text" name="direccion_n_persona" :disabled="action == 'Asignacion'" v-model="lugar_n" class="form-control form-control-sm" id="direccion_persona" placeholder="Ingrese el lugar de nacimiento" required style="width:50%;" disabled>
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
@@ -131,7 +131,7 @@
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Seguimiento:</span>
                     <input type="number" min="1" max="6" maxlength="1" :readonly="action == 'Update' || action == 'Asignacion' " minlength="1" name="seguimiento_estudiante" class="form-control form-control-sm" id="" v-model="seguimiento" placeholder="Año">
-                    <select name="id_seccion" v-model="id_seccion" id="seccion" class="form-select" :disabled="desactivado" aria-label="Default select example" required>
+                    <select name="id_seccion" v-model="id_seccion" id="seccion" class="form-select" :disabled="desactivado" aria-label="Default select example" required disabled>
                       <option value="0">Seleccione una opción</option>
                       <option :value="item.idSeccion" v-for="item in secciones">{{item.id_seccion}}</option>
                     </select>
@@ -145,7 +145,7 @@
                 <div class="col-md-6" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Dirección:</span>
-                    <input type="text" name="direccion" :disabled="action == 'Asignacion'" v-model="direccion" maxlength="100" class="form-control form-control-sm" id="" placeholder="Ingrese la dirección" required style="width:70%;">
+                    <input type="text" name="direccion" :disabled="action == 'Asignacion'" v-model="direccion" maxlength="100" class="form-control form-control-sm" id="" placeholder="Ingrese la dirección" required style="width:70%;" disabled>
                     <span class="error-text">Direccion inválida</span>
                   </div>
                 </div>
@@ -355,6 +355,16 @@
         ifPeriodo() {
           if (this.id_periodo == "") return true;
           return false;
+        },
+        async ConsultCedula(newCedula) {
+          console.log(newCedula)
+          if (newCedula.length >= 7) {
+            await fetch(`./Controllers/EstudiantesController.php?ope=ConsultOne&&id=${newCedula}`)
+              .then(response => response.json())
+              .then(result => {
+                console.log(result)
+              }).catch(error => console.error(error))
+          }
         }
       },
       watch: {
@@ -541,14 +551,33 @@
       }
     }
 
-    function validacion(box, boxInput) {
+    async function validacion(box, boxInput) {
       if (boxInput != null && boxInput.name == "cedula") {
+        let cedulaRepetida = false;
+
+        if (boxInput.value.length >= 7) {
+          await fetch(`./Controllers/EstudiantesController.php?ope=VerificarCedula&&id=${boxInput.value}`)
+            .then(response => response.json())
+            .then(result => {
+              if(result.data.cedula_persona){
+                alert("Esta cedula ya esta registrada")
+                cedulaRepetida = true;
+              }else{
+                cedulaRepetida = false;
+              }
+            }).catch(error => console.error(error))
+        }else cedulaRepetida = false;
+
         if (boxInput.value.length < 7 || boxInput.value.length > 8) {
           console.error('Campo vacío o cédula inválida')
           mostrarError(true, box);
           cedulaValida = false;
         } else if (isNaN(boxInput.value)) {
           console.error(`${boxInput.value} no es un numero`);
+          mostrarError(true, box);
+          cedulaValida = false
+        } else if (cedulaRepetida) {
+          console.error(`${boxInput.value} Ya esta registrado`);
           mostrarError(true, box);
           cedulaValida = false
         } else {
@@ -617,51 +646,78 @@
         }
       }
 
+
       if (boxInput != null & boxInput.name == "fecha_n_persona") {
-        const DATE_REGEX = /^(0[1-9]|[1-2]\d|3[01])(\/)(0[1-9]|1[012])\2(\d{4})$/
-        const CURRENT_DATE = app.fecha_maxima
-        // const CURRENT_YEAR = new Date().getFullYear();
-        console.log('Validacion fecha de nacimiento')
-        if (boxInput.value.length == 2) boxInput.value = boxInput.value + '/';
-        if (boxInput.value.length == 5) boxInput.value = boxInput.value + '/';
+        console.log('Validacion fecha inicio')
 
-        if (!boxInput.value.match(DATE_REGEX)) {
-          mostrarError(true, box);
-          fechaValida = false;
-          return false
-        }
-        /* Comprobar los días del mes */
-        const day = parseInt(boxInput.value.split('/')[0])
-        const month = parseInt(boxInput.value.split('/')[1])
-        const year = parseInt(boxInput.value.split('/')[2])
-
-        const CURRENT_DAY = parseInt(CURRENT_DATE.split('-')[2])
-        const CURRENT_MONTH = parseInt(CURRENT_DATE.split('-')[1])
-        const CURRENT_YEAR = parseInt(CURRENT_DATE.split('-')[0])
-
-        const monthDays = new Date(year, month, 0).getDate()
-        if (day > monthDays) {
+        if (!moment(boxInput.value).isValid()) {
+          app.formulario_valido = false
           mostrarError(true, box);
           fechaValida = false;
           return false
         }
 
         /* Comprobar que el año no sea superior al actual*/
-        if (year > CURRENT_YEAR) {
-          if (month > CURRENT_MONTH) {
-            mostrarError(true, box);
-            fechaValida = false;
-            return false
-          }
+        if (moment(boxInput.value).isAfter(moment(boxInput.max)) || moment(boxInput.value).isBefore(moment(boxInput.min))) {
+          app.formulario_valido = false
           mostrarError(true, box);
-          fechaValida = false;
+          fechaIValida = false;
           return false
         } else {
+          app.formulario_valido = true
           mostrarError(false, box);
           fechaValida = true;
           return true
         }
       }
+
+
+
+      // if (boxInput != null & boxInput.name == "fecha_n_persona") {
+      //   const DATE_REGEX = /^(0[1-9]|[1-2]\d|3[01])(\/)(0[1-9]|1[012])\2(\d{4})$/
+      //   const CURRENT_DATE = app.fecha_maxima
+      //   // const CURRENT_YEAR = new Date().getFullYear();
+      //   console.log('Validacion fecha de nacimiento')
+      //   if (boxInput.value.length == 2) boxInput.value = boxInput.value + '/';
+      //   if (boxInput.value.length == 5) boxInput.value = boxInput.value + '/';
+
+      //   if (!boxInput.value.match(DATE_REGEX)) {
+      //     mostrarError(true, box);
+      //     fechaValida = false;
+      //     return false
+      //   }
+      //   /* Comprobar los días del mes */
+      //   const day = parseInt(boxInput.value.split('/')[0])
+      //   const month = parseInt(boxInput.value.split('/')[1])
+      //   const year = parseInt(boxInput.value.split('/')[2])
+
+      //   const CURRENT_DAY = parseInt(CURRENT_DATE.split('-')[2])
+      //   const CURRENT_MONTH = parseInt(CURRENT_DATE.split('-')[1])
+      //   const CURRENT_YEAR = parseInt(CURRENT_DATE.split('-')[0])
+
+      //   const monthDays = new Date(year, month, 0).getDate()
+      //   if (day > monthDays) {
+      //     mostrarError(true, box);
+      //     fechaValida = false;
+      //     return false
+      //   }
+
+      //   /* Comprobar que el año no sea superior al actual*/
+      //   if (year > CURRENT_YEAR) {
+      //     if (month > CURRENT_MONTH) {
+      //       mostrarError(true, box);
+      //       fechaValida = false;
+      //       return false
+      //     }
+      //     mostrarError(true, box);
+      //     fechaValida = false;
+      //     return false
+      //   } else {
+      //     mostrarError(false, box);
+      //     fechaValida = true;
+      //     return true
+      //   }
+      // }
 
       if (boxInput != null && boxInput.name == "direccion_n_persona") {
         console.log("validacion lugar de nacimiento")
@@ -721,6 +777,16 @@
         box.classList.remove('form-error');
       }
     }
+
+
+    $("#nombre, #apellido").bind('keypress', function(event) {
+      var regex = new RegExp("^[a-zA-Z ]+$");
+      var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+      if (!regex.test(key)) {
+        event.preventDefault();
+        return false;
+      }
+    });
   </script>
 </body>
 
