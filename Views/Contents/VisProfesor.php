@@ -100,7 +100,7 @@
 
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Nombres:</span>
-                    <input type="text" name="nombre" v-model="nombre" maxlength="20" class="form-control form-control-sm" id="nombre" required placeholder="Ingrese el nombre del profesor" :disabled="action == 'Asignar' " style="width:70%;">
+                    <input type="text" name="nombre" v-model="nombre" maxlength="20" class="form-control form-control-sm" id="nombre" required placeholder="Ingrese el nombre del profesor" style="width:70%;" disabled>
                     <span class="error-text">Nombre no valido</span>
                   </div>
 
@@ -111,7 +111,7 @@
 
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Apellidos:</span>
-                    <input type="text" name="apellido" v-model="apellido" maxlength="20" class="form-control form-control-sm" id="apellido" required placeholder="Ingrese el apellido del profesor" :disabled="action == 'Asignar' " style="width:70%;">
+                    <input type="text" name="apellido" v-model="apellido" maxlength="20" class="form-control form-control-sm" id="apellido" required placeholder="Ingrese el apellido del profesor" style="width:70%;" disabled>
                     <span class="error-text">Apellido no valido</span>
                   </div>
 
@@ -119,9 +119,9 @@
 
                 <div class="col-md-6 " style="margin:0; padding:5px;" v-if="action != 'Asignar' ">
 
-                  <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
+                  <div class="input-group input-group-sm form-box form-box-fecha" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Fecha de Nacimiento:</span>
-                    <input type="date" min="1987-01-01" max="1999-12-31" name="fecha_n_persona" v-model="fecha_n" class="form-control form-control-sm" id="" placeholder="dd/mm/aaaa" required style="width:50%;">
+                    <input type="date" min="1987-01-01" max="1999-12-31" name="fecha_n_persona" v-model="fecha_n" class="form-control form-control-sm" id="fecha_n_persona" placeholder="dd/mm/aaaa" required style="width:50%;" disabled>
                     <span class="error-text">Formato o fecha inválida</span>
                   </div>
 
@@ -130,7 +130,7 @@
                 <div class="col-md-6 " style="margin:0; padding:5px;" v-if="action != 'Asignar' ">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Correo electronico:</span>
-                    <input type="email" name="correo_persona" v-model="correo_persona" class="form-control form-control-sm" id="" required placeholder="Ingrese el correo electronico" style="width: 50%;">
+                    <input type="email" name="correo_persona" v-model="correo_persona" class="form-control form-control-sm" id="correo_persona" required placeholder="Ingrese el correo electronico" style="width: 50%;" disabled>
                     <span class="error-text">Correo inválido</span>
                   </div>
                 </div>
@@ -139,7 +139,7 @@
                 <div class="col-md-6" style="margin:0; padding:5px;" v-if="action != 'Asignar' ">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Dirección:</span>
-                    <input type="text" name="direccion" v-model="direccion" class="form-control form-control-sm" id="" placeholder="Ingrese la dirección" required style="width:70%;">
+                    <input type="text" name="direccion" v-model="direccion" class="form-control form-control-sm" id="direccion" placeholder="Ingrese la dirección" required style="width:70%;" disabled>
                     <span class="error-text">Direccion inválida</span>
                   </div>
                 </div>
@@ -298,7 +298,7 @@
               this.apellido = profesor.apellido_persona;
               this.fecha_n = moment(profesor.fecha_n_persona).format("D/MM/YYYY");
               this.correo_persona = profesor.correo_persona;
-              this.direccion = profesor.direccion_persona;
+              
               this.sexo = profesor.sexo_persona;
 
               if (data.Asignaciones[0] != undefined) {
@@ -556,18 +556,20 @@
     let cedulaValida = false;
     let nombreValida = false;
     let apellidoValida = false;
-    let fechaValida = false;
     let correoValida = false;
     let direccionValida = false;
+    let fechaValida = false;
     let seguimientoValida = false;
     let materiaValida = false;
     let seccionValida = false;
     let radioValida = false;
 
+
+
+
     document.querySelectorAll('.form-box').forEach((box) => {
       const boxInput = box.querySelector('input');
-
-      boxInput.addEventListener("keypress", (event) => {
+      boxInput.addEventListener("blur", (event) => {
         clearTimeout(tiempoFuera);
         tiempoFuera = setTimeout(() => {
           console.log(`input ${boxInput.name} value: `, boxInput.value)
@@ -586,36 +588,97 @@
         let cedulaValida = false;
         let nombreValida = false;
         let apellidoValida = false;
-        let fechaValida = false;
         let correoValida = false;
         let direccionValida = false;
         let seguimientoValida = false;
         let radioValida = false;
-      });
+      })
 
-      document.querySelectorAll('.form-box-select').forEach((box) => {
-        const boxSelect = box.querySelector('select');
-        boxSelect.addEventListener("click", (event) => {
-          clearTimeout(tiempoFuera);
-          tiempoFuera = setTimeout(() => {
-            console.log(`select ${boxSelect.name} value: `, boxSelect.value)
-            validarSelect(box, boxSelect, null)
-          });
-        })
-        let button = document.querySelector('#btn-g');
-        button.addEventListener('click', e => {
-          validarSelect(box, boxSelect)
-          let materiaValida = false;
-          let seccionValida = false;
-        })
-      });
     });
+
+
+    document.querySelectorAll('.form-box-fecha').forEach((box) => {
+      const boxInput = box.querySelector('input');
+      boxInput.addEventListener("keypress", (event) => {
+        clearTimeout(tiempoFuera);
+        tiempoFuera = setTimeout(() => {
+          console.log(`input ${boxInput.name} value: `, boxInput.value)
+          validacionFecha(box, boxInput, null)
+        });
+      })
+      let button = document.querySelector('#btn-g');
+      button.addEventListener('click', e => {
+        validacionFecha(box, boxInput);
+        let fechaValida = false;
+      })
+    });
+
+
+    document.querySelectorAll('.form-box-select').forEach((box) => {
+      const boxSelect = box.querySelector('select');
+      boxSelect.addEventListener("click", (event) => {
+        clearTimeout(tiempoFuera);
+        tiempoFuera = setTimeout(() => {
+          console.log(`select ${boxSelect.name} value: `, boxSelect.value)
+          validarSelect(box, boxSelect, null)
+        }, 250);
+      })
+      let button = document.querySelector('#btn-g');
+      button.addEventListener('click', e => {
+        validarSelect(box, boxSelect)
+        let seccionValida = false;
+      })
+    });
+
+
+    function validacionFecha(box, boxInput){
+
+      if (boxInput != null & boxInput.name == "fecha_n_persona") {
+        console.log('Validacion fecha inicio')
+
+        if (!moment(boxInput.value).isValid()) {
+          app.formulario_valido = false
+          mostrarError(true, box);
+          fechaValida = false;
+          document.querySelector('#correo_persona').disabled = true;
+          return false
+        }
+
+        /* Comprobar que el año no sea superior al actual*/
+        if (moment(boxInput.value).isAfter(moment(boxInput.max)) || moment(boxInput.value).isBefore(moment(boxInput.min))) {
+          app.formulario_valido = false
+          mostrarError(true, box);
+          fechaIValida = false;
+          document.querySelector('#correo_persona').disabled = true;
+          return false
+        } else {
+          app.formulario_valido = true
+          mostrarError(false, box);
+          fechaValida = true;
+          document.querySelector('#correo_persona').disabled = false;
+          return true
+        }
+      }
+    }
+
+
 
     function validarSelect(box, boxSelect) {
       if (boxSelect.name == 'nacionalidad') {
         if (boxSelect.value == "") {
           mostrarError(true, box);
           nacionalidadValida = false;
+          document.querySelector('#nombre').disabled = true;
+          document.querySelector('#nombre').value = "";
+          document.querySelector('#apellido').disabled = true;
+          document.querySelector('#apellido').value = "";
+          document.querySelector('#fecha_n_persona').disabled = true;
+          document.querySelector('#fecha_n_persona').value = "";
+          document.querySelector('#correo_persona').disabled = true;
+          document.querySelector('#correo_persona').value = "";
+          document.querySelector('#direccion').disabled = true;
+          document.querySelector('#direccion').value = "";
+
         } else {
           console.log(box);
           mostrarError(false, box);
@@ -655,8 +718,19 @@
             if (result.data.cedula_persona) {
               alert("Esta cedula ya esta registrada")
               cedulaRepetida = true;
-            } else {
-              cedulaRepetida = false;
+              document.querySelector('#nombre').disabled = false;
+              }else{
+                document.querySelector('#nombre').disabled = true;
+                document.querySelector('#nombre').value = "";
+                document.querySelector('#apellido').disabled = true;
+                document.querySelector('#apellido').value = "";
+                document.querySelector('#fecha_n_persona').disabled = true;
+                document.querySelector('#fecha_n_persona').value = "";
+                document.querySelector('#correo_persona').disabled = true;
+                document.querySelector('#correo_persona').value = "";
+                document.querySelector('#direccion').disabled = true;
+                document.querySelector('#direccion').value = "";
+                cedulaRepetida = false;
             }
           }).catch(error => console.error(error))
       } else cedulaRepetida = false;
@@ -666,17 +740,48 @@
           console.error('Campo vacío o cédula inválida')
           mostrarError(true, box);
           cedulaValida = false;
+          document.querySelector('#nombre').disabled = true;
+          document.querySelector('#nombre').value = "";
+          document.querySelector('#apellido').disabled = true;
+          document.querySelector('#apellido').value = "";
+          document.querySelector('#fecha_n_persona').disabled = true;
+          document.querySelector('#fecha_n_persona').value = "";
+          document.querySelector('#correo_persona').disabled = true;
+          document.querySelector('#correo_persona').value = "";
+          document.querySelector('#direccion').disabled = true;
+          document.querySelector('#direccion').value = "";
+
         } else if (isNaN(boxInput.value)) {
           console.error(`${boxInput.value} no es un numero`);
           mostrarError(true, box);
-          cedulaValida = false
+          document.querySelector('#nombre').disabled = true;
+          document.querySelector('#nombre').value = "";
+          document.querySelector('#apellido').disabled = true;
+          document.querySelector('#apellido').value = "";
+          document.querySelector('#fecha_n_persona').disabled = true;
+          document.querySelector('#fecha_n_persona').value = "";
+          document.querySelector('#correo_persona').disabled = true;
+          document.querySelector('#correo_persona').value = "";
+          document.querySelector('#direccion').disabled = true;
+          document.querySelector('#direccion').value = "";
+          cedulaValida = false;
         } else if (cedulaRepetida) {
           console.error(`${boxInput.value} Ya esta registrado`);
           mostrarError(true, box);
-          cedulaValida = false
+          document.querySelector('#nombre').disabled = true;
+          document.querySelector('#nombre').value = "";
+          document.querySelector('#apellido').disabled = true;
+          document.querySelector('#apellido').value = "";
+          document.querySelector('#fecha_n_persona').disabled = true;
+          document.querySelector('#fecha_n_persona').value = "";
+          document.querySelector('#correo_persona').disabled = true;
+          document.querySelector('#correo_persona').value = "";
+          document.querySelector('#direccion').disabled = true;
+          document.querySelector('#direccion').value = "";
         } else {
           mostrarError(false, box);
           cedulaValida = true;
+          document.querySelector('#nombre').disabled = false;
         }
       }
 
@@ -705,9 +810,18 @@
         if (boxInput.value == '' || boxInput.value == ' ' || boxInput.value.length < 3 || contieneNumeros > 0 || contieneLetraEspecial > 0) {
           mostrarError(true, box);
           nombreValida = false;
+          document.querySelector('#apellido').disabled = true;
+          document.querySelector('#apellido').value = "";
+          document.querySelector('#fecha_n_persona').disabled = true;
+          document.querySelector('#fecha_n_persona').value = "";
+          document.querySelector('#correo_persona').disabled = true;
+          document.querySelector('#correo_persona').value = "";
+          document.querySelector('#direccion').disabled = true;
+          document.querySelector('#direccion').value = "";
         } else {
           mostrarError(false, box);
           nombreValida = true;
+          document.querySelector('#apellido').disabled = false;
         }
       }
       if (boxInput != null && boxInput.name == "apellido") {
@@ -735,51 +849,19 @@
         if (boxInput.value == '' || boxInput.value == ' ' || boxInput.value.length < 3 || contieneNumeros > 0 || contieneLetraEspecial > 0) {
           mostrarError(true, box);
           apellidoValida = false;
+          document.querySelector('#fecha_n_persona').disabled = true;
+          document.querySelector('#fecha_n_persona').value = "";
+          document.querySelector('#correo_persona').disabled = true;
+          document.querySelector('#correo_persona').value = "";
+          document.querySelector('#direccion').disabled = true;
+          document.querySelector('#direccion').value = "";
         } else {
           mostrarError(false, box);
           apellidoValida = true;
+          document.querySelector('#fecha_n_persona').disabled = false;
         }
       }
 
-      if (boxInput != null & boxInput.name == "fecha_n_persona") {
-        const DATE_REGEX = /^(0[1-9]|[1-2]\d|3[01])(\/)(0[1-9]|1[012])\2(\d{4})$/
-        // const CURRENT_YEAR = new Date().getFullYear();
-        const CURRENT_DATE = app.fecha_maxima
-        console.log('Validacion fecha de nacimiento')
-        if (boxInput.value.length == 2) boxInput.value = boxInput.value + '/';
-        if (boxInput.value.length == 5) boxInput.value = boxInput.value + '/';
-
-        if (!boxInput.value.match(DATE_REGEX)) {
-          mostrarError(true, box);
-          fechaValida = false;
-          return false
-        }
-        /* Comprobar los días del mes */
-        const day = parseInt(boxInput.value.split('/')[0])
-        const month = parseInt(boxInput.value.split('/')[1])
-        const year = parseInt(boxInput.value.split('/')[2])
-        const CURRENT_DAY = parseInt(CURRENT_DATE.split('-')[2])
-        const CURRENT_MONTH = parseInt(CURRENT_DATE.split('-')[1])
-        const CURRENT_YEAR = parseInt(CURRENT_DATE.split('-')[0])
-
-        const monthDays = new Date(year, month, 0).getDate()
-        if (day > monthDays) {
-          mostrarError(true, box);
-          fechaValida = false;
-          return false
-        }
-
-        /* Comprobar que el año no sea superior al actual*/
-        if (year > CURRENT_YEAR) {
-          mostrarError(true, box);
-          fechaValida = false;
-          return false
-        } else {
-          mostrarError(false, box);
-          fechaValida = true;
-          return true
-        }
-      }
 
       if (boxInput != null && boxInput.name == "correo_persona") {
         console.log("validacion correo")
@@ -787,9 +869,12 @@
           console.log("validacion lugar nacimiento");
           mostrarError(false, box);
           correoValida = true;
+          document.querySelector('#direccion').disabled = true;
+          document.querySelector('#direccion').value = "";
         } else {
           mostrarError(true, box);
           correoValida = false;
+          document.querySelector('#direccion').disabled = true;
         }
       }
       if (boxInput != null && boxInput.name == "direccion") {

@@ -12,7 +12,7 @@
         <div class="col-md-12  mt-2 py-2 mx-auto px-2">
           <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
             <div class="col-md-7 my-auto px-3  ">
-              <h2 class="fw-bold text-start my-auto text-dark">Gestión de Estudiantes</h3>
+              <h2 class="fw-bold text-start my-auto text-dark">Gestión de Asignación de Estudiantes</h3>
             </div>
             <div class="col-md-2 p-3 card bg-primary ">
               <h5 class="fw-bold text-light text-center my-auto">Periodo: {{des_periodo}}</h5>
@@ -30,9 +30,9 @@
           <!-- contenedor de la tabla -->
           <div class="col-md-12 card p-3 shadow ">
             <div class="col-md-12 d-flex justify-content-end" style="margin: 0; padding: 0;">
-              <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px">
+              <!-- <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px">
                 <i class="fa-regular fa-user"></i> AGREGAR
-              </button>
+              </button> -->
             </div>
             <div class="col ">
               <table class="table border table-sm" id="datatable">
@@ -131,11 +131,12 @@
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Seguimiento:</span>
                     <input type="number" min="1" max="6" maxlength="1" :readonly="action == 'Update' || action == 'Asignacion' " minlength="1" name="seguimiento_estudiante" class="form-control form-control-sm" id="" v-model="seguimiento" placeholder="Año">
-                    <!-- <select name="id_seccion" v-model="id_seccion" id="seccion" class="form-select" :disabled="desactivado" aria-label="Default select example" required disabled>
+                    <select name="id_seccion" v-model="id_seccion" id="seccion" class="form-select" :disabled="desactivado" aria-label="Default select example" required disabled>
                       <option value="0">Seleccione una opción</option>
                       <option :value="item.idSeccion" v-for="item in secciones">{{item.id_seccion}}</option>
-                    </select> -->
+                    </select>
                     <span class="error-text">Selecciona año y sección</span>
+                    <!-- <input type="text" class="form-control form-control-sm" id="" placeholder="Seccion"> -->
                   </div>
                 </div>
 
@@ -152,11 +153,11 @@
                   <label for="">Sexo</label>
                   <div class="d-flex">
                     <div class="form-check">
-                      <input type="radio" name="sexo" v-model="sexo" value="F" id="radio" class="form-check-input" required>
+                      <input type="radio" name="sexo" disabled v-model="sexo" value="F" id="radio" class="form-check-input" required>
                       <label for="">F</label>
                     </div>
                     <div class="form-check pl-2">
-                      <input type="radio" name="sexo" v-model="sexo" value="M" id="radio1" class="form-check-input" required>
+                      <input type="radio" name="sexo" disabled v-model="sexo" value="M" id="radio1" class="form-check-input" required>
                       <label for="">M</label>
                     </div>
                   </div>
@@ -427,16 +428,16 @@
           render: function(data, type, row) {
             let classStatus = row.estatus_estudiante == 1 ? 'success' : 'danger';
             let btns = '';
-            btns = `
-                <div class="d-flex justify-content-center">
-                  <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.cedula_estudiante}' class="btn btn-sm btn-info">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+            if (row.estatus_asig_estu == 1) {
+              btns = ``;
+            } else {
+              btns = `
+                <div class="">
+                  <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="asignacion(this)" data-id='${row.cedula_estudiante}' class="btn btn-sm btn-info">
+                    <i class="fa-regular fa-user"></i>
                   </button>
-
-                  <!-- <button type="button" onClick="CambiarEstatus(this)" data-id='${row.cedula_estudiante}' class="btn btn-sm btn-${classStatus}">
-                    <i class="fas fa-power-off"></i>
-                  </button> -->
-                </div>`
+                </div>`;
+            }
 
             return btns;
           }
@@ -479,23 +480,17 @@
           validacion(box, boxInput, null)
         });
       })
-      radio.addEventListener('click', () => {
-        validacion(box, 'sexo');
-      })
-      radio1.addEventListener('click', () => {
-        validacion(box, 'sexo');
-      })
       let button = document.querySelector('#btn-g');
       button.addEventListener('click', e => {
         validacion(box, boxInput);
-        let cedulaValida = false;
-        let nombreValida = false;
-        let apellidoValida = false;
-        let lugarNValida = false;
-        let direccionValida = false;
+        // let cedulaValida = false;
+        // let nombreValida = false;
+        // let apellidoValida = false;
+        // let lugarNValida = false;
+        // let direccionValida = false;
         let seguimientoValida = false;
         let seccionValida = false;
-        let radioValida = false;
+        // let radioValida = false;
       })
 
     });
@@ -535,34 +530,34 @@
     });
 
 
-    function validacionFecha(box, boxInput){
+    function validacionFecha(box, boxInput) {
 
-      if (boxInput != null & boxInput.name == "fecha_n_persona") {
-        console.log('Validacion fecha inicio')
+      // if (boxInput != null & boxInput.name == "fecha_n_persona") {
+      //   console.log('Validacion fecha inicio')
 
-        if (!moment(boxInput.value).isValid()) {
-          app.formulario_valido = false
-          mostrarError(true, box);
-          fechaValida = false;
-          document.querySelector('#direccion_persona').disabled = true;
-          return false
-        }
+      //   if (!moment(boxInput.value).isValid()) {
+      //     app.formulario_valido = false
+      //     mostrarError(true, box);
+      //     fechaValida = false;
+      //     document.querySelector('#direccion_persona').disabled = true;
+      //     return false
+      //   }
 
-        /* Comprobar que el año no sea superior al actual*/
-        if (moment(boxInput.value).isAfter(moment(boxInput.max)) || moment(boxInput.value).isBefore(moment(boxInput.min))) {
-          app.formulario_valido = false
-          mostrarError(true, box);
-          fechaIValida = false;
-          document.querySelector('#direccion_persona').disabled = true;
-          return false
-        } else {
-          app.formulario_valido = true
-          mostrarError(false, box);
-          fechaValida = true;
-          document.querySelector('#direccion_persona').disabled = false;
-          return true
-        }
-      }
+      //   /* Comprobar que el año no sea superior al actual*/
+      //   if (moment(boxInput.value).isAfter(moment(boxInput.max)) || moment(boxInput.value).isBefore(moment(boxInput.min))) {
+      //     app.formulario_valido = false
+      //     mostrarError(true, box);
+      //     fechaIValida = false;
+      //     document.querySelector('#direccion_persona').disabled = true;
+      //     return false
+      //   } else {
+      //     app.formulario_valido = true
+      //     mostrarError(false, box);
+      //     fechaValida = true;
+      //     document.querySelector('#direccion_persona').disabled = false;
+      //     return true
+      //   }
+      // }
     }
 
 
@@ -602,160 +597,161 @@
     }
 
     async function validacion(box, boxInput) {
-      if (boxInput != null && boxInput.name == "cedula") {
-        let cedulaRepetida = false;
+      // if (boxInput != null && boxInput.name == "cedula") {
+      //   let cedulaRepetida = false;
 
-        if (boxInput.value.length >= 7) {
-          await fetch(`./Controllers/EstudiantesController.php?ope=VerificarCedula&&id=${boxInput.value}`)
-            .then(response => response.json())
-            .then(result => {
-              if(result.data.cedula_persona){
-                alert("Esta cedula ya esta registrada")
-                cedulaRepetida = true;
-                document.querySelector('#nombre').disabled = false;
-              }else{
-                document.querySelector('#nombre').disabled = true;
-                document.querySelector('#nombre').value = "";
-                document.querySelector('#apellido').disabled = true;
-                document.querySelector('#apellido').value = "";
-                document.querySelector('#fecha_n_persona').disabled = true;
-                document.querySelector('#fecha_n_persona').value = "";
-                document.querySelector('#direccion_persona').disabled = true;
-                document.querySelector('#direccion_persona').value = "";
-                document.querySelector('#direccion').disabled = true;
-                document.querySelector('#direccion').value = "";
-                cedulaRepetida = false;
-              }
-            }).catch(error => console.error(error))
-        }else cedulaRepetida = false;
+        // if (boxInput.value.length >= 7) {
+        //   await fetch(`./Controllers/EstudiantesController.php?ope=VerificarCedula&&id=${boxInput.value}`)
+        //     .then(response => response.json())
+        //     .then(result => {
+        //       if (result.data.cedula_persona) {
+        //         alert("Esta cedula ya esta registrada")
+        //         cedulaRepetida = true;
+        //         document.querySelector('#nombre').disabled = false;
+        //       } else {
+        //         document.querySelector('#nombre').disabled = true;
+        //         document.querySelector('#nombre').value = "";
+        //         document.querySelector('#apellido').disabled = true;
+        //         document.querySelector('#apellido').value = "";
+        //         document.querySelector('#fecha_n_persona').disabled = true;
+        //         document.querySelector('#fecha_n_persona').value = "";
+        //         document.querySelector('#direccion_persona').disabled = true;
+        //         document.querySelector('#direccion_persona').value = "";
+        //         document.querySelector('#direccion').disabled = true;
+        //         document.querySelector('#direccion').value = "";
+        //         cedulaRepetida = false;
+        //       }
+        //     }).catch(error => console.error(error))
+        // } else cedulaRepetida = false;
 
-        if (boxInput.value.length < 7 || boxInput.value.length > 8) {
-          console.error('Campo vacío o cédula inválida')
-          mostrarError(true, box);
-          cedulaValida = false;
-          document.querySelector('#nombre').disabled = true;
-          document.querySelector('#nombre').value = "";
-          document.querySelector('#apellido').disabled = true;
-          document.querySelector('#apellido').value = "";
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#direccion_persona').disabled = true;
-          document.querySelector('#direccion_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-        } else if (isNaN(boxInput.value)) {
-          console.error(`${boxInput.value} no es un numero`);
-          mostrarError(true, box);
-          cedulaValida = false
-          document.querySelector('#nombre').disabled = true;
-          document.querySelector('#nombre').value = "";
-          document.querySelector('#apellido').disabled = true;
-          document.querySelector('#apellido').value = "";
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#direccion_persona').disabled = true;
-          document.querySelector('#direccion_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-        } else if (cedulaRepetida) {
-          console.error(`${boxInput.value} Ya esta registrado`);
-          mostrarError(true, box);
-          cedulaValida = false;
-          document.querySelector('#nombre').disabled = true;
-          document.querySelector('#nombre').value = "";
-          document.querySelector('#apellido').disabled = true;
-          document.querySelector('#apellido').value = "";
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#direccion_persona').disabled = true;
-          document.querySelector('#direccion_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-        } else {
-          mostrarError(false, box);
-          cedulaValida = true;
-          document.querySelector('#nombre').disabled = false;
-        }
-      }
-      if (boxInput != null && boxInput.name == "nombre") {
-        const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬"];
-        const numeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-        let contieneLetraEspecial = 0;
-        let contieneNumeros = 0;
+        // if (boxInput.value.length < 7 || boxInput.value.length > 8) {
+        //   console.error('Campo vacío o cédula inválida')
+        //   mostrarError(true, box);
+        //   cedulaValida = false;
+        //   document.querySelector('#nombre').disabled = true;
+        //   document.querySelector('#nombre').value = "";
+        //   document.querySelector('#apellido').disabled = true;
+        //   document.querySelector('#apellido').value = "";
+        //   document.querySelector('#fecha_n_persona').disabled = true;
+        //   document.querySelector('#fecha_n_persona').value = "";
+        //   document.querySelector('#direccion_persona').disabled = true;
+        //   document.querySelector('#direccion_persona').value = "";
+        //   document.querySelector('#direccion').disabled = true;
+        //   document.querySelector('#direccion').value = "";
+        // } else if (isNaN(boxInput.value)) {
+        //   console.error(`${boxInput.value} no es un numero`);
+        //   mostrarError(true, box);
+        //   cedulaValida = false
+        //   document.querySelector('#nombre').disabled = true;
+        //   document.querySelector('#nombre').value = "";
+        //   document.querySelector('#apellido').disabled = true;
+        //   document.querySelector('#apellido').value = "";
+        //   document.querySelector('#fecha_n_persona').disabled = true;
+        //   document.querySelector('#fecha_n_persona').value = "";
+        //   document.querySelector('#direccion_persona').disabled = true;
+        //   document.querySelector('#direccion_persona').value = "";
+        //   document.querySelector('#direccion').disabled = true;
+        //   document.querySelector('#direccion').value = "";
+        // } else if (cedulaRepetida) {
+        //   console.error(`${boxInput.value} Ya esta registrado`);
+        //   mostrarError(true, box);
+        //   cedulaValida = false;
+        //   document.querySelector('#nombre').disabled = true;
+        //   document.querySelector('#nombre').value = "";
+        //   document.querySelector('#apellido').disabled = true;
+        //   document.querySelector('#apellido').value = "";
+        //   document.querySelector('#fecha_n_persona').disabled = true;
+        //   document.querySelector('#fecha_n_persona').value = "";
+        //   document.querySelector('#direccion_persona').disabled = true;
+        //   document.querySelector('#direccion_persona').value = "";
+        //   document.querySelector('#direccion').disabled = true;
+        //   document.querySelector('#direccion').value = "";
+        // } else {
+        //   mostrarError(false, box);
+        //   cedulaValida = true;
+        //   document.querySelector('#nombre').disabled = false;
+        // }
+      // }
+      // if (boxInput != null && boxInput.name == "nombre") {
+      //   const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬"];
+      //   const numeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+      //   let contieneLetraEspecial = 0;
+      //   let contieneNumeros = 0;
 
-        for (let i = 0; i < boxInput.value.length; i++) {
-          for (let j = 0; j < letrasEspeciales.length; j++) {
-            if (boxInput.value[i] === letrasEspeciales[j]) {
-              contieneLetraEspecial++;
-            }
-          }
-        }
+      //   for (let i = 0; i < boxInput.value.length; i++) {
+      //     for (let j = 0; j < letrasEspeciales.length; j++) {
+      //       if (boxInput.value[i] === letrasEspeciales[j]) {
+      //         contieneLetraEspecial++;
+      //       }
+      //     }
+      //   }
 
-        for (let i = 0; i < boxInput.value.length; i++) {
-          for (let j = 0; j < numeros.length; j++) {
-            if (boxInput.value[i] === numeros[j]) {
-              contieneNumeros++;
-            }
-          }
-        }
-        console.log("validacion nombre")
-        if (boxInput.value == '' || boxInput.value == ' ' || boxInput.value.length < 3 || contieneNumeros > 0 || contieneLetraEspecial > 0) {
-          mostrarError(true, box);
-          nombreValida = false;
-          document.querySelector('#apellido').disabled = true;
-          document.querySelector('#apellido').value = "";
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#direccion_persona').disabled = true;
-          document.querySelector('#direccion_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-        } else {
-          mostrarError(false, box);
-          nombreValida = true;
-          document.querySelector('#apellido').disabled = false;       }
-      }
-      if (boxInput != null && boxInput.name == "apellido") {
-        const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬"];
-        const numeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-        let contieneLetraEspecial = 0;
-        let contieneNumeros = 0;
+      //   for (let i = 0; i < boxInput.value.length; i++) {
+      //     for (let j = 0; j < numeros.length; j++) {
+      //       if (boxInput.value[i] === numeros[j]) {
+      //         contieneNumeros++;
+      //       }
+      //     }
+      //   }
+      //   console.log("validacion nombre")
+      //   if (boxInput.value == '' || boxInput.value == ' ' || boxInput.value.length < 3 || contieneNumeros > 0 || contieneLetraEspecial > 0) {
+      //     mostrarError(true, box);
+      //     nombreValida = false;
+      //     document.querySelector('#apellido').disabled = true;
+      //     document.querySelector('#apellido').value = "";
+      //     document.querySelector('#fecha_n_persona').disabled = true;
+      //     document.querySelector('#fecha_n_persona').value = "";
+      //     document.querySelector('#direccion_persona').disabled = true;
+      //     document.querySelector('#direccion_persona').value = "";
+      //     document.querySelector('#direccion').disabled = true;
+      //     document.querySelector('#direccion').value = "";
+      //   } else {
+      //     mostrarError(false, box);
+      //     nombreValida = true;
+      //     document.querySelector('#apellido').disabled = false;
+      //   }
+      // }
+      // if (boxInput != null && boxInput.name == "apellido") {
+      //   const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬"];
+      //   const numeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+      //   let contieneLetraEspecial = 0;
+      //   let contieneNumeros = 0;
 
-        for (let i = 0; i < boxInput.value.length; i++) {
-          for (let j = 0; j < letrasEspeciales.length; j++) {
-            if (boxInput.value[i] === letrasEspeciales[j]) {
-              contieneLetraEspecial++;
-            }
-          }
-        }
+      //   for (let i = 0; i < boxInput.value.length; i++) {
+      //     for (let j = 0; j < letrasEspeciales.length; j++) {
+      //       if (boxInput.value[i] === letrasEspeciales[j]) {
+      //         contieneLetraEspecial++;
+      //       }
+      //     }
+      //   }
 
-        for (let i = 0; i < boxInput.value.length; i++) {
-          for (let j = 0; j < numeros.length; j++) {
-            if (boxInput.value[i] === numeros[j]) {
-              contieneNumeros++;
-            }
-          }
-        }
-        console.log("validacion apellido")
-        if (boxInput.value == '' || boxInput.value == ' ' || boxInput.value.length < 3 || contieneNumeros > 0 || contieneLetraEspecial > 0) {
-          mostrarError(true, box);
-          apellidoValida = false;
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#direccion_persona').disabled = true;
-          document.querySelector('#direccion_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-          
-        } else {
-          mostrarError(false, box);
-          apellidoValida = true;
-          document.querySelector('#fecha_n_persona').disabled = false;  
-        }
-      }
+      //   for (let i = 0; i < boxInput.value.length; i++) {
+      //     for (let j = 0; j < numeros.length; j++) {
+      //       if (boxInput.value[i] === numeros[j]) {
+      //         contieneNumeros++;
+      //       }
+      //     }
+      //   }
+      //   console.log("validacion apellido")
+      //   if (boxInput.value == '' || boxInput.value == ' ' || boxInput.value.length < 3 || contieneNumeros > 0 || contieneLetraEspecial > 0) {
+      //     mostrarError(true, box);
+      //     apellidoValida = false;
+      //     document.querySelector('#fecha_n_persona').disabled = true;
+      //     document.querySelector('#fecha_n_persona').value = "";
+      //     document.querySelector('#direccion_persona').disabled = true;
+      //     document.querySelector('#direccion_persona').value = "";
+      //     document.querySelector('#direccion').disabled = true;
+      //     document.querySelector('#direccion').value = "";
+
+      //   } else {
+      //     mostrarError(false, box);
+      //     apellidoValida = true;
+      //     document.querySelector('#fecha_n_persona').disabled = false;
+      //   }
+      // }
 
 
-      
+
 
 
 
@@ -805,55 +801,54 @@
       //   }
       // }
 
-      if (boxInput != null && boxInput.name == "direccion_n_persona") {
-        console.log("validacion lugar de nacimiento")
-        if (boxInput.value.length <= 3) {
-          console.log("validacion lugar nacimiento");
-          mostrarError(true, box);
-          lugarNValida = false;
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-        } else {
-          mostrarError(false, box);
-          lugarNValida = true;
-          document.querySelector('#direccion').disabled = false;
-          document.querySelector('#direccion').value = "";
-        }
-      }
-      if (boxInput != null && boxInput.name == "direccion") {
-        console.log("validacion direccion")
-        if (boxInput.value.length < 3 || boxInput.value == "" || boxInput.value == null) {
-          mostrarError(true, box);
-          direccionValida = false;
-        } else {
-          mostrarError(false, box);
-          direccionValida = true;
-        }
-      }
+      // if (boxInput != null && boxInput.name == "direccion_n_persona") {
+      //   console.log("validacion lugar de nacimiento")
+      //   if (boxInput.value.length <= 3) {
+      //     console.log("validacion lugar nacimiento");
+      //     mostrarError(true, box);
+      //     lugarNValida = false;
+      //     document.querySelector('#direccion').disabled = true;
+      //     document.querySelector('#direccion').value = "";
+      //   } else {
+      //     mostrarError(false, box);
+      //     lugarNValida = true;
+      //     document.querySelector('#direccion').disabled = false;
+      //     document.querySelector('#direccion').value = "";
+      //   }
+      // }
+      // if (boxInput != null && boxInput.name == "direccion") {
+      //   console.log("validacion direccion")
+      //   if (boxInput.value.length < 3 || boxInput.value == "" || boxInput.value == null) {
+      //     mostrarError(true, box);
+      //     direccionValida = false;
+      //   } else {
+      //     mostrarError(false, box);
+      //     direccionValida = true;
+      //   }
+      // }
 
-      if (boxInput != null && boxInput.name == "seguimiento_estudiante") {
-        console.log("validacion seguimiento")
-        if (boxInput.value > 6 || boxInput.value < 1) {
-          mostrarError(true, box);
-          seguimientoValida = false;
-        } else {
-          mostrarError(false, box);
-          seguimientoValida = true;
-        }
-      }
+      // if (boxInput != null && boxInput.name == "seguimiento_estudiante") {
+      //   console.log("validacion seguimiento")
+      //   if (boxInput.value > 6 || boxInput.value < 1) {
+      //     mostrarError(true, box);
+      //     seguimientoValida = false;
+      //   } else {
+      //     mostrarError(false, box);
+      //     seguimientoValida = true;
+      //   }
+      // }
 
 
-      if (radio.checked || radio1.checked) {
-        radioValida = true;
-      }
+      // if (radio.checked || radio1.checked) {
+      //   radioValida = true;
+      // }
 
       if (app.action == "Asignacion" && seccionValida) {
         app.formulario_valido = true;
         return false;
       }
-      // nacionalidadValida && seguimientoValida &&
 
-      if (cedulaValida && nombreValida && apellidoValida && lugarNValida && fechaValida && direccionValida && seccionValida && radioValida) {
+      if (SeguimientoValida && seccionValida) {
         app.formulario_valido = true;
       } else app.formulario_valido = false;
     }
@@ -870,14 +865,14 @@
     }
 
 
-    $("#nombre, #apellido").bind('keypress', function(event) {
-      var regex = new RegExp("^[a-zA-Z ]+$");
-      var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-      if (!regex.test(key)) {
-        event.preventDefault();
-        return false;
-      }
-    });
+    // $("#nombre, #apellido").bind('keypress', function(event) {
+    //   var regex = new RegExp("^[a-zA-Z ]+$");
+    //   var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    //   if (!regex.test(key)) {
+    //     event.preventDefault();
+    //     return false;
+    //   }
+    // });
   </script>
 </body>
 

@@ -15,7 +15,7 @@ class EstudiantesModel extends DB
 	{
 		$this->cedula_estudiante = isset($datos['cedula']) ? $datos['cedula'] : null;
 		$this->estatus_estudiante = isset($datos['estatus_estudiante']) ? $datos['estatus_estudiante'] : null;
-		$this->seguimiento_estudiante = isset($datos['seguimiento_estudiante']) ? $datos['seguimiento_estudiante'] : null;
+		$this->seguimiento_estudiante = isset($datos['seguimiento_estudiante']) ? $datos['seguimiento_estudiante'] : 0;
 		$this->id_seccion = isset($datos['id_seccion']) ? $datos['id_seccion'] : null;
 		$this->id_periodo = isset($datos['id_periodo']) ? $datos['id_periodo'] : null;
 	}
@@ -119,10 +119,11 @@ class EstudiantesModel extends DB
 						seccion.id_seccion
 						FROM estudiante 
 						INNER JOIN personas ON estudiante.cedula_estudiante = personas.cedula_persona
-						INNER JOIN asignacion_estudiante_seccion ON asignacion_estudiante_seccion.cedula_estu_asignacion = estudiante.cedula_estudiante
-						INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = asignacion_estudiante_seccion.id_periodo 
-						INNER JOIN seccion ON seccion.idSeccion = asignacion_estudiante_seccion.id_seccion
-						WHERE periodo_escolar.estatus_periodo_escolar = 1;");
+						LEFT JOIN asignacion_estudiante_seccion ON asignacion_estudiante_seccion.cedula_estu_asignacion = estudiante.cedula_estudiante
+						LEFT JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = asignacion_estudiante_seccion.id_periodo 
+						LEFT JOIN seccion ON seccion.idSeccion = asignacion_estudiante_seccion.id_seccion
+						;");
+						// WHERE periodo_escolar.estatus_periodo_escolar = 1
 			}
 
 
@@ -137,8 +138,13 @@ class EstudiantesModel extends DB
 	public function GetOne($id)
 	{
 		try {
-			$result = $this->consult("SELECT * FROM estudiante,personas,asignacion_estudiante_seccion WHERE asignacion_estudiante_seccion.cedula_estu_asignacion = '$id' AND personas.cedula_persona = '$id' AND estudiante.cedula_estudiante = '$id';");
-
+			$result = $this->consult("SELECT * FROM estudiante
+			INNER JOIN personas ON estudiante.cedula_estudiante = personas.cedula_persona
+			LEFT JOIN asignacion_estudiante_seccion ON asignacion_estudiante_seccion.cedula_estu_asignacion = estudiante.cedula_estudiante
+							;");
+			// asignacion_estudiante_seccion.cedula_estu_asignacion = '$id' AND 
+			// personas.cedula_persona = '$id' AND 
+			// 	estudiante.cedula_estudiante = '$id'
 			if (isset($result[0])) $this->ResDataJSON($result);
 			else $this->ResDataJSON([]);
 		} catch (PDOException $e) {
