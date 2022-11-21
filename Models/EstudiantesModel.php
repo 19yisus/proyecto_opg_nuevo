@@ -27,10 +27,10 @@ class EstudiantesModel extends DB
 			$pdo->bindParam(':cedula_estudiante', $this->cedula_estudiante);
 			$pdo->bindParam(':seguimiento', $this->seguimiento_estudiante);
 
-			if ($pdo->execute()) return true;
-			else return false;
-			// if($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
-			// else $this->ResJSON("Operacion Fallida!", "error");
+			// if ($pdo->execute()) return true;
+			// else return false;
+			if($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
+			else $this->ResJSON("Operacion Fallida!", "error");
 
 		} catch (PDOException $e) {
 			error_log("MateriasModel(line0------) => " . $e->getMessages());
