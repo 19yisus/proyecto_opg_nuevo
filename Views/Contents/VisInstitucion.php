@@ -67,21 +67,21 @@
                 <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Código de la institución:</span>
-                    <input type="text" minlength="1" maxlength="30" v-model="codigo_institucion" name="codigo_institucion" class="form-control form-control-sm" required id="des_materia" placeholder="Código de la institución" id="codigo_institucion" style="width:70%; text-transform:uppercase;">
+                    <input type="text" minlength="1" maxlength="10" v-model="codigo_institucion" name="codigo_institucion" class="form-control form-control-sm" required id="des_materia" placeholder="Código de la institución" id="codigo_institucion" style="width:70%; text-transform:uppercase;">
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
                 <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Nombre de la institución:</span>
-                    <input type="text" minlength="1" maxlength="30" v-model="des_institucion" name="des_institucion" class="form-control form-control-sm" id="des_institucion" required id="des_materia" placeholder="Nombre de la institución" style="width:70%; text-transform:uppercase;" disabled>
+                    <input type="text" minlength="1" maxlength="60" v-model="des_institucion" name="des_institucion" class="form-control form-control-sm" id="des_institucion" required id="des_materia" placeholder="Nombre de la institución" style="width:70%; text-transform:uppercase;" disabled>
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
                 <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Dirección de la institución:</span>
-                    <input v-model="direccion_institucion" name="direccion_institucion" class="form-control form-control-sm" id="direccion_institucion" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" disabled>
+                    <input v-model="direccion_institucion" maxlength="120" name="direccion_institucion" class="form-control form-control-sm" id="direccion_institucion" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" disabled>
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
@@ -251,14 +251,6 @@
       })
     });
 
-    
-    
-    
-    
-    
-
-
-
     function validacion(box, boxInput) {
 
 
@@ -292,18 +284,19 @@
           document.querySelector("#des_institucion").disabled = false;
         }
       }
-      // if (boxInput != null && boxInput.name == "direccion_institucion") {
-      //   if (boxInput.value.length < 1) {
-      //     console.log('direccion')
-      //     mostrarError(true, box);
-      //     descripcionValida = false;
-      //   } else {
-      //     console.log('direccion')
-      //     mostrarError(false, box);
-      //     descripcionValida = true;
-      //   }
-      // }direccionValida codigoValida
-      console.log(descripcionValida, codigoValida)
+      if (boxInput != null && boxInput.name == "direccion_institucion") {
+        if (boxInput.value.length < 1) {
+          console.log('direccion')
+          mostrarError(true, box);
+          descripcionValida = false;
+        } else {
+          console.log('direccion')
+          mostrarError(false, box);
+          descripcionValida = true;
+        }
+      }
+      // direccionValida codigoValida
+      // console.log(descripcionValida, codigoValida)
       if (descripcionValida) {
         app.formulario_valido = true;
 
@@ -336,18 +329,13 @@
     });
 
     $("#direccion_institucion").bind('keypress', function(event) {
-      var regex = new RegExp("^[a-zA-Z ]+$");
+      var regex = new RegExp("^[a-zA-Z0-9 ]+$");
       var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
       if (!regex.test(key)) {
         event.preventDefault();
         return false;
       }
     });
-
-
-
-
-
   </script>
 
   <!-- <script src="./views/js/Seccion/index.js"></script> -->

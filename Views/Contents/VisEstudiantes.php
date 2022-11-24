@@ -347,7 +347,7 @@
             return false;
           }
           this.id_periodo = res.id_periodo_escolar;
-          this.fecha_maxima = res.fecha_inicio;
+          this.fecha_maxima = moment(res.fecha_inicio).subtract(12,"years").format("YYYY-MM-DD");
         },
       },
       computed: {
@@ -753,13 +753,7 @@
           document.querySelector('#fecha_n_persona').disabled = false;  
         }
       }
-
-
-      
-
-
-
-      // if (boxInput != null & boxInput.name == "fecha_n_persona") {
+ // if (boxInput != null & boxInput.name == "fecha_n_persona") {
       //   const DATE_REGEX = /^(0[1-9]|[1-2]\d|3[01])(\/)(0[1-9]|1[012])\2(\d{4})$/
       //   const CURRENT_DATE = app.fecha_maxima
       //   // const CURRENT_YEAR = new Date().getFullYear();

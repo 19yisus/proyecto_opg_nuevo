@@ -263,7 +263,7 @@ class NotasModel extends DB
           INNER JOIN estudiante ON estudiante.cedula_estudiante = personas.cedula_persona
           INNER JOIN asignacion_estudiante_seccion ON asignacion_estudiante_seccion.cedula_estu_asignacion = estudiante.cedula_estudiante
           INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = asignacion_estudiante_seccion.id_periodo
-          INNER JOIN seccion ON seccion.id_seccion = asignacion_estudiante_seccion.id_seccion WHERE
+          INNER JOIN seccion ON seccion.idSeccion = asignacion_estudiante_seccion.id_seccion WHERE
           periodo_escolar.estatus_periodo_escolar = 1 AND estudiante.cedula_estudiante = '$this->cedula_estudiante' ;";
 
     $result_consulta_estudiante = $this->consult($sql_consulta_estudiante);
@@ -288,7 +288,10 @@ class NotasModel extends DB
       if($seguimiento == 6) $string = "materia.sexto = 1";
     }
     // $sql_pensum = "SELECT * FROM pensum WHERE anios_abarcados = '$clasificacion' ;";
-    $resultPensum = $this->consultAll("SELECT materia.* FROM materia INNER JOIN pensum ON pensum.id = materia.id_pensum_ma WHERE pensum.anios_abarcados = '$clasificacion' AND $string;");
+    $resultPensum = $this->consultAll("SELECT materia.* FROM materia 
+    INNER JOIN pensum ON pensum.id = materia.id_pensum_ma
+    INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = materia.id_periodo_ma
+    WHERE periodo_escolar.estatus_periodo_escolar = 1 AND pensum.anios_abarcados = '$clasificacion' AND $string;");
 
     if ($resultPensum == false) {
       $this->ResJSON("Operacion Fallida! No hay pensum para el año a trabajar", "error");
@@ -361,7 +364,7 @@ class NotasModel extends DB
         INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = nota.periodo_escolar_id 
         INNER JOIN seccion ON seccion.id_seccion = nota.seccion_id
         LEFT JOIN pensum ON pensum.periodo_id = periodo_escolar.id_periodo_escolar
-        WHERE nota.estatusNotas = 0 AND nota.cedula_estudiante = '$cedula' ORDER BY nota.seccion_id;";
+        WHERE nota.estatusNotas = 0 AND nota.cedula_estudiante = '$cedula' GROUP BY nota.idNota ORDER BY nota.seccion_id;";
     
     $result_datos_estudiante = $this->consult($sqlDatos);
     $result_datos_notas = $this->consultAll($sqlNotasHistoricas);

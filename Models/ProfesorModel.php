@@ -14,6 +14,7 @@
 			$this->id_periodo = isset($datos['id_periodo']) ? $datos['id_periodo'] : null;
 			$this->id_seccion = isset($datos['id_seccion']) ? $datos['id_seccion'] : null;
 			$this->id_materia = isset($datos['id_materia']) ? $datos['id_materia'] : null;
+			
 		}
 
 		public function SaveDatos(){
@@ -34,28 +35,33 @@
 		public function AsignarProfesor(){
 			try{
 				$status = true;
-				$this->driver->query("UPDATE asignacion_profesor_seccion SET estatus_asignacion = 0 WHERE profesor_cedula = '$this->cedula_profesor' AND periodo_id != '$this->id_periodo' ;");
+				$this->driver->query("UPDATE asignacion_profesor_seccion SET estatus_asignacion = 0 
+				WHERE profesor_cedula = '$this->cedula_profesor' AND periodo_id != '$this->id_periodo' ;");
+
 				$this->driver->query("DELETE FROM asignacion_profesor_seccion WHERE periodo_id = '$this->id_periodo' AND profesor_cedula = '$this->cedula_profesor' ;");
 
 				for($i = 0; $i < sizeof($this->id_materia); $i++){
 
-					$pdo = $this->driver->prepare("INSERT INTO asignacion_profesor_seccion(profesor_cedula, materia_id, seccion_id, periodo_id, estatus_asignacion) VALUES(:cedula_profesor, :id_materia, :id_seccion, :id_periodo, 1)");
+					// var_dump($this->id_materia, $this->id_materia[$i]);
+
+					$pdo = $this->driver->prepare("INSERT INTO asignacion_profesor_seccion(profesor_cedula, materia_id, seccion_id, periodo_id, estatus_asignacion) 
+					VALUES(:cedula_profesor, :id_materia, :id_seccion, :id_periodo, 1)");
 					$pdo->bindParam(':cedula_profesor', $this->cedula_profesor);
 					$pdo->bindParam(':id_materia', $this->id_materia[$i]);
 					$pdo->bindParam(':id_seccion', $this->id_seccion[$i]);
 					$pdo->bindParam(':id_periodo', $this->id_periodo);	
-					
-					if(!$pdo->execute()){
+					$result = $pdo->execute();
+
+					if(!$result){
+						// var_dump($this->id_seccion[$i]);
+						// var_dump($this->id_materia[$i]);
+						// var_dump("INSERT INTO asignacion_profesor_seccion(profesor_cedula, materia_id, seccion_id, periodo_id, estatus_asignacion) 
+						// VALUES(:cedula_profesor, :id_materia, :id_seccion, :id_periodo, 1)");
+						// die("HUBO un fallo");
 						$estatus = false;
 						break;
 					}
 				}
-
-				// $pdo = $this->driver->prepare("INSERT INTO asignacion_profesor_seccion(profesor_cedula, materia_id, seccion_id, periodo_id, estatus_asignacion) VALUES(:cedula_profesor, :id_materia, :id_seccion, :id_periodo, 1)");
-				// $pdo->bindParam(':cedula_profesor', $this->cedula_profesor);
-				// $pdo->bindParam(':id_materia', $this->id_materia);
-				// $pdo->bindParam(':id_seccion', $this->id_seccion);
-				// $pdo->bindParam(':id_periodo', $this->id_periodo);
 				
 				if($status) $this->ResJSON("Operacion Exitosa!", "success");
 				else $this->ResJSON("Operacion Fallida!", "error");
@@ -131,9 +137,10 @@
 				
 				$datosAsignaciones = $this->consultAll("SELECT * FROM profesor
 					INNER JOIN asignacion_profesor_seccion ON asignacion_profesor_seccion.profesor_cedula = profesor.cedula_profesor
+					INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = asignacion_profesor_seccion.periodo_id
 					INNER JOIN materia ON materia.id_materia = asignacion_profesor_seccion.materia_id
 					INNER JOIN seccion ON seccion.id_seccion = asignacion_profesor_seccion.seccion_id
-					WHERE cedula_profesor = '$id' ;");
+					WHERE profesor.cedula_profesor = '$id' AND periodo_escolar.estatus_periodo_escolar = 1 GROUP BY asignacion_profesor_seccion.id_asignacion;");
 				
 				if(isset($datosProfesor[0])) $this->ResDataJSON(['profesor' => $datosProfesor,'Asignaciones' => $datosAsignaciones]);
 				else $this->ResDataJSON([]);

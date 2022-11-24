@@ -141,7 +141,7 @@ class EstudiantesModel extends DB
 			$result = $this->consult("SELECT * FROM estudiante
 			INNER JOIN personas ON estudiante.cedula_estudiante = personas.cedula_persona
 			LEFT JOIN asignacion_estudiante_seccion ON asignacion_estudiante_seccion.cedula_estu_asignacion = estudiante.cedula_estudiante
-							;");
+			WHERE estudiante.cedula_estudiante = '$id';");
 			// asignacion_estudiante_seccion.cedula_estu_asignacion = '$id' AND 
 			// personas.cedula_persona = '$id' AND 
 			// 	estudiante.cedula_estudiante = '$id'

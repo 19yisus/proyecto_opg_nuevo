@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generacion: 17-11-2022 a las 01:25:24
--- Version del servidor: 10.4.20-MariaDB
--- Version de PHP: 7.4.22
+-- Tiempo de generación: 24-11-2022 a las 04:05:23
+-- Versión del servidor: 10.4.20-MariaDB
+-- Versión de PHP: 7.4.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -89,8 +89,15 @@ CREATE TABLE `institucion` (
   `id_institucion` int(11) NOT NULL,
   `des_institucion` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
   `codigo_institucion` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
-  `direccion_institucion` varchar(60) COLLATE utf8_spanish_ci NOT NULL
+  `direccion_institucion` varchar(120) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `institucion`
+--
+
+INSERT INTO `institucion` (`id_institucion`, `des_institucion`, `codigo_institucion`, `direccion_institucion`) VALUES
+(1, 'opg', '123abc', 'direccion nueva');
 
 -- --------------------------------------------------------
 
@@ -182,13 +189,6 @@ CREATE TABLE `personas` (
   `telefono_persona` varchar(12) COLLATE utf8_spanish_ci DEFAULT NULL,
   `direccion_n_persona` varchar(120) COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `personas`
---
-
-INSERT INTO `personas` (`cedula_persona`, `nombre_persona`, `apellido_persona`, `nacionalidad_persona`, `sexo_persona`, `correo_persona`, `fecha_n_persona`, `direccion_persona`, `telefono_persona`, `direccion_n_persona`) VALUES
-('46465456', 'hkjhjkhjkh', 'kjhkjhjkh', 'V', 'M', NULL, '1999-10-10', 'kjhjkhjkhj', '46465456', 'lkjkjkjkjl');
 
 -- --------------------------------------------------------
 
@@ -423,7 +423,7 @@ ALTER TABLE `bitacora_notas`
 -- AUTO_INCREMENT de la tabla `institucion`
 --
 ALTER TABLE `institucion`
-  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `materia`

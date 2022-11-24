@@ -25,11 +25,11 @@
 
           <!-- contenedor de la tabla -->
           <div class="col-md-12 card p-3 shadow ">
-            <div class="col-md-12 d-flex justify-content-end" style="margin: 0; padding: 0;">
+            <!-- <div class="col-md-12 d-flex justify-content-end" style="margin: 0; padding: 0;">
               <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px">
                 <i class="fa-regular fa-user"></i> AGREGAR
               </button>
-            </div>
+            </div> -->
             <div class="col ">
               <table class="table border table-sm" id="datatable">
                 <thead>
@@ -57,7 +57,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header bg-hero-azul fw-bold">
-              <h5 class="modal-title" id="staticBackdropLabel">Registro Profesor</h5>
+              <h5 class="modal-title" id="staticBackdropLabel">Asignación de profesor</h5>
               <button type="button" @click="LimpiarForm" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!--
@@ -75,7 +75,7 @@
               <div class="modal-body row " style="padding: 0 70px ;">
 
                 <div class="col-md-6 " style="margin:0; padding:5px;" v-if="action != 'Asignar' ">
-                  <div class="input-group input-group-sm form-box-select" v-if="action != 'Asignar' " style="display:flex; flex-wrap: wrap;">
+                  <div class="input-group input-group-sm" v-if="action != 'Asignar' " style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Nacionalidad:</span>
                     <select class="form-select" @change="cedula = '' " v-model="nacionalidad" name="nacionalidad" id="nacionalidad" aria-label="Default select example" style="width: 50%;" required>
                       <option value="" selected>Seleccionar</option>
@@ -157,12 +157,12 @@
                   </div>
                 </div>
 
-                <!-- <div v-if="action == 'Asignar' " class="row d-flex align-items-center" v-for="(item,index) in id_materia">
+                <div v-if="action == 'Asignar' " class="row d-flex align-items-center" v-for="(item,index) in id_materia">
                   <div class="col-md-6" style="margin:0; padding:5px;">
                     <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Asignación: {{(index+1)}}</span>
                       <input type="number" min="1" max="6" v-model="seguimiento[index]" max="6" maxlength="1" minlength="1" name="seguimiento_profesor[]" class="form-control form-control-sm" id="" @keypress="consultarSecciones" :data-index="index" placeholder="Año" style="width: 10%">
-                      <select name="id_seccion[]" required @change="MateriaRepetida(index)" v-model="secciones[index]" id="" class="form-select" aria-label="Default select example" style="width: 10%">
+                      <select name="id_seccion[]" required @change="MateriaRepetida(index)" v-model="secciones[index]" id="seccion" class="form-select selectsection" aria-label="Default select example" style="width: 10%">
                         <option value="" selected>Seleccione una opción</option>
                         <option :value="item.idSeccion" v-for="item in id_seccion[index]">{{item.id_seccion}}</option>
                       </select>
@@ -172,25 +172,25 @@
                   <div class="col-md-5">
                     <div class="input-group input-group-sm form-box-select" style="display:flex; flex-wrap: wrap;">
                       <span class="input-group-text">Materia</span>
-                      <select name="id_materia[]" required @change="MateriaRepetida(index)" v-model="materias[index]" id="" class="form-select" aria-label="Default select example" style="width: 50%;">
+                      <select name="id_materia[]" required @change="MateriaRepetida(index)" v-model="materias[index]" id="materia" class="form-select selectmateria" aria-label="Default select example" style="width: 50%;">
                         <option value="" selected>Seleccione una opción</option>
                         <option :value="item.id_materia" v-for="item in id_materia[index]">{{item.des_materia}}</option>
                       </select>
                       <span class="error-text">Seleccione una materia</span>
                     </div>
                   </div>
-                </div> -->
+                </div>
 
 
                 <div class="modal-footer mx-auto">
-                  <!-- <div class="btn-group" v-if="action == 'Asignar' ">
+                  <div class="btn-group" v-if="action == 'Asignar' ">
                     <button class="btn btn-sm btn-success" @click="MasAsignacion">
                       <i class="fas fa-plus"></i>
                     </button>
                     <button class="btn btn-sm btn-danger" @click="MenosAsignacion" v-if="id_materia.length > 1">
                       -
                     </button>
-                  </div> -->
+                  </div>
                   <input type="hidden" name="ope" v-model="action">
                   <button type="submit" @click="evitandoDobleSubmit = true" class="btn btn-sm btn-primary" id="btn-g">
                     <i class="fa-regular fa-circle-check" :disabled="ifPeriodo"></i>GUARDAR
@@ -239,7 +239,7 @@
           // Filtros
           id_periodoFiltro: "",
           periodosFiltro: [],
-          formulario_valido: false,
+          formulario_valido: true,
           evitandoDobleSubmit: false,
           bucle: 1,
           fecha_maxima: "",
@@ -257,7 +257,6 @@
           this.seguimiento.push('');
         },
         MenosAsignacion() {
-          console.log(this.secciones)
           this.id_materia.pop()
           this.id_seccion.pop()
           this.seguimiento.pop()
@@ -305,7 +304,7 @@
 
                 data.Asignaciones.forEach((item, index) => {
                   this.materias.push(item.id_materia);
-                  this.secciones.push(item.id_seccion);
+                  this.secciones.push(item.idSeccion);
                   this.seguimiento.push(item.ano_seguimiento);
 
                   let obj = {
@@ -424,7 +423,14 @@
 
           if (res[0] != undefined) {
             let lista = res.filter(i => {
-              if (i) return i;
+              if (i){
+                if(anio == 1 && i.primero == "1") return i;
+                if(anio == 2 && i.segundo == "1") return i;
+                if(anio == 3 && i.tercero == "1") return i;
+                if(anio == 4 && i.cuarto == "1") return i;
+                if(anio == 5 && i.quinto == "1") return i;
+                if(anio == 6 && i.sexto == "1") return i;
+              }
             })
             this.id_materia[index] = lista;
           } else ViewAlert("No existe pensum para el año solicitado", "error");
@@ -502,21 +508,13 @@
         },
         {
           defaultContent: '',
-          render: function(data, type, row) {
-
-            let classStatus = row.estatus_profesor == 1 ? 'success' : 'danger';
-            let disabled = row.estatus_profesor == 1 ? '' : 'disabled="disabled"';
-            let btns = '';
-            btns = `
-                <div class="">
-                  <button type="button" ${disabled} data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-info">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                  </button>
-                  
-                  <button type="button" onClick="CambiarEstatus(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-${classStatus}">
-                    <i class="fas fa-power-off"></i>
-                  </button>
-                </div>`;
+          render: function(data, type, row) {            
+            let btns = `
+              <div class="">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Asignar(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-info">
+                  <i class="fa-regular fa-user"></i>
+                </button>
+              </div>`;
 
             return btns;
           }
@@ -534,416 +532,10 @@
       }
     });
 
-    let emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    let radio = document.getElementById("radio");
-    let radio1 = document.getElementById('radio1');
-    let nacionalidad = document.getElementById("nacionalidad");
-    let tiempoFuera = null;
-    let nacionalidadValida = false;
-    let cedulaValida = false;
-    let nombreValida = false;
-    let apellidoValida = false;
-    let correoValida = false;
-    let direccionValida = false;
-    let fechaValida = false;
-    let seguimientoValida = false;
-    let materiaValida = false;
-    let seccionValida = false;
-    let radioValida = false;
-
-
-
-
-    document.querySelectorAll('.form-box').forEach((box) => {
-      const boxInput = box.querySelector('input');
-      boxInput.addEventListener("blur", (event) => {
-        clearTimeout(tiempoFuera);
-        tiempoFuera = setTimeout(() => {
-          console.log(`input ${boxInput.name} value: `, boxInput.value)
-          validacion(box, boxInput, null)
-        });
-      })
-      radio.addEventListener('click', () => {
-        validacion(box, 'sexo');
-      })
-      radio1.addEventListener('click', () => {
-        validacion(box, 'sexo');
-      })
-      let button = document.querySelector('#btn-g');
-      button.addEventListener('click', e => {
-        validacion(box, boxInput);
-        let cedulaValida = false;
-        let nombreValida = false;
-        let apellidoValida = false;
-        let correoValida = false;
-        let direccionValida = false;
-        let seguimientoValida = false;
-        let radioValida = false;
-      })
-
-    });
-
-
-    document.querySelectorAll('.form-box-fecha').forEach((box) => {
-      const boxInput = box.querySelector('input');
-      boxInput.addEventListener("keypress", (event) => {
-        clearTimeout(tiempoFuera);
-        tiempoFuera = setTimeout(() => {
-          console.log(`input ${boxInput.name} value: `, boxInput.value)
-          validacionFecha(box, boxInput, null)
-        });
-      })
-      let button = document.querySelector('#btn-g');
-      button.addEventListener('click', e => {
-        validacionFecha(box, boxInput);
-        let fechaValida = false;
-      })
-    });
-
-
-    document.querySelectorAll('.form-box-select').forEach((box) => {
-      const boxSelect = box.querySelector('select');
-      boxSelect.addEventListener("click", (event) => {
-        clearTimeout(tiempoFuera);
-        tiempoFuera = setTimeout(() => {
-          console.log(`select ${boxSelect.name} value: `, boxSelect.value)
-          validarSelect(box, boxSelect, null)
-        }, 250);
-      })
-      let button = document.querySelector('#btn-g');
-      button.addEventListener('click', e => {
-        validarSelect(box, boxSelect)
-        let seccionValida = false;
-      })
-    });
-
-
-    function validacionFecha(box, boxInput) {
-
-      if (boxInput != null & boxInput.name == "fecha_n_persona") {
-        console.log('Validacion fecha inicio')
-
-        if (!moment(boxInput.value).isValid()) {
-          app.formulario_valido = false
-          mostrarError(true, box);
-          fechaValida = false;
-          document.querySelector('#correo_persona').disabled = true;
-          return false
-        }
-
-        /* Comprobar que el año no sea superior al actual*/
-        if (moment(boxInput.value).isAfter(moment(boxInput.max)) || moment(boxInput.value).isBefore(moment(boxInput.min))) {
-          app.formulario_valido = false
-          mostrarError(true, box);
-          fechaIValida = false;
-          document.querySelector('#correo_persona').disabled = true;
-          return false
-        } else {
-          app.formulario_valido = true
-          mostrarError(false, box);
-          fechaValida = true;
-          document.querySelector('#correo_persona').disabled = false;
-          return true
-        }
-      }
+    const validarCampos = () => {
+      app.id_seccion
+      console.log(app.id_seccion);
     }
-
-
-
-    function validarSelect(box, boxSelect) {
-      if (boxSelect.name == 'nacionalidad') {
-        if (boxSelect.value == "") {
-          mostrarError(true, box);
-          nacionalidadValida = false;
-          document.querySelector('#nombre').disabled = true;
-          document.querySelector('#nombre').value = "";
-          document.querySelector('#apellido').disabled = true;
-          document.querySelector('#apellido').value = "";
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#correo_persona').disabled = true;
-          document.querySelector('#correo_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-
-        } else {
-          console.log(box);
-          mostrarError(false, box);
-          nacionalidadValida = true;
-        }
-      }
-      // if (boxSelect.name == 'id_seccion') {
-      //   if (boxSelect.value == "") {
-      //     mostrarError(true, box);
-      //     seccionValida = false;
-      //   } else {
-      //     console.log(box);
-      //     mostrarError(false, box);
-      //     seccionValida = true;
-      //   }
-      // }
-      // if (boxSelect.name == 'id_materia') {
-      //   if (boxSelect.value == "") {
-      //     mostrarError(true, box);
-      //     materiaValida = false;
-      //   } else {
-      //     console.log(box);
-      //     mostrarError(false, box);
-      //     materiaValida = true;
-      //   }
-      // }
-    }
-
-
-    async function validacion(box, boxInput) {
-
-      if (boxInput != null && boxInput.name == "cedula") {
-        let cedulaRepetida = false;
-
-        if (boxInput.value.length >= 7) {
-          await fetch(`./Controllers/EstudiantesController.php?ope=VerificarCedula&&id=${boxInput.value}`)
-            .then(response => response.json())
-            .then(result => {
-              if (result.data.cedula_persona) {
-                alert("Esta cedula ya esta registrada")
-                cedulaRepetida = true;
-                document.querySelector('#nombre').disabled = false;
-              } else {
-                document.querySelector('#nombre').disabled = true;
-                document.querySelector('#nombre').value = "";
-                document.querySelector('#apellido').disabled = true;
-                document.querySelector('#apellido').value = "";
-                document.querySelector('#fecha_n_persona').disabled = true;
-                document.querySelector('#fecha_n_persona').value = "";
-                document.querySelector('#correo_persona').disabled = true;
-                document.querySelector('#correo_persona').value = "";
-                document.querySelector('#direccion').disabled = true;
-                document.querySelector('#direccion').value = "";
-                cedulaRepetida = false;
-              }
-            }).catch(error => console.error(error))
-        } else cedulaRepetida = false;
-
-        if (boxInput.value.length < 7 || boxInput.value.length > 8) {
-          console.error('Campo vacío o cédula inválida')
-          mostrarError(true, box);
-          cedulaValida = false;
-          document.querySelector('#nombre').disabled = true;
-          document.querySelector('#nombre').value = "";
-          document.querySelector('#apellido').disabled = true;
-          document.querySelector('#apellido').value = "";
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#correo_persona').disabled = true;
-          document.querySelector('#correo_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-
-        } else if (isNaN(boxInput.value)) {
-          console.error(`${boxInput.value} no es un numero`);
-          mostrarError(true, box);
-          document.querySelector('#nombre').disabled = true;
-          document.querySelector('#nombre').value = "";
-          document.querySelector('#apellido').disabled = true;
-          document.querySelector('#apellido').value = "";
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#correo_persona').disabled = true;
-          document.querySelector('#correo_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-          cedulaValida = false;
-        } else if (cedulaRepetida) {
-          console.error(`${boxInput.value} Ya esta registrado`);
-          mostrarError(true, box);
-          document.querySelector('#nombre').disabled = true;
-          document.querySelector('#nombre').value = "";
-          document.querySelector('#apellido').disabled = true;
-          document.querySelector('#apellido').value = "";
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#correo_persona').disabled = true;
-          document.querySelector('#correo_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-        } else {
-          mostrarError(false, box);
-          cedulaValida = true;
-          document.querySelector('#nombre').disabled = false;
-        }
-      }
-
-      if (boxInput != null && boxInput.name == "nombre") {
-        console.log("validacion nombre")
-        console.group("NOMBRE");
-        console.log(boxInput.value)
-        console.groupEnd();
-        const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬"];
-        const numeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-        let contieneLetraEspecial = 0;
-        let contieneNumeros = 0;
-
-        for (let i = 0; i < boxInput.value.length; i++) {
-          for (let j = 0; j < letrasEspeciales.length; j++) {
-            if (boxInput.value[i] === letrasEspeciales[j]) {
-              contieneLetraEspecial++;
-            }
-          }
-        }
-
-        for (let i = 0; i < boxInput.value.length; i++) {
-          for (let j = 0; j < numeros.length; j++) {
-            if (boxInput.value[i] === numeros[j]) {
-              contieneNumeros++;
-            }
-          }
-        }
-
-        if (boxInput.value == '' || boxInput.value == ' ' || boxInput.value.length < 3 || contieneNumeros > 0 || contieneLetraEspecial > 0) {
-          mostrarError(true, box);
-          nombreValida = false;
-          document.querySelector('#apellido').disabled = true;
-          document.querySelector('#apellido').value = "";
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#correo_persona').disabled = true;
-          document.querySelector('#correo_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-        } else {
-          mostrarError(false, box);
-          nombreValida = true;
-          document.querySelector('#apellido').disabled = false;
-        }
-      }
-      if (boxInput != null && boxInput.name == "apellido") {
-        console.log("validacion apellido")
-        console.group("APELLIDO");
-        console.log(boxInput.value)
-        console.groupEnd();
-        const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬"];
-        const numeros = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-        let contieneLetraEspecial = 0;
-        let contieneNumeros = 0;
-
-        for (let i = 0; i < boxInput.value.length; i++) {
-          for (let j = 0; j < letrasEspeciales.length; j++) {
-            if (boxInput.value[i] === letrasEspeciales[j]) {
-              contieneLetraEspecial++;
-            }
-          }
-        }
-
-        for (let i = 0; i < boxInput.value.length; i++) {
-          for (let j = 0; j < numeros.length; j++) {
-            if (boxInput.value[i] === numeros[j]) {
-              contieneNumeros++;
-            }
-          }
-        }
-
-
-        if (boxInput.value == '' || boxInput.value == ' ' || boxInput.value.length < 3 || contieneNumeros > 0 || contieneLetraEspecial > 0) {
-          mostrarError(true, box);
-          apellidoValida = false;
-          document.querySelector('#fecha_n_persona').disabled = true;
-          document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#correo_persona').disabled = true;
-          document.querySelector('#correo_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-        } else {
-          mostrarError(false, box);
-          apellidoValida = true;
-          document.querySelector('#fecha_n_persona').disabled = false;
-        }
-      }
-
-
-      if (boxInput != null && boxInput.name == "correo_persona") {
-        console.log("validacion correo")
-        if (emailRegex.test(boxInput.value)) {
-          console.log("validacion lugar nacimiento");
-          mostrarError(false, box);
-          correoValida = true;
-          document.querySelector('#direccion').disabled = false;
-          document.querySelector('#direccion').value = "";
-        } else {
-          mostrarError(true, box);
-          correoValida = false;
-          document.querySelector('#direccion').disabled = true;
-        }
-      }
-      if (boxInput != null && boxInput.name == "direccion") {
-        console.log("validacion direccion")
-        if (boxInput.value.length < 3 || boxInput.value == "" || boxInput.value == null) {
-          mostrarError(true, box);
-          direccionValida = false;
-        } else {
-          mostrarError(false, box);
-          direccionValida = true;
-        }
-      }
-
-      // if (boxInput != null && boxInput.name == "seguimiento_profesor") {
-      //   console.log("validacion seguimiento")
-      //   if (boxInput.value > 6 || boxInput.value < 1) {
-      //     mostrarError(true, box);
-      //     seguimientoValida = false;
-      //   } else {
-      //     mostrarError(false, box);
-      //     seguimientoValida = true;
-      //   }
-      // }
-      let button = document.querySelector('#btn-g');
-
-      if (radio.checked || radio1.checked) {
-        radioValida = true;
-      }
-      // seguimientoValida && && seccionValida
-
-      // if (app.action == "Asignar") {
-      //   let materias = true,
-      //     secciones = true;
-      //   app.id_materia.forEach(item => {
-      //     if (item.id == '') materias = false;
-      //   })
-      //   app.id_seccion.forEach(item => {
-      //     if (item == '') secciones = false;
-      //   })
-
-      //   if (app.seguimiento != '' && materias && secciones) app.formulario_valido = true;
-      //   else {
-      //     app.formulario_valido = false;
-      //     alert("Debes de llenar todos los datos faltantes (secciones y materias)");
-      //   }
-      //   return false;
-      // }
-
-      if (cedulaValida && nombreValida && apellidoValida && correoValida && fechaValida && direccionValida && nacionalidadValida && radioValida) {
-        app.formulario_valido = true;
-      } else app.formulario_valido = false;
-    }
-
-    function mostrarError(check, box) {
-      // console.log("MOSTRAR ERROR");
-      if (check) {
-        box.classList.remove('div-error');
-        box.classList.add('form-error');
-      } else {
-        box.classList.add('div-error');
-        box.classList.remove('form-error');
-      }
-    }
-
-    $("#nombre, #apellido").bind('keypress', function(event) {
-      var regex = new RegExp("^[a-zA-Z ]+$");
-      var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-      if (!regex.test(key)) {
-        event.preventDefault();
-        return false;
-      }
-    });
   </script>
 
   <!-- <script src="./views/js/Seccion/index.js"></script> -->

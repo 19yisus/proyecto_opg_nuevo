@@ -119,7 +119,7 @@
           <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#accordionExample">
             <ul class="list-group">
             <a class="list-group-item list-group-item-action" href="./VisAsignacionEstudiantes"> <i class="fas fa-chalkboard-teacher mx-2"></i>Asignar Estudiante</a>  
-            <a class="list-group-item list-group-item-action" href="./VisInstitucion"> <i class="fas fa-chalkboard-teacher mx-2"></i>Asignar Materias a Profesor</a>  
+            <a class="list-group-item list-group-item-action" href="./VisAsignacionProfesor"> <i class="fas fa-chalkboard-teacher mx-2"></i>Asignar Materias a Profesor</a>  
            
             </ul>
           </div>

@@ -130,16 +130,16 @@
                         <input type="hidden" name="des_materia[]" :value="item.des_materia">
                         <td class="text-center">{{item.des_materia}}</td>
                         <td class="text-center">
-                          <input max="20" min="0" @keypress="validar" :value="item.nota_lapso1" :disabled="item.estatus_nota == 0" name="nota1[]" type="number" class="form-control form-control-sm" id="" placeholder="">
+                          <input max="20" min="1" @keypress="validar" :value="item.nota_lapso1" :disabled="item.estatus_nota == 0" name="nota1[]" type="number" class="form-control form-control-sm" id="" placeholder="">
                         </td>
                         <td class="text-center">
-                          <input max="20" min="0" @keypress="validar" maxlength="2" :value="item.nota_lapso2" :disabled="item.estatus_nota == 0" name="nota2[]" type="number" class="form-control form-control-sm" id="" placeholder="">
+                          <input max="20" min="1" @keypress="validar" maxlength="2" :value="item.nota_lapso2" :disabled="item.estatus_nota == 0" name="nota2[]" type="number" class="form-control form-control-sm" id="" placeholder="">
                         </td>
                         <td class="text-center">
-                          <input max="20" min="0" @keypress="validar" maxlength="2" :value="item.nota_lapso3" :disabled="item.estatus_nota == 0" name="nota3[]" type="number" class="form-control form-control-sm" id="" placeholder="">
+                          <input max="20" min="1" @keypress="validar" maxlength="2" :value="item.nota_lapso3" :disabled="item.estatus_nota == 0" name="nota3[]" type="number" class="form-control form-control-sm" id="" placeholder="">
                         </td>
                         <td class="text-center">
-                          <input max="20" min="0" maxlength="2" readonly :value="item.nota_final" readonly="readonly" :disabled="item.estatus_nota == 0" name="nota4[]" type="number" class="form-control form-control-sm" id="" placeholder="">
+                          <input max="20" min="1" maxlength="2" readonly :value="item.nota_final" readonly="readonly" :disabled="item.estatus_nota == 0" name="nota4[]" type="number" class="form-control form-control-sm" id="" placeholder="">
                         </td>
 
                         <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center">

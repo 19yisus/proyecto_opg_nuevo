@@ -55,7 +55,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header bg-hero-azul fw-bold">
-              <h5 class="modal-title" id="staticBackdropLabel">Registro Pensum {{action}}</h5>
+              <h5 class="modal-title" id="staticBackdropLabel">Registro Pensum</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!-- "./Controllers/PensumController.php" -->

@@ -38,7 +38,6 @@
               <table class="table border table-sm" id="datatable">
                 <thead>
                   <tr>
-                    <th class="text-center" scope="col">Id</th>
                     <th class="text-center" scope="col">Seccion</th>
                     <th class="text-center" scope="col">Periodo Escolar</th>
                     <th class="text-center" scope="col">Estado</th>
@@ -229,9 +228,7 @@
         url: "./Controllers/SeccionController.php?ope=ConsulAll",
         dataSrc: "data"
       },
-      columns: [{
-          data: "idSeccion"
-        },
+      columns: [
         {
           data: "id_seccion"
         },

@@ -23,7 +23,13 @@
 
 		public function SaveDatos(){
 			try{
-				$pdo = $this->driver->prepare("INSERT INTO `personas`(`cedula_persona`, `nombre_persona`, `apellido_persona`, `nacionalidad_persona`, `sexo_persona`, `correo_persona`, `fecha_n_persona`, `direccion_persona`, `telefono_persona`, `direccion_n_persona`) VALUES(:cedula, :nombre, :apellido, :nacionalidad, :sexo, :correo, :fecha_nacimiento, :direccion, :telefono, :direccion_nacimiento)");
+				$pdo = $this->driver->prepare("
+				INSERT INTO `personas`(`cedula_persona`, `nombre_persona`, `apellido_persona`, 
+				`nacionalidad_persona`, `sexo_persona`, `correo_persona`, `fecha_n_persona`, `direccion_persona`, 
+				`telefono_persona`, `direccion_n_persona`) 
+				
+				VALUES(:cedula, :nombre, :apellido, :nacionalidad, :sexo, 
+				:correo, :fecha_nacimiento, :direccion, :telefono, :direccion_nacimiento)");
 
 				$pdo->bindParam(':cedula',$this->cedula_persona);
 				$pdo->bindParam(':nombre',$this->nombre_persona);

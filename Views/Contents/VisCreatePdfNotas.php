@@ -2,7 +2,7 @@
     require_once("./Models/NotasModel.php");
     $nota_model = new NotasModel();
     $datos = $nota_model->ConsultaParaPdf($_GET['cedula']);
-        
+
     if(!isset($datos['notas'][0])){
         echo "<script>
             alert('No hay datos suficiente para generar este reporte');

@@ -73,7 +73,7 @@
                 <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Fecha de inicio:</span>
-                    <input type="date" min="1987-01-01" max="1998-12-31" v-model="fecha_inicio" name="fecha_inicio" class="form-control form-control-sm" required placeholder="dd/mm/aaaa" id="" style="width:50%;">
+                    <input type="date" min="1987-01-01" max="1998-12-31" v-model="fecha_inicio" v-on:keyup="fechaInicio()" name="fecha_inicio" class="form-control form-control-sm" required placeholder="dd/mm/aaaa" id="" style="width:50%;">
                     <span class="error-text">Formato o fecha inválida</span>
                   </div>
                 </div>
@@ -196,6 +196,20 @@
           this.fecha_cierre = "";
           this.estatus = "";
           this.action = "Save";
+        },
+        fechaInicio() {
+          if (this.fecha_inicio.length == 10) {
+            let dia = this.fecha_inicio.split("-")[2]
+            let mes = this.fecha_inicio.split("-")[1]
+            let year = this.fecha_inicio.split("-")[0]
+            console.log(mes)
+            if (mes != "09") {
+              let fecha = moment([year, 8, dia]).format("YYYY-MM-DD")
+              this.fecha_inicio = fecha;
+              return fecha
+            }
+
+          }
         }
       },
       computed: {

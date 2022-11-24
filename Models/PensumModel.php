@@ -104,7 +104,8 @@ class PensumModel extends DB
 	{
 		try {
 			$result = $this->consultAll("SELECT * FROM pensum 
-			INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = pensum.periodo_id WHERE periodo_escolar.estatus_periodo_escolar = 1");
+			INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = pensum.periodo_id 
+			WHERE periodo_escolar.estatus_periodo_escolar = 1");
 
 			if (isset($result[0])) $this->ResDataJSON($result);
 			else $this->ResDataJSON([]);
@@ -117,7 +118,9 @@ class PensumModel extends DB
 	public function GetOne($id)
 	{
 		try {
-			$result = $this->consult("SELECT * FROM pensum INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = pensum.periodo_id WHERE id = '$id' ;");
+			$result = $this->consult("SELECT * FROM pensum 
+			INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = pensum.periodo_id WHERE
+			periodo_escolar.estatus_periodo_escolar = 1 AND id = '$id' ;");
 			$id = $result['id'];
 			$result2 = $this->consultAll("SELECT * FROM materia WHERE id_pensum_ma = $id");
 
@@ -134,9 +137,11 @@ class PensumModel extends DB
 		try {
 			$lista_materias = [];
 			if ($anio < 4) $anio = "B";
-			else if ($anio < 6) $anio = "D";
-			else $anio = "E";
-			$lista_materias = $this->consultAll("SELECT materia.* FROM materia INNER JOIN pensum ON pensum.id = materia.id_pensum_ma WHERE pensum.anios_abarcados = '$anio' ;");
+			else $anio = "D";
+			$lista_materias = $this->consultAll("SELECT materia.* FROM materia 
+			INNER JOIN pensum ON pensum.id = materia.id_pensum_ma
+			INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = pensum.periodo_id WHERE
+			periodo_escolar.estatus_periodo_escolar = 1 AND pensum.anios_abarcados = '$anio' ;");
 
 			if (isset($lista_materias[0]) && $lista_materias[0]) $this->ResDataJSON($lista_materias);
 			else $this->ResDataJSON([]);

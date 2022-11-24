@@ -82,9 +82,9 @@
                 <div class="col-md-6 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Pensum:</span>
-                    <select class="form-select form-select-sm" name="id_pensum" v-model="id_pensum" required aria-label="Default select example" disabled>
+                    <select class="form-select form-select-sm" name="id_pensum" @change="ValidaPensum" v-model="id_pensum" required aria-label="Default select example" disabled>
                       <option value="" selected>Seleccionar</option>
-                      <option v-for="item in pensums" :value="item.id">{{ item.cod_pensum }} {{ (item.anios_abarcados == 'B') ? 'Basica' : 'Diversificado' }}</option>
+                      <option v-for="item in pensums" :data-anio="item.anios_abarcados" :value="item.id">{{ item.cod_pensum }} {{ (item.anios_abarcados == 'B') ? 'Basica' : 'Diversificado' }}</option>
                     </select>
 
                   </div>
@@ -94,27 +94,27 @@
                   <label for="">Años abarcados</label>
                   <div class="d-flex justify-content-around">
                     <div class="form-check">
-                      <input type="checkbox" v-bind:checked="primero == 1" name="primero" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'D'" v-bind:checked="primero == 1" name="primero" id="" value="1" class="form-check-input">
                       <small class="form-check-label">1er</small>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" v-bind:checked="segundo == 1" name="segundo" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'D'" v-bind:checked="segundo == 1" name="segundo" id="" value="1" class="form-check-input">
                       <small class="form-check-label">2do</small>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" v-bind:checked="tercero == 1" name="tercero" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'D'" v-bind:checked="tercero == 1" name="tercero" id="" value="1" class="form-check-input">
                       <small class="form-check-label">3ro</small>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" v-bind:checked="cuarto == 1" name="cuarto" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'B'" v-bind:checked="cuarto == 1" name="cuarto" id="" value="1" class="form-check-input">
                       <small class="form-check-label">4to</small>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" v-bind:checked="quinto == 1" name="quinto" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'B'" v-bind:checked="quinto == 1" name="quinto" id="" value="1" class="form-check-input">
                       <small class="form-check-label">5to</small>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" v-bind:checked="sexto == 1" name="sexto" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'B'" v-bind:checked="sexto == 1" name="sexto" id="" value="1" class="form-check-input">
                       <small class="form-check-label">6to</small>
                     </div>
                   </div>
@@ -154,6 +154,7 @@
           quinto: "",
           sexto: "",
           formulario_valido: false,
+          tipo_pensum: "",
           pensums: [],
           action: "Save",
         }
@@ -174,8 +175,16 @@
             this.ToggleModal();
             ViewAlert(result.mensaje, result.estado);
             this.formulario_valido = false;
+            this.LimpiarForm();
             this.periodo_activo();
           }).catch(Error => console.error(Error))
+        },
+        ValidaPensum(e){
+          let pensum = this.pensums.filter( item =>{
+            if(item.id == e.target.value) return item;
+          })[0]
+
+          this.tipo_pensum = pensum.anios_abarcados;
         },
         async GetData(id) {
           await fetch(`./Controllers/MateriasController.php?ope=ConsultOne&&id=${id}`)

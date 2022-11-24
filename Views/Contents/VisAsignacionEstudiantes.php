@@ -234,6 +234,7 @@
               data
             }) => {
 
+              console.log(data)
               if (data[0] != undefined) {
                 this.nacionalidad = data.nacionalidad_persona
                 this.cedula = data.cedula_estudiante
