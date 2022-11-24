@@ -68,7 +68,7 @@
               -->
             <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" name="register" novalidate>
               <div class="col-md-12 mx-auto rounded border d-flex justify-content-between mt-2 row">
-                <h5 class="text-start col-md-4">Pensum: </h5>
+                <h5 class="text-start col-md-8">Pensum: {{info_pensum_1}} | {{info_pensum_2}}</h5>
                 <h5 class="text-end col-md-4">Periodo: {{des_periodo}}</h5>
               </div>
               <input type="hidden" name="id_periodo" v-model="id_periodo">
@@ -241,6 +241,8 @@
           periodosFiltro: [],
           formulario_valido: true,
           evitandoDobleSubmit: false,
+          info_pensum_1: "",
+          info_pensum_2: "",
           bucle: 1,
           fecha_maxima: "",
           action: "Save",
@@ -321,6 +323,21 @@
               }
               this.action = "Update";
             }).catch(error => console.error(error))
+        },
+        async Get_pengums() {
+          await fetch(`./Controllers/PensumController.php?ope=ConsulAll`)
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              if (data[0]) {
+                this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+              }
+
+              if (data[1]) {
+                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+              }
+              console.log(data)
+            }).catch(Error => console.error(Error))
         },
         async ChangeState(id) {
           this.cedula = id;
@@ -423,13 +440,13 @@
 
           if (res[0] != undefined) {
             let lista = res.filter(i => {
-              if (i){
-                if(anio == 1 && i.primero == "1") return i;
-                if(anio == 2 && i.segundo == "1") return i;
-                if(anio == 3 && i.tercero == "1") return i;
-                if(anio == 4 && i.cuarto == "1") return i;
-                if(anio == 5 && i.quinto == "1") return i;
-                if(anio == 6 && i.sexto == "1") return i;
+              if (i) {
+                if (anio == 1 && i.primero == "1") return i;
+                if (anio == 2 && i.segundo == "1") return i;
+                if (anio == 3 && i.tercero == "1") return i;
+                if (anio == 4 && i.cuarto == "1") return i;
+                if (anio == 5 && i.quinto == "1") return i;
+                if (anio == 6 && i.sexto == "1") return i;
               }
             })
             this.id_materia[index] = lista;
@@ -475,6 +492,7 @@
       async mounted() {
         await this.periodo_activo();
         await this.GetPeriodoEscolar();
+        await this.Get_pengums();
       }
     }).mount("#App_vue");
 
@@ -508,7 +526,7 @@
         },
         {
           defaultContent: '',
-          render: function(data, type, row) {            
+          render: function(data, type, row) {
             let btns = `
               <div class="">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Asignar(this)" data-id='${row.cedula_profesor}' class="btn btn-sm btn-info">

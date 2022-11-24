@@ -65,7 +65,7 @@
             </div>
             <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" name="formulario" novalidate>
               <div class="col-md-12 mx-auto rounded border d-flex justify-content-between mt-2 row">
-                <h5 class="text-start col-md-4">Pensum: </h5>
+                <h5 class="text-start col-md-8">Pensum: {{info_pensum_1}} | {{info_pensum_2}}</h5>
                 <h5 class="text-end col-md-4">Periodo: {{des_periodo}}</h5>
               </div>
               <input type="hidden" name="id_periodo" v-model="id_periodo">
@@ -199,6 +199,8 @@
           id_periodoFiltro: "",
           secciones: [],
           periodosFiltro: [],
+          info_pensum_1: "",
+          info_pensum_2: "",
           formulario_valido: false,
           desactivado: false,
           fecha_maxima: "",
@@ -266,6 +268,21 @@
           setTimeout(() => {
             this.action = "Asignacion";
           }, 100)
+        },
+        async Get_pengums() {
+          await fetch(`./Controllers/PensumController.php?ope=ConsulAll`)
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              if (data[0]) {
+                this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+              }
+
+              if (data[1]) {
+                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+              }
+              console.log(data)
+            }).catch(Error => console.error(Error))
         },
         async ChangeState(id) {
           this.cedula = id;
@@ -347,7 +364,7 @@
             return false;
           }
           this.id_periodo = res.id_periodo_escolar;
-          this.fecha_maxima = moment(res.fecha_inicio).subtract(12,"years").format("YYYY-MM-DD");
+          this.fecha_maxima = moment(res.fecha_inicio).subtract(12, "years").format("YYYY-MM-DD");
         },
       },
       computed: {
@@ -380,6 +397,7 @@
       async mounted() {
         await this.periodo_activo();
         await this.GetPeriodoEscolar();
+        await this.Get_pengums();
       }
     }).mount("#App_vue");
 
@@ -535,7 +553,7 @@
     });
 
 
-    function validacionFecha(box, boxInput){
+    function validacionFecha(box, boxInput) {
 
       if (boxInput != null & boxInput.name == "fecha_n_persona") {
         console.log('Validacion fecha inicio')
@@ -609,11 +627,11 @@
           await fetch(`./Controllers/EstudiantesController.php?ope=VerificarCedula&&id=${boxInput.value}`)
             .then(response => response.json())
             .then(result => {
-              if(result.data.cedula_persona){
+              if (result.data.cedula_persona) {
                 alert("Esta cedula ya esta registrada")
                 cedulaRepetida = true;
                 document.querySelector('#nombre').disabled = false;
-              }else{
+              } else {
                 document.querySelector('#nombre').disabled = true;
                 document.querySelector('#nombre').value = "";
                 document.querySelector('#apellido').disabled = true;
@@ -627,7 +645,7 @@
                 cedulaRepetida = false;
               }
             }).catch(error => console.error(error))
-        }else cedulaRepetida = false;
+        } else cedulaRepetida = false;
 
         if (boxInput.value.length < 7 || boxInput.value.length > 8) {
           console.error('Campo vacío o cédula inválida')
@@ -713,7 +731,8 @@
         } else {
           mostrarError(false, box);
           nombreValida = true;
-          document.querySelector('#apellido').disabled = false;       }
+          document.querySelector('#apellido').disabled = false;
+        }
       }
       if (boxInput != null && boxInput.name == "apellido") {
         const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬"];
@@ -746,14 +765,14 @@
           document.querySelector('#direccion_persona').value = "";
           document.querySelector('#direccion').disabled = true;
           document.querySelector('#direccion').value = "";
-          
+
         } else {
           mostrarError(false, box);
           apellidoValida = true;
-          document.querySelector('#fecha_n_persona').disabled = false;  
+          document.querySelector('#fecha_n_persona').disabled = false;
         }
       }
- // if (boxInput != null & boxInput.name == "fecha_n_persona") {
+      // if (boxInput != null & boxInput.name == "fecha_n_persona") {
       //   const DATE_REGEX = /^(0[1-9]|[1-2]\d|3[01])(\/)(0[1-9]|1[012])\2(\d{4})$/
       //   const CURRENT_DATE = app.fecha_maxima
       //   // const CURRENT_YEAR = new Date().getFullYear();

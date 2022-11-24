@@ -68,7 +68,7 @@
               -->
             <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" name="register" novalidate>
               <div class="col-md-12 mx-auto rounded border d-flex justify-content-between mt-2 row">
-                <h5 class="text-start col-md-4">Pensum: </h5>
+                <h5 class="text-start col-md-8">Pensum: {{info_pensum_1}} | {{info_pensum_2}}</h5>
                 <h5 class="text-end col-md-4">Periodo: {{des_periodo}}</h5>
               </div>
               <input type="hidden" name="id_periodo" v-model="id_periodo">
@@ -241,6 +241,8 @@
           periodosFiltro: [],
           formulario_valido: false,
           evitandoDobleSubmit: false,
+          info_pensum_1:"",
+          info_pensum_2:"",
           bucle: 1,
           fecha_maxima: "",
           action: "Save",
@@ -410,6 +412,21 @@
           } else ViewAlert("No hay suficientes secciones registradas", "error");
 
         },
+        async Get_pengums(){
+          await fetch(`./Controllers/PensumController.php?ope=ConsulAll`)
+          .then(res => res.json()).then(({
+              data
+            }) => {
+              if(data[0]){
+                this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+              }
+
+              if(data[1]){
+                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+              }
+              console.log(data)
+            }).catch(Error => console.error(Error))
+        },
         async consultarMaterias(e) {
           let anio = e.key,
             index = e.target.dataset.index;
@@ -469,6 +486,7 @@
       async mounted() {
         await this.periodo_activo();
         await this.GetPeriodoEscolar();
+        await this.Get_pengums();
       }
     }).mount("#App_vue");
 

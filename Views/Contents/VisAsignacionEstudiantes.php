@@ -429,7 +429,8 @@
           render: function(data, type, row) {
             let classStatus = row.estatus_estudiante == 1 ? 'success' : 'danger';
             let btns = '';
-            if (row.estatus_asig_estu == 1) {
+            // || row.id_seccion != ''
+            if (row.estatus_asig_estu == 1 ) {
               btns = ``;
             } else {
               btns = `

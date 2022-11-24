@@ -71,7 +71,7 @@
 
             <form action="#" @submit.preventDefault="SendData" method="POST" id="Formulario" class="needs-validation" novalidate autocomplete="off">
               <div class="col-md-12 mx-auto rounded border d-flex justify-content-between mt-2 row">
-                <h5 class="text-start col-md-4">Pensum: </h5>
+                <h5 class="text-start col-md-8">Pensum: {{info_pensum_1}} | {{info_pensum_2}}</h5>
                 <h5 class="text-end col-md-4">Periodo: {{des_periodo}}</h5>
               </div>
               <div class="modal-body row " style="padding: 0 70px ;">
@@ -136,6 +136,8 @@
           estatus: "",
           datos: [],
           formulario_valido: false,
+          info_pensum_1:"",
+          info_pensum_2:"",
           action: "Save",
           letras: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z']
         }
@@ -185,6 +187,21 @@
             }).catch(error => console.error(error))
           }, 100);
         },
+        async Get_pengums(){
+          await fetch(`./Controllers/PensumController.php?ope=ConsulAll`)
+          .then(res => res.json()).then(({
+              data
+            }) => {
+              if(data[0]){
+                this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+              }
+
+              if(data[1]){
+                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+              }
+              console.log(data)
+            }).catch(Error => console.error(Error))
+        },
         async periodo_activo() {
           await fetch(`./Controllers/PeriodoController.php?ope=ConsultPeriodoActivo`)
             .then(res => res.json()).then(({
@@ -216,6 +233,7 @@
       async mounted() {
         await this.periodo_activo();
         await this.GetDatos();
+        await this.Get_pengums();
       }
     }).mount("#App_vue");
 
@@ -228,8 +246,7 @@
         url: "./Controllers/SeccionController.php?ope=ConsulAll",
         dataSrc: "data"
       },
-      columns: [
-        {
+      columns: [{
           data: "id_seccion"
         },
         {
