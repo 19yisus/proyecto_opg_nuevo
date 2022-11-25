@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php $this->Head(); ?>
+<?php 
+  $this->Head();
+
+  require_once("./Models/InstitucionModel.php");
+  $mod = new InstitucionModel();
+  $datos_institucion = $mod->GetActivo();
+
+?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
@@ -64,11 +71,12 @@
             </div>
             <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation px-2" novalidate>
               <div class="col-md-12 mx-auto rounded border d-flex justify-content-between mt-2 row">
-              <h5 class="text-start col-md-8">Pensum: {{info_pensum_1}} | {{info_pensum_2}}</h5>
+                <h5 class="text-start col-md-8">Pensum: {{info_pensum_1}} | {{info_pensum_2}}</h5>
                 <h5 class="text-end col-md-4">Periodo: {{des_periodo}}</h5>
               </div>
               <div class="modal-body row py-2 " style="padding: 0 70px ;">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
+                <input type="hidden" name="institucion_id" value="<?php echo $datos_institucion['id_institucion'];?>">
 
                 <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
@@ -118,8 +126,8 @@
           fecha_inicio: "",
           fecha_cierre: "",
           estatus: "",
-          info_pensum_1:"",
-          info_pensum_2:"",
+          info_pensum_1: "",
+          info_pensum_2: "",
           formulario_valido: false,
           action: "Save",
         }
@@ -160,17 +168,17 @@
               this.action = "Update";
             }).catch(error => console.error(error))
         },
-        async Get_pengums(){
+        async Get_pengums() {
           await fetch(`./Controllers/PensumController.php?ope=ConsulAll`)
-          .then(res => res.json()).then(({
+            .then(res => res.json()).then(({
               data
             }) => {
-              if(data[0]){
-                this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+              if (data[0]) {
+                if(data[0].estatus_pensum == '1') this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
               }
 
-              if(data[1]){
-                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+              if (data[1]) {
+                if(data[1].estatus_pensum == '1') this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
               }
               console.log(data)
             }).catch(Error => console.error(Error))

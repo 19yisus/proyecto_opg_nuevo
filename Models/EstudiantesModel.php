@@ -29,9 +29,14 @@ class EstudiantesModel extends DB
 
 			// if ($pdo->execute()) return true;
 			// else return false;
-			if($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
-			else $this->ResJSON("Operacion Fallida!", "error");
-
+			if ($pdo->execute()) {
+				$this->registrar_bitacora_sistema([
+					'table' => "estudiante",
+					'descripcion' => "REGISTRO",
+					'id_registro' => $this->cedula_estudiante
+				]);
+				$this->ResJSON("Operacion Exitosa!", "success");
+			} else $this->ResJSON("Operacion Fallida!", "error");
 		} catch (PDOException $e) {
 			error_log("MateriasModel(line0------) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida!", "error");
@@ -58,8 +63,15 @@ class EstudiantesModel extends DB
 				$pdo->bindParam(':id_seccion', $this->id_seccion);
 				$pdo->bindParam(':id_periodo', $this->id_periodo);
 
-				if ($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
-				else $this->ResJSON("Operacion Fallida!", "error");
+				if ($pdo->execute()) {
+					// A LA SECCION '$this->id_secion'
+					$this->registrar_bitacora_sistema([
+						'table' => "asignacion_estudiante_seccion",
+						'descripcion' => "ASIGNACION DE UN ESTUDIANTE CON LA CÉDULA '$this->cedula_estudiante'",
+						'id_registro' => $this->cedula_estudiante
+					]);
+					$this->ResJSON("Operacion Exitosa!", "success");
+				} else $this->ResJSON("Operacion Fallida!", "error");
 			} else {
 				$this->ResJSON("Operacion Fallida! No se pueden realizar dos asignaciones en un mismo periodo escolar", "error");
 			}
@@ -90,8 +102,14 @@ class EstudiantesModel extends DB
 			$pdo = $this->driver->prepare("UPDATE estudiante SET estatus_estudiante = !estatus_estudiante WHERE cedula_estudiante = :cedula ;");
 			$pdo->bindParam(':cedula', $this->cedula_estudiante);
 
-			if ($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
-			else $this->ResJSON("Operacion Fallida!", "error");
+			if ($pdo->execute()) {
+				$this->registrar_bitacora_sistema([
+					'table' => "estudiante",
+					'descripcion' => "CAMBIO DE ESTATUS AL ESTUDIANTE CON AL CEDULA '$this->cedula_estudiante'",
+					'id_registro' => $this->cedula_estudiante
+				]);
+				$this->ResJSON("Operacion Exitosa!", "success");
+			} else $this->ResJSON("Operacion Fallida!", "error");
 		} catch (PDOException $e) {
 			error_log("MateriasModel(54) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida! (error_log)", "error");
@@ -123,7 +141,7 @@ class EstudiantesModel extends DB
 						LEFT JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = asignacion_estudiante_seccion.id_periodo 
 						LEFT JOIN seccion ON seccion.idSeccion = asignacion_estudiante_seccion.id_seccion
 						;");
-						// WHERE periodo_escolar.estatus_periodo_escolar = 1
+				// WHERE periodo_escolar.estatus_periodo_escolar = 1
 			}
 
 

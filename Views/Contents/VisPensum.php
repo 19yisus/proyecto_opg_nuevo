@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php $this->Head(); ?>
+<?php 
+  $this->Head(); 
+?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">

@@ -2,7 +2,7 @@
 	require("db.php");
 
 	class PeriodoModel extends DB{
-		private $id, $periodoescolar, $fecha_inicio, $fecha_cierre, $estatus;
+		private $id, $periodoescolar, $fecha_inicio, $fecha_cierre, $estatus, $institucion_id;
 
 		public function __construct(){
 			parent::__construct();
@@ -14,6 +14,7 @@
 			$this->fecha_inicio = isset($datos['fecha_inicio']) ? $datos['fecha_inicio'] : null;
 			$this->fecha_cierre = isset($datos['fecha_cierre']) ? $datos['fecha_cierre'] : null;
 			$this->estatus = isset($datos['estatus']) ? $datos['estatus'] : null;
+			$this->institucion_id = isset($datos['institucion_id']) ? $datos['institucion_id'] : null;
 		}
 
 		public function SaveDatos(){
@@ -28,14 +29,25 @@
 					return $this->ResJSON("Las fechas de los periodos colisionan","error");
 				}
 
-				$pdo = $this->driver->prepare("INSERT INTO periodo_escolar(periodoescolar, fecha_inicio, fecha_cierre, estatus_periodo_escolar) VALUES(:periodo, :fecha_inicio, :fecha_cierre, :estatus);");
+				$pdo = $this->driver->prepare("INSERT INTO periodo_escolar(
+					periodoescolar, fecha_inicio, fecha_cierre, estatus_periodo_escolar, institucion_id) 
+					VALUES(:periodo, :fecha_inicio, :fecha_cierre, :estatus, :institucion);");
 
 				$pdo->bindParam(':periodo', $this->periodoescolar);
 				$pdo->bindParam(':fecha_inicio', $this->fecha_inicio);
 				$pdo->bindParam(':fecha_cierre', $this->fecha_cierre);
 				$pdo->bindParam(':estatus', $estatus);
+				$pdo->bindParam(':institucion', $this->institucion_id);
 
-				if($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
+				if($pdo->execute()){
+					$id = $this->driver->lastInsertId();
+					$this->registrar_bitacora_sistema([
+						'table' => "periodo_escolar",
+						'descripcion' => "REGISTRO",
+						'id_registro' => $id
+					]);
+					$this->ResJSON("Operacion Exitosa!", "success");
+				}
 				else $this->ResJSON("Operacion Fallida!", "error");
 
 			}catch(PDOException $e){
@@ -50,7 +62,14 @@
 				$pdo->bindParam(':descripcion', $this->des_materia);
 				$pdo->bindParam(':id', $this->id);
 
-				if($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
+				if($pdo->execute()){
+					$this->registrar_bitacora_sistema([
+						'table' => "periodo_escolar",
+						'descripcion' => "ACTUALIZACION",
+						'id_registro' => $this->id
+					]);
+					$this->ResJSON("Operacion Exitosa!", "success");
+				}
 				else $this->ResJSON("Operacion Fallida!", "error");
 
 			}catch(PDOException $e){
@@ -69,14 +88,30 @@
 					if(!isset($result[0])){
 						$pdo = $this->driver->prepare("UPDATE periodo_escolar SET estatus_periodo_escolar = 1 WHERE id_periodo_escolar = :id ;");
 						$pdo->bindParam(':id', $this->id);
-						if($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
+						if($pdo->execute()){
+							$this->registrar_bitacora_sistema([
+								'table' => "periodo_escolar",
+								'descripcion' => "CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)",
+								'id_registro' => $this->id
+							]);
+
+							$this->ResJSON("Operacion Exitosa!", "success");
+						}
 						else $this->ResJSON("Operacion Fallida!", "error");
 					}else $this->ResJSON("No se pueden tener dos periodos escolares activos!", "error");
 					
 				}else{
 					$pdo = $this->driver->prepare("UPDATE periodo_escolar SET estatus_periodo_escolar = 0 WHERE id_periodo_escolar = :id ;");
 					$pdo->bindParam(':id', $this->id);
-					if($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
+					if($pdo->execute()){
+						$this->registrar_bitacora_sistema([
+							'table' => "periodo_escolar",
+							'descripcion' => "CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)",
+							'id_registro' => $this->id
+						]);
+
+						$this->ResJSON("Operacion Exitosa!", "success");
+					} 
 					else $this->ResJSON("Operacion Fallida!", "error");
 				}
 				

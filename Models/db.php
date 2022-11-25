@@ -22,6 +22,18 @@
 			$this->driver = new PDO("$this->dbManagment:host=$this->host;dbname=$this->dbname", $this->username, $this->password);
 		}
 
+		protected function registrar_bitacora_sistema($datos){
+			session_start();
+			$user = $_SESSION['id_user'];
+			$pdo = $this->driver->prepare("INSERT INTO bitacora_sistema(name_tabla, descripcion, registro_id, fecha_hora, user_id	)
+			VALUES(:name_tabla, :descripcion, :registro_id, NOW(), :user)");
+			$pdo->bindParam(':name_tabla', $datos['table']);
+			$pdo->bindParam(':registro_id', $datos['id_registro']);
+			$pdo->bindParam(':user', $user);
+			$pdo->bindParam(':descripcion', $datos['descripcion']);
+
+		}
+
 		protected function StartTransaction(){
 			// $this->driver->setAtribute(PDO::ATTR_ERRMODE, PDO::ERRDOME_EXCEPTION);
 			$this->driver->beginTransaction();

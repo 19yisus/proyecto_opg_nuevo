@@ -298,6 +298,7 @@
               this.cedula = profesor.cedula_persona;
               this.nombre = profesor.nombre_persona;
               this.apellido = profesor.apellido_persona;
+              this.direccion = profesor.direccion;
               this.fecha_n = moment(profesor.fecha_n_persona).format("D/MM/YYYY");
               this.correo_persona = profesor.correo_persona;
 

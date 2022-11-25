@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 24-11-2022 a las 04:05:23
+-- Tiempo de generación: 25-11-2022 a las 17:42:12
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.4.22
 
@@ -70,6 +70,21 @@ CREATE TABLE `bitacora_notas` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `bitacora_sistema`
+--
+
+CREATE TABLE `bitacora_sistema` (
+  `id` int(11) NOT NULL,
+  `name_tabla` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
+  `registro_id` char(5) COLLATE utf8_spanish_ci NOT NULL,
+  `fecha_hora` datetime NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `estudiante`
 --
 
@@ -89,15 +104,13 @@ CREATE TABLE `institucion` (
   `id_institucion` int(11) NOT NULL,
   `des_institucion` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
   `codigo_institucion` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
-  `direccion_institucion` varchar(120) COLLATE utf8_spanish_ci NOT NULL
+  `direccion_institucion` varchar(120) COLLATE utf8_spanish_ci NOT NULL,
+  `municipio` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
+  `entidad_federal` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
+  `zona_educativa` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
+  `telefono` varchar(12) COLLATE utf8_spanish_ci NOT NULL,
+  `estatus_institucion` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `institucion`
---
-
-INSERT INTO `institucion` (`id_institucion`, `des_institucion`, `codigo_institucion`, `direccion_institucion`) VALUES
-(1, 'opg', '123abc', 'direccion nueva');
 
 -- --------------------------------------------------------
 
@@ -168,7 +181,8 @@ CREATE TABLE `periodo_escolar` (
   `periodoescolar` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_cierre` date NOT NULL,
-  `estatus_periodo_escolar` tinyint(1) NOT NULL
+  `estatus_periodo_escolar` tinyint(1) NOT NULL,
+  `institucion_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
@@ -313,6 +327,13 @@ ALTER TABLE `bitacora_notas`
   ADD KEY `nota_id` (`nota_id`);
 
 --
+-- Indices de la tabla `bitacora_sistema`
+--
+ALTER TABLE `bitacora_sistema`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indices de la tabla `estudiante`
 --
 ALTER TABLE `estudiante`
@@ -354,7 +375,8 @@ ALTER TABLE `pensum`
 -- Indices de la tabla `periodo_escolar`
 --
 ALTER TABLE `periodo_escolar`
-  ADD PRIMARY KEY (`id_periodo_escolar`);
+  ADD PRIMARY KEY (`id_periodo_escolar`),
+  ADD KEY `institucion_id` (`institucion_id`);
 
 --
 -- Indices de la tabla `personas`
@@ -420,10 +442,16 @@ ALTER TABLE `bitacora_notas`
   MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `bitacora_sistema`
+--
+ALTER TABLE `bitacora_sistema`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `institucion`
 --
 ALTER TABLE `institucion`
-  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `materia`
@@ -502,6 +530,12 @@ ALTER TABLE `bitacora_notas`
   ADD CONSTRAINT `usuario_bitacora` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`);
 
 --
+-- Filtros para la tabla `bitacora_sistema`
+--
+ALTER TABLE `bitacora_sistema`
+  ADD CONSTRAINT `bitacora_sistema_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `bitacora_sistema` (`id`);
+
+--
 -- Filtros para la tabla `estudiante`
 --
 ALTER TABLE `estudiante`
@@ -528,6 +562,12 @@ ALTER TABLE `nota`
 --
 ALTER TABLE `pensum`
   ADD CONSTRAINT `pensum_ibfk_1` FOREIGN KEY (`periodo_id`) REFERENCES `periodo_escolar` (`id_periodo_escolar`);
+
+--
+-- Filtros para la tabla `periodo_escolar`
+--
+ALTER TABLE `periodo_escolar`
+  ADD CONSTRAINT `periodo_escolar_ibfk_1` FOREIGN KEY (`institucion_id`) REFERENCES `institucion` (`id_institucion`);
 
 --
 -- Filtros para la tabla `profesor`

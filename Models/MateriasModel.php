@@ -50,8 +50,15 @@ class MateriasModel extends DB
 			$pdo->bindParam(':quin', $this->quinto);
 			$pdo->bindParam(':sext', $this->sexto);
 
-			if ($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
-			else $this->ResJSON("Operacion Fallida!", "error");
+			if ($pdo->execute()) {
+				$id = $this->driver->lastInsertId();
+				$this->registrar_bitacora_sistema([
+					'table' => "materia",
+					'descripcion' => "REGISTRO",
+					'id_registro' => $id
+				]);
+				$this->ResJSON("Operacion Exitosa!", "success");
+			} else $this->ResJSON("Operacion Fallida!", "error");
 		} catch (PDOException $e) {
 			error_log("MateriasModel(line0------) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida!", "error");
@@ -81,8 +88,15 @@ class MateriasModel extends DB
 			$pdo->bindParam(':sext', $this->sexto);
 			$pdo->bindParam(':id', $this->id);
 
-			if ($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
-			else $this->ResJSON("Operacion Fallida!", "error");
+			if ($pdo->execute()) {
+				$this->registrar_bitacora_sistema([
+					'table' => "materia",
+					'descripcion' => "ACTUALIZACION",
+					'id_registro' => $this->id
+				]);
+
+				$this->ResJSON("Operacion Exitosa!", "success");
+			} else $this->ResJSON("Operacion Fallida!", "error");
 		} catch (PDOException $e) {
 			error_log("MateriasModel(line0------) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida!", "error");
@@ -95,8 +109,14 @@ class MateriasModel extends DB
 			$pdo = $this->driver->prepare("UPDATE materia SET estatus_materia = !estatus_materia WHERE id_materia = :id ;");
 			$pdo->bindParam(':id', $this->id);
 
-			if ($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
-			else $this->ResJSON("Operacion Fallida!", "error");
+			if ($pdo->execute()) {
+				$this->registrar_bitacora_sistema([
+					'table' => "materia",
+					'descripcion' => "CAMBIO DE ESTATUS",
+					'id_registro' => $this->id
+				]);
+				$this->ResJSON("Operacion Exitosa!", "success");
+			} else $this->ResJSON("Operacion Fallida!", "error");
 		} catch (PDOException $e) {
 			error_log("MateriasModel(54) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida! (error_log)", "error");

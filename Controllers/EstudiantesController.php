@@ -47,6 +47,8 @@
 
 	function SaveData(){
 
+		var_dump($_POST);
+		die("FF");
 		$EstudiantesModel = new EstudiantesModel();
 		$PersonasModel = new PersonasModel();
 		$PersonasModel->SetData($_POST);

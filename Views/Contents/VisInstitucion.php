@@ -85,6 +85,34 @@
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
+                <div class="col-md-12 mt-3">
+                  <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Municipio:</span>
+                    <input v-model="municipio" maxlength="60" name="municipio" class="form-control form-control-sm" id="municipio" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" >
+                    <span class="error-text">Rellene el campo correctamente</span>
+                  </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                  <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Entidad Federal:</span>
+                    <input v-model="entidad_federal" maxlength="60" name="entidad_federal" class="form-control form-control-sm" id="entidad" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" >
+                    <span class="error-text">Rellene el campo correctamente</span>
+                  </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                  <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Zona Educativa:</span>
+                    <input v-model="zona_educativa" maxlength="60" name="zona_educativa" class="form-control form-control-sm" id="zona" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" >
+                    <span class="error-text">Rellene el campo correctamente</span>
+                  </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                  <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Telefono de la institución:</span>
+                    <input v-model="telefono" maxlength="12" name="telefono" class="form-control form-control-sm" id="telefono" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" >
+                    <span class="error-text">Rellene el campo correctamente</span>
+                  </div>
+                </div>
               </div>
               <div class="modal-footer mx-auto">
                 <input type="hidden" name="ope" v-model="action">
@@ -109,9 +137,13 @@
         return {
           des_periodo: "actual",
           id_institucion: "",
-          des_institucion: "",
           codigo_institucion: "",
+          des_institucion: "",
           direccion_institucion: "",
+          municipio: "",
+          entidad_federal: "",
+          zona_educativa: "",
+          telefono: "",
           formulario_valido: false,
           action: "Save",
         }
@@ -297,7 +329,8 @@
       }
       // direccionValida codigoValida
       // console.log(descripcionValida, codigoValida)
-      if (descripcionValida) {
+      // ARREGLAR VALIDACIONES
+      if (true) {
         app.formulario_valido = true;
 
 

@@ -27,8 +27,9 @@ class PensumModel extends DB
 				anios_abarcados = '$this->anios_abarcados' AND 
 				estatus_pensum = 1 OR
 				periodo_id = $this->id_periodo AND 
+				estatus_pensum = 1 OR 
 				cod_pensum = '$this->cod_pensum' AND
-				estatus_pensum = 1;");
+				periodo_id != $this->id_periodo;");
 			if (isset($result[0])) return $this->ResJSON("No se pueden duplicar las pensums en el mismo periodo", "error");
 
 			$sql = "INSERT INTO pensum(cod_pensum,anios_abarcados,periodo_id,estatus_pensum) 
@@ -36,6 +37,12 @@ class PensumModel extends DB
 
 			$pdo = $this->driver->prepare($sql);
 			if ($pdo->execute()) {
+				$id = $this->driver->lastInsertId();
+				$this->registrar_bitacora_sistema([
+					'table' => "pensum",
+					'descripcion' => "REGISTRO",
+					'id_registro' => $id
+				]);
 				$this->ResJSON("Operacion Exitosa!", "success");
 			} else $this->ResJSON("Operacion Fallida!", "error");
 		} catch (PDOException $e) {
@@ -52,6 +59,11 @@ class PensumModel extends DB
 			$pdo->bindParam(':id', $this->id);
 
 			if ($pdo->execute()) {
+				$this->registrar_bitacora_sistema([
+					'table' => "pensum",
+					'descripcion' => "ACTUALIZACION",
+					'id_registro' => $this->id
+				]);
 				$this->ResJSON("Operacion Exitosa!", "success");
 			} else $this->ResJSON("Operacion Fallida!", "error");
 		} catch (PDOException $e) {
@@ -92,8 +104,14 @@ class PensumModel extends DB
 			$pdo = $this->driver->prepare("UPDATE pensum SET estatus_pensum = !estatus_pensum WHERE id = :id ;");
 			$pdo->bindParam(':id', $this->id);
 
-			if ($pdo->execute()) $this->ResJSON("Operacion Exitosa!", "success");
-			else $this->ResJSON("Operacion Fallida!", "error");
+			if ($pdo->execute()){
+				$this->registrar_bitacora_sistema([
+					'table' => "pensum",
+					'descripcion' => "CAMBIO DE ESTATUS",
+					'id_registro' => $this->id
+				]);
+				$this->ResJSON("Operacion Exitosa!", "success");
+			} else $this->ResJSON("Operacion Fallida!", "error");
 		} catch (PDOException $e) {
 			error_log("PensumModel(54) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida! (error_log)", "error");
@@ -141,7 +159,7 @@ class PensumModel extends DB
 			$lista_materias = $this->consultAll("SELECT materia.* FROM materia 
 			INNER JOIN pensum ON pensum.id = materia.id_pensum_ma
 			INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = pensum.periodo_id WHERE
-			periodo_escolar.estatus_periodo_escolar = 1 AND pensum.anios_abarcados = '$anio' ;");
+			periodo_escolar.estatus_periodo_escolar = 1 AND pensum.anios_abarcados = '$anio' AND estatus_pensum = 1;");
 
 			if (isset($lista_materias[0]) && $lista_materias[0]) $this->ResDataJSON($lista_materias);
 			else $this->ResDataJSON([]);

@@ -144,7 +144,7 @@
                 <div class="col-md-6" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Dirección:</span>
-                    <input type="text" name="direccion" disabled v-model="direccion" maxlength="100" class="form-control form-control-sm" id="direccion" placeholder="Ingrese la dirección" required style="width:70%;" disabled>
+                    <input type="text" name="direccion" disabled v-model="direccion" maxlength="100" class="form-control form-control-sm" id="direccion" placeholder="Ingrese la dirección" required style="width:70%;">
                     <span class="error-text">Direccion inválida</span>
                   </div>
                 </div>
@@ -220,13 +220,17 @@
             body: form
           }).then(res => res.json()).then(result => {
 
+            // setTimeout(() => {
+            //   this.LimpiarForm();
+            // }, 150)
 
             $("#datatable").DataTable().ajax.reload(null, false);
             this.ToggleModal();
-            this.LimpiarForm();
             ViewAlert(result.mensaje, result.estado);
             this.periodo_activo();
           }).catch(Error => console.error(Error))
+
+
         },
         async GetData(id) {
           this.desactivado = false;
@@ -607,16 +611,6 @@
           nacionalidadValida = true;
         }
       }
-      if (boxSelect.name == 'id_seccion') {
-        if (boxSelect.value == "") {
-          mostrarError(true, box);
-          seccionValida = false;
-        } else {
-          console.log(box);
-          mostrarError(false, box);
-          seccionValida = true;
-        }
-      }
     }
 
     async function validacion(box, boxInput) {
@@ -858,11 +852,6 @@
 
       if (radio.checked || radio1.checked) {
         radioValida = true;
-      }
-
-      if (app.action == "Asignacion" && seccionValida) {
-        app.formulario_valido = true;
-        return false;
       }
       // nacionalidadValida && seguimientoValida &&
 
