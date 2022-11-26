@@ -12,12 +12,13 @@ class NotasModel extends DB
 
   public function SetData($estu, $materias = [])
   {
+    session_start();
     $this->cedula_estudiante = isset($estu[0]['ced']) ? $estu[0]['ced'] : Null;
     $this->id_periodo = isset($estu[0]['periodo']) ? $estu[0]['periodo'] : Null;
     $this->id_seccion = isset($estu[0]['seccion']) ? $estu[0]['seccion'] : Null;
     $this->estatus = isset($estu[0]['estatus']) ? $estu[0]['estatus'] : 1;
     $this->observacion = isset($estu[0]['observacion']) ? $estu[0]['observacion'] : Null;
-    $this->usuario_id = 1;
+    $this->usuario_id = $_SESSION['id_user'];
     $this->materias = $materias;
   }
 
@@ -30,11 +31,11 @@ class NotasModel extends DB
       foreach ($this->materias as $materia) {
 
         $idMateria = $materia['id_materia'];
-        $nt1 = $materia['nota1'];
-        $nt2 = $materia['nota2'];
-        $nt3 = $materia['nota3'];
-        // $nt4 = $materia['nota4'];
-        $nt4 = ((intval($materia['nota1']) + intval($materia['nota2']) + intval($materia['nota3'])) / 3);
+        // $nt1 = $materia['nota1'];
+        // $nt2 = $materia['nota2'];
+        // $nt3 = $materia['nota3'];
+        $nt4 = $materia['nota4'];
+        // $nt4 = ((intval($materia['nota1']) + intval($materia['nota2']) + intval($materia['nota3'])) / 3);
 
         $rp1 = $materia['rp1'];
         $rp2 = $materia['rp2'];
@@ -44,14 +45,15 @@ class NotasModel extends DB
         if (isset($materia['id_nota']) && $materia['id_nota'] != null && $materia['id_nota']  != '') {
           $idNota = $materia['id_nota'];
           $operacion = "Modificacion";
+          // nota_lapso1,nota_lapso2,nota_lapso3,
 
-          $sqlNotas = "SELECT nota_lapso1,nota_lapso2,nota_lapso3,nota_final,recuperativo_1,recuperativo_2,recuperativo_3,recuperativo_4 FROM nota WHERE idNota = $idNota ;";
+          $sqlNotas = "SELECT nota_final,recuperativo_1,recuperativo_2,recuperativo_3,recuperativo_4 FROM nota WHERE idNota = $idNota ;";
           $notasAcomparar = $this->consult($sqlNotas);
 
           $array_lista = [
-            0 => ['name' => 'nota_lapso1', 'result' => $notasAcomparar['nota_lapso1'] != $nt1, 'new' => $nt1, 'old' => $notasAcomparar['nota_lapso1']],
-            1 => ['name' => 'nota_lapso2', 'result' => $notasAcomparar['nota_lapso2'] != $nt2, 'new' => $nt2, 'old' => $notasAcomparar['nota_lapso2']],
-            2 => ['name' => 'nota_lapso3', 'result' => $notasAcomparar['nota_lapso3'] != $nt3, 'new' => $nt3, 'old' => $notasAcomparar['nota_lapso3']],
+            // 0 => ['name' => 'nota_lapso1', 'result' => $notasAcomparar['nota_lapso1'] != $nt1, 'new' => $nt1, 'old' => $notasAcomparar['nota_lapso1']],
+            // 1 => ['name' => 'nota_lapso2', 'result' => $notasAcomparar['nota_lapso2'] != $nt2, 'new' => $nt2, 'old' => $notasAcomparar['nota_lapso2']],
+            // 2 => ['name' => 'nota_lapso3', 'result' => $notasAcomparar['nota_lapso3'] != $nt3, 'new' => $nt3, 'old' => $notasAcomparar['nota_lapso3']],
             3 => ['name' => 'nota_final', 'result' => $notasAcomparar['nota_final'] != $nt4, 'new' => $nt4, 'old' => $notasAcomparar['nota_final']],
             4 => ['name' => 'recuperativo_1', 'result' => $notasAcomparar['recuperativo_1'] != $rp1, 'new' => $rp1, 'old' => $notasAcomparar['recuperativo_1']],
             5 => ['name' => 'recuperativo_2', 'result' => $notasAcomparar['recuperativo_2'] != $rp2, 'new' => $rp2, 'old' => $notasAcomparar['recuperativo_2']],
@@ -68,8 +70,8 @@ class NotasModel extends DB
             }
           }
           if ($actualizar) {
-
-            $sql_nota = "UPDATE nota SET nota_lapso1 = $nt1, nota_lapso2 = $nt2, nota_lapso3 = $nt3, nota_final = $nt4,recuperativo_1 = $rp1, recuperativo_2 = $rp2, recuperativo_3 = $rp3, recuperativo_4 = $rp4. WHERE idNota = $idNota";
+            // nota_lapso1 = $nt1, nota_lapso2 = $nt2, nota_lapso3 = $nt3, 
+            $sql_nota = "UPDATE nota SET nota_final = $nt4,recuperativo_1 = $rp1, recuperativo_2 = $rp2, recuperativo_3 = $rp3, recuperativo_4 = $rp4. WHERE idNota = $idNota";
             $sql_nota = str_ireplace("= ,", "= NULL,", $sql_nota);
             $sql_nota = str_ireplace("= .", "= NULL", $sql_nota);
 
@@ -95,10 +97,9 @@ class NotasModel extends DB
           }
         } else {
           $operacion = "Registro";
-
-          $sql_nota = "INSERT INTO nota(idNota, cedula_estudiante, periodo_escolar_id, seccion_id, materia_id, nota_lapso1, 
-            nota_lapso2, nota_lapso3, nota_final, recuperativo_1, recuperativo_2, recuperativo_3, recuperativo_4, estatusNotas) 
-            VALUES(NULL,'$this->cedula_estudiante',$this->id_periodo,$this->id_seccion,$idMateria,$nt1,$nt2,$nt3,$nt4,$rp1,$rp2,$rp3,$rp4,$this->estatus);";
+          // nota_lapso1, nota_lapso2, nota_lapso3,  $nt1,$nt2,$nt3,
+          $sql_nota = "INSERT INTO nota(idNota, cedula_estudiante, periodo_escolar_id, seccion_id, materia_id,nota_final, recuperativo_1, recuperativo_2, recuperativo_3, recuperativo_4, estatusNotas) 
+            VALUES(NULL,'$this->cedula_estudiante',$this->id_periodo,$this->id_seccion,$idMateria,$nt4,$rp1,$rp2,$rp3,$rp4,$this->estatus);";
 
           $sql_nota = str_ireplace(",,", ",NULL,", $sql_nota);
           $sql_nota = str_ireplace(",,", ",NULL,", $sql_nota);
@@ -321,9 +322,9 @@ class NotasModel extends DB
           'materia_id' => $resultado['materia_id'],
           'des_materia' => $resultado['des_materia'],
           'estatus_nota' => $resultado['estatusNotas'],
-          'nota_lapso1' => $resultado['nota_lapso1'],
-          'nota_lapso2' => $resultado['nota_lapso2'],
-          'nota_lapso3' => $resultado['nota_lapso3'],
+          // 'nota_lapso1' => $resultado['nota_lapso1'],
+          // 'nota_lapso2' => $resultado['nota_lapso2'],
+          // 'nota_lapso3' => $resultado['nota_lapso3'],
           'nota_final' => $resultado['nota_final'],
           'recuperativo_1' => $resultado['recuperativo_1'],
           'recuperativo_2' => $resultado['recuperativo_2'],
@@ -336,9 +337,9 @@ class NotasModel extends DB
           'materia_id' => $materia['materia_id'],
           'des_materia' => $materia['des_materia'],
           'estatus_nota' => 1,
-          'nota_lapso1' => null,
-          'nota_lapso2' => null,
-          'nota_lapso3' => null,
+          // 'nota_lapso1' => null,
+          // 'nota_lapso2' => null,
+          // 'nota_lapso3' => null,
           'nota_final' => null,
           'recuperativo_1' => null,
           'recuperativo_2' => null,
@@ -365,6 +366,9 @@ class NotasModel extends DB
         INNER JOIN seccion ON seccion.id_seccion = nota.seccion_id
         LEFT JOIN pensum ON pensum.periodo_id = periodo_escolar.id_periodo_escolar
         WHERE nota.estatusNotas = 0 AND nota.cedula_estudiante = '$cedula' GROUP BY nota.idNota ORDER BY nota.seccion_id;";
+    
+    // var_dump($sqlNotasHistoricas);
+    // die("DDD");
     
     $result_datos_estudiante = $this->consult($sqlDatos);
     $result_datos_notas = $this->consultAll($sqlNotasHistoricas);

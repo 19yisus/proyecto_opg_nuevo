@@ -73,6 +73,9 @@
               <div class="col-md-12 mx-auto rounded border d-flex justify-content-between mt-2 row">
                 <h5 class="text-start col-md-8">Pensum: {{info_pensum_1}} | {{info_pensum_2}}</h5>
                 <h5 class="text-end col-md-4">Periodo: {{des_periodo}}</h5>
+                <?php if(!isset($datos_institucion)){?>
+                <h5 class="text-center col-12 text-danger">No hay datos de la institución que este activos</h5>
+                <?php } ?>
               </div>
               <div class="modal-body row py-2 " style="padding: 0 70px ;">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
@@ -101,7 +104,7 @@
               </div>
               <div class="modal-footer mx-auto">
                 <input type="hidden" name="ope" v-model="action">
-                <button type="submit" class="btn btn-sm btn-primary">
+                <button type="submit" class="btn btn-sm btn-primary" <?php echo (!isset($datos_institucion)) ? "disabled=''" : null; ?> >
                   <i class="fa-regular fa-circle-check"></i>GUARDAR
                 </button>
                 <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">

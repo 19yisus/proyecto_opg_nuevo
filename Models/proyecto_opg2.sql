@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 25-11-2022 a las 17:42:12
+-- Tiempo de generación: 26-11-2022 a las 02:22:04
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.4.22
 
@@ -145,7 +145,7 @@ CREATE TABLE `nota` (
   `seccion_id` int(11) NOT NULL,
   `materia_id` int(11) NOT NULL,
   `lapso_id` int(11) DEFAULT NULL,
-  `nota_lapso1` int(2) NOT NULL,
+  `nota_lapso1` int(2) DEFAULT NULL,
   `nota_lapso2` int(2) DEFAULT NULL,
   `nota_lapso3` int(2) DEFAULT NULL,
   `nota_final` int(2) DEFAULT NULL,

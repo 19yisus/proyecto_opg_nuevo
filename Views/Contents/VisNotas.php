@@ -57,7 +57,7 @@
                   <tr>
                     <th class="text-center" scope="col">N°</th>
                     <th class="text-center" scope="col">Nombre y Apellido</th>
-                    <th class="text-center" scope="col">Sección</th>
+                    <th class="text-center" scope="col">Periodo escolar</th>
                     <th class="text-center" scope="col">Estado</th>
                     <th class="text-center" scope="col">Opciones</th>
                   </tr>
@@ -113,9 +113,9 @@
                     <thead>
                       <tr>
                         <th class="text-center" scope="col">Materia</th>
-                        <th class="text-center" scope="col">Lapso 1</th>
+                        <!-- <th class="text-center" scope="col">Lapso 1</th>
                         <th class="text-center" scope="col">Lapso 2</th>
-                        <th class="text-center" scope="col">Lapso 3</th>
+                        <th class="text-center" scope="col">Lapso 3</th> -->
                         <th class="text-center" scope="col">Nota Final</th>
                         <th v-if="recuperacion" class="text-center" scope="col">Rec. 1</th>
                         <th v-if="recuperacion" class="text-center" scope="col">Rec. 2</th>
@@ -129,7 +129,7 @@
                         <input type="hidden" name="id_materia[]" :value="item.materia_id">
                         <input type="hidden" name="des_materia[]" :value="item.des_materia">
                         <td class="text-center">{{item.des_materia}}</td>
-                        <td class="text-center">
+                        <!-- <td class="text-center">
                           <input max="20" min="1" @keypress="validar" :value="item.nota_lapso1" :disabled="item.estatus_nota == 0" name="nota1[]" type="number" class="form-control form-control-sm" id="" placeholder="">
                         </td>
                         <td class="text-center">
@@ -137,9 +137,9 @@
                         </td>
                         <td class="text-center">
                           <input max="20" min="1" @keypress="validar" maxlength="2" :value="item.nota_lapso3" :disabled="item.estatus_nota == 0" name="nota3[]" type="number" class="form-control form-control-sm" id="" placeholder="">
-                        </td>
+                        </td> -->
                         <td class="text-center">
-                          <input max="20" min="1" maxlength="2" readonly :value="item.nota_final" readonly="readonly" :disabled="item.estatus_nota == 0" name="nota4[]" type="number" class="form-control form-control-sm" id="" placeholder="">
+                          <input max="20" min="1" maxlength="2" @keypress="validar" :value="item.nota_final" :disabled="item.estatus_nota == 0" name="nota4[]" type="number" class="form-control form-control-sm" id="" placeholder="">
                         </td>
 
                         <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center">
@@ -215,6 +215,7 @@
         validar(e) {
           setTimeout(() => {
             if (parseInt(e.target.value) > 20) e.target.value = 20;
+            if (parseInt(e.target.value) <= 0) e.target.value = 1;
           }, 100);
         },
         SendData(e) {
@@ -361,7 +362,7 @@
           }
         },
         {
-          data: "id_seccion"
+          data: "periodoescolar"
         },
         {
           data: "estatus_estudiante",

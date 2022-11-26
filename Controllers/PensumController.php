@@ -36,6 +36,10 @@ if (isset($_GET['ope'])) {
 		case 'ConsultPorAnio':
 			GetPemsun();
 			break;
+		
+		case 'ConsulActivos':
+			GetPensumActivos();
+			break;
 	}
 }
 
@@ -101,4 +105,10 @@ function GetPemsun()
 {
 	$PensumModel = new PensumModel();
 	$PensumModel->GetPensumPorAnio($_GET['anio']);
+}
+
+function GetPensumActivos()
+{
+	$PensumModel = new PensumModel();
+	$PensumModel->GetPensumActivos();
 }

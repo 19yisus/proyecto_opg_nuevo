@@ -94,27 +94,27 @@
                   <label for="">Años abarcados</label>
                   <div class="d-flex justify-content-around">
                     <div class="form-check">
-                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'D'" v-bind:checked="primero == 1" name="primero" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'D'" v-bind:checked="primero == 1 && primero != ''" name="primero" id="primero" value="1" class="form-check-input">
                       <small class="form-check-label">1er</small>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'D'" v-bind:checked="segundo == 1" name="segundo" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'D'" v-bind:checked="segundo == 1 && segundo != ''" name="segundo" id="segundo" value="1" class="form-check-input">
                       <small class="form-check-label">2do</small>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'D'" v-bind:checked="tercero == 1" name="tercero" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'D'" v-bind:checked="tercero == 1 && tercero != ''" name="tercero" id="tercero" value="1" class="form-check-input">
                       <small class="form-check-label">3ro</small>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'B'" v-bind:checked="cuarto == 1" name="cuarto" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'B'" v-bind:checked="cuarto == 1 && cuarto != ''" name="cuarto" id="cuarto" value="1" class="form-check-input">
                       <small class="form-check-label">4to</small>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'B'" v-bind:checked="quinto == 1" name="quinto" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'B'" v-bind:checked="quinto == 1 && quinto != ''" name="quinto" id="quinto" value="1" class="form-check-input">
                       <small class="form-check-label">5to</small>
                     </div>
                     <div class="form-check">
-                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'B'" v-bind:checked="sexto == 1" name="sexto" id="" value="1" class="form-check-input">
+                      <input type="checkbox" v-bind:disabled="tipo_pensum == 'B'" v-bind:checked="sexto == 1 && sexto != ''" name="sexto" id="sexto" value="1" class="form-check-input">
                       <small class="form-check-label">6to</small>
                     </div>
                   </div>
@@ -189,7 +189,7 @@
           this.tipo_pensum = pensum.anios_abarcados;
         },
         async Get_pengums(){
-          await fetch(`./Controllers/PensumController.php?ope=ConsulAll`)
+          await fetch(`./Controllers/PensumController.php?ope=ConsulActivos`)
           .then(res => res.json()).then(({
               data
             }) => {
@@ -200,7 +200,6 @@
               if(data[1]){
                 this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
               }
-              console.log(data)
             }).catch(Error => console.error(Error))
         },
         async GetData(id) {
@@ -267,12 +266,19 @@
           this.id = "";
           this.des_materia = "";
           this.id_pensum = "";
-          this.primero = "";
-          this.segundo = "";
-          this.tercero = "";
-          this.cuarto = "";
-          this.quinto = "";
-          this.sexto = "";
+          this.primero =""
+          this.segundo =""
+          this.tercero =""
+          this.cuarto =""
+          this.quinto =""
+          this.sexto = ""
+          
+          document.getElementById("primero").checked = false;
+          document.getElementById("segundo").checked = false;
+          document.getElementById("tercero").checked = false;
+          document.getElementById("cuarto").checked = false;
+          document.getElementById("quinto").checked = false;
+          document.getElementById("sexto").checked = false;
           this.action = "Save";
         }
       },

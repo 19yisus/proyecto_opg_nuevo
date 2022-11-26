@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php $this->Head(); ?>
+<?php 
+  $this->Head(); 
+?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
@@ -67,12 +69,11 @@
                   <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div> 
               -->
-
-
             <form action="#" @submit.preventDefault="SendData" method="POST" id="Formulario" class="needs-validation" novalidate autocomplete="off">
               <div class="col-md-12 mx-auto rounded border d-flex justify-content-between mt-2 row">
                 <h5 class="text-start col-md-8">Pensum: {{info_pensum_1}} | {{info_pensum_2}}</h5>
                 <h5 class="text-end col-md-4">Periodo: {{des_periodo}}</h5>
+                <h5 class="text-center col-12 text-danger" v-show="registro_btn_disabled">Debe de registrar pensums</h5>
               </div>
               <div class="modal-body row " style="padding: 0 70px ;">
                 <input type="hidden" name="id" v-model="id" v-if="id != '' ">
@@ -109,7 +110,7 @@
               </div>
               <div class="modal-footer mx-auto">
                 <input type="hidden" name="ope" v-model="action">
-                <button type="submit" class="btn btn-sm btn-primary" id="btn-g">
+                <button type="submit" v-bind:disabled="registro_btn_disabled" class="btn btn-sm btn-primary" id="btn-g">
                   <i class="fa-regular fa-circle-check"></i>GUARDAR
                 </button>
                 <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
@@ -136,8 +137,9 @@
           estatus: "",
           datos: [],
           formulario_valido: false,
-          info_pensum_1:"",
-          info_pensum_2:"",
+          info_pensum_1: "",
+          info_pensum_2: "",
+          registro_btn_disabled: true,
           action: "Save",
           letras: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z']
         }
@@ -187,19 +189,20 @@
             }).catch(error => console.error(error))
           }, 100);
         },
-        async Get_pengums(){
-          await fetch(`./Controllers/PensumController.php?ope=ConsulAll`)
-          .then(res => res.json()).then(({
+        async Get_pengums() {
+          await fetch(`./Controllers/PensumController.php?ope=ConsulActivos`)
+            .then(res => res.json()).then(({
               data
             }) => {
-              if(data[0]){
+              
+              if (data[0]) {
+                this.registro_btn_disabled = false;
                 this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
-              }
-
-              if(data[1]){
-                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
-              }
-              console.log(data)
+                if (data[1]) {
+                  this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                }
+              }else this.registro_btn_disabled = true;
+              
             }).catch(Error => console.error(Error))
         },
         async periodo_activo() {

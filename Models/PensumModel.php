@@ -25,8 +25,6 @@ class PensumModel extends DB
 			$result = $this->consult("SELECT * FROM pensum WHERE 
 				periodo_id = $this->id_periodo AND 
 				anios_abarcados = '$this->anios_abarcados' AND 
-				estatus_pensum = 1 OR
-				periodo_id = $this->id_periodo AND 
 				estatus_pensum = 1 OR 
 				cod_pensum = '$this->cod_pensum' AND
 				periodo_id != $this->id_periodo;");
@@ -146,6 +144,21 @@ class PensumModel extends DB
 			else $this->ResDataJSON([]);
 		} catch (PDOException $e) {
 			error_log("PensumModel(78) => " . $e->getMessages());
+			$this->ResJSON("Operacion Fallida! (error_log)", "error");
+		}
+	}
+
+	public function GetPensumActivos()
+	{
+		try {
+			$result = $this->consultAll("SELECT * FROM pensum 
+			INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = pensum.periodo_id 
+			WHERE periodo_escolar.estatus_periodo_escolar = 1 AND pensum.estatus_pensum = 1");
+
+			if (isset($result[0])) $this->ResDataJSON($result);
+			else $this->ResDataJSON([]);
+		} catch (PDOException $e) {
+			error_log("PensumModel(66) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida! (error_log)", "error");
 		}
 	}

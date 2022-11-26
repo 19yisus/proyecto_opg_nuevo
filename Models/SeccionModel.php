@@ -22,7 +22,7 @@ class SeccionModel extends DB
 	public function SaveDatos()
 	{
 		try {
-
+			
 			$result = $this->consult("SELECT * FROM seccion WHERE id_sec_periodo = $this->id_sec_periodo AND id_seccion = '$this->id_seccion';");
 
 			if (!isset($result[0])) {
@@ -62,15 +62,14 @@ class SeccionModel extends DB
 			$pdo = $this->driver->prepare("UPDATE seccion SET estatus_seccion = !estatus_seccion WHERE idSeccion = :id ;");
 			$pdo->bindParam(':id', $this->id);
 
-			if ($pdo->execute()){
+			if ($pdo->execute()) {
 				$this->registrar_bitacora_sistema([
 					'table' => "seccion",
 					'descripcion' => "CAMBIO DE ESTATUS",
 					'id_registro' => $this->id
 				]);
 				$this->ResJSON("Operacion Exitosa!", "success");
-			} 
-			else $this->ResJSON("Operacion Fallida!", "error");
+			} else $this->ResJSON("Operacion Fallida!", "error");
 		} catch (PDOException $e) {
 			error_log("SeccionModel(54) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida! (error_log)", "error");

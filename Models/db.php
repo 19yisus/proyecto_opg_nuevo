@@ -23,7 +23,8 @@
 		}
 
 		protected function registrar_bitacora_sistema($datos){
-			session_start();
+			if(!isset($_SESSION)) session_start();
+
 			$user = $_SESSION['id_user'];
 			$pdo = $this->driver->prepare("INSERT INTO bitacora_sistema(name_tabla, descripcion, registro_id, fecha_hora, user_id	)
 			VALUES(:name_tabla, :descripcion, :registro_id, NOW(), :user)");
@@ -31,6 +32,7 @@
 			$pdo->bindParam(':registro_id', $datos['id_registro']);
 			$pdo->bindParam(':user', $user);
 			$pdo->bindParam(':descripcion', $datos['descripcion']);
+			$pdo->execute();
 
 		}
 
