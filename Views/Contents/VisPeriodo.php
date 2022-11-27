@@ -6,6 +6,7 @@
   require_once("./Models/InstitucionModel.php");
   $mod = new InstitucionModel();
   $datos_institucion = $mod->GetActivo();
+  if(!isset($datos_institucion[0])) header("Location: ./VisInstitucion?no existen datos de la institución activo, debes de registrar uno");
 
 ?>
 
@@ -177,13 +178,11 @@
               data
             }) => {
               if (data[0]) {
-                if(data[0].estatus_pensum == '1') this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                if (data[1]) {
+                  this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                }
               }
-
-              if (data[1]) {
-                if(data[1].estatus_pensum == '1') this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
-              }
-              console.log(data)
             }).catch(Error => console.error(Error))
         },
         ChangeState(id) {

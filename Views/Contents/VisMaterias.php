@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php $this->Head(); ?>
+<?php 
+  require_once("Models/PeriodoModel.php");
+  $mod = new PeriodoModel();
+  $res = $mod->GetActivo('algo');
+  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
+  $this->Head(); 
+?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
@@ -34,7 +40,6 @@
               <table class="table border table-sm" id="datatable">
                 <thead>
                   <tr>
-                    <th class="text-center" scope="col">N°</th>
                     <th class="text-center" scope="col">Descripción</th>
                     <th class="text-center" scope="col">Perido Escolar</th>
                     <th class="text-center" scope="col">Pensum</th>
@@ -122,7 +127,7 @@
               </div>
               <div class="modal-footer mx-auto">
                 <input type="hidden" name="ope" v-model="action">
-                <button type="submit" class="btn btn-sm btn-primary" id="btn-g">
+                <button type="submit" class="btn btn-sm btn-primary" v-bind:disabled="registro_btn_disabled" id="btn-g">
                   <i class="fa-regular fa-circle-check"></i>GUARDAR
                 </button>
                 <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
@@ -154,6 +159,7 @@
           quinto: "",
           sexto: "",
           formulario_valido: false,
+          registro_btn_disabled: true,
           tipo_pensum: "",
           pensums: [],
           info_pensum_1:"",
@@ -193,12 +199,14 @@
           .then(res => res.json()).then(({
               data
             }) => {
-              if(data[0]){
+              if (data[0]) {
+                this.registro_btn_disabled = false;
                 this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
-              }
-
-              if(data[1]){
-                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                if (data[1]) {
+                  this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                }
+              }else{
+                this.registro_btn_disabled = true;
               }
             }).catch(Error => console.error(Error))
         },
@@ -254,7 +262,10 @@
             .then(res => res.json()).then(({
               data
             }) => {
-              this.pensums = data;
+              let res = data.filter( item =>{
+                if(item.estatus_pensum == '1') return item;
+              });
+              this.pensums = res;
             }).catch(Error => console.error(Error))
         },
         ToggleModal() {
@@ -297,9 +308,7 @@
         url: "./Controllers/MateriasController.php?ope=ConsulAll",
         dataSrc: "data"
       },
-      columns: [{
-          data: "id_materia"
-        },
+      columns: [
         {
           data: "des_materia",
           render(data) {

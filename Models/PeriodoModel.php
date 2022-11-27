@@ -145,12 +145,15 @@
 			}	
 		}
 
-		public function GetActivo(){
+		public function GetActivo($string = ''){
 			try{
 				$result = $this->consult("SELECT * FROM periodo_escolar WHERE estatus_periodo_escolar = 1;");
 
-				if(isset($result[0])) $this->ResDataJSON($result);
-				else $this->ResDataJSON([]);
+				if(isset($result[0])){
+					if($string == '') $this->ResDataJSON($result); else return $result;
+				}else{
+					if($string == '') $this->ResDataJSON([]); else return [];
+				}
 			}catch(PDOException $e){
 				error_log("SeccionModel(94) => ".$e->getMessages());
 				$this->ResJSON("Operacion Fallida! (error_log)", "error");	

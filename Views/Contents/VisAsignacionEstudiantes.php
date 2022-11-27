@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php $this->Head(); ?>
+<?php
+$this->Head();
+require_once("Models/PeriodoModel.php");
+$mod = new PeriodoModel();
+$res = $mod->GetActivo('algo');
+if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
+?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
@@ -22,13 +28,19 @@
 
 
         <div class="col-md-12 mx-auto px-2 ">
-
-
-
-
-
           <!-- contenedor de la tabla -->
           <div class="col-md-12 card p-3 shadow ">
+            <div class="col-md-12 d-flex justify-content-between container-fluid row " style="margin: 0; padding: 0;">
+              <div class="col-md-5" style="margin: 0; padding: 0;">
+                <div class="input-group input-group-sm mb-3">
+                  <span class="input-group-text" id="inputGroup-sizing-sm">Periodo escolar:</span>
+                  <select class="form-select" v-model="id_periodoFiltro" aria-label="Default select example">
+                    <option value="" selected>Seleccionar</option>
+                    <option :value="item.id_periodo_escolar" v-for="item in periodosFiltro">{{item.periodoescolar}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             <div class="col-md-12 d-flex justify-content-end" style="margin: 0; padding: 0;">
               <!-- <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px">
                 <i class="fa-regular fa-user"></i> AGREGAR
@@ -430,7 +442,7 @@
             let classStatus = row.estatus_estudiante == 1 ? 'success' : 'danger';
             let btns = '';
             // || row.id_seccion != ''
-            if (row.estatus_asig_estu == 1 ) {
+            if (row.estatus_asig_estu == 1) {
               btns = ``;
             } else {
               btns = `
@@ -602,77 +614,77 @@
       // if (boxInput != null && boxInput.name == "cedula") {
       //   let cedulaRepetida = false;
 
-        // if (boxInput.value.length >= 7) {
-        //   await fetch(`./Controllers/EstudiantesController.php?ope=VerificarCedula&&id=${boxInput.value}`)
-        //     .then(response => response.json())
-        //     .then(result => {
-        //       if (result.data.cedula_persona) {
-        //         alert("Esta cedula ya esta registrada")
-        //         cedulaRepetida = true;
-        //         document.querySelector('#nombre').disabled = false;
-        //       } else {
-        //         document.querySelector('#nombre').disabled = true;
-        //         document.querySelector('#nombre').value = "";
-        //         document.querySelector('#apellido').disabled = true;
-        //         document.querySelector('#apellido').value = "";
-        //         document.querySelector('#fecha_n_persona').disabled = true;
-        //         document.querySelector('#fecha_n_persona').value = "";
-        //         document.querySelector('#direccion_persona').disabled = true;
-        //         document.querySelector('#direccion_persona').value = "";
-        //         document.querySelector('#direccion').disabled = true;
-        //         document.querySelector('#direccion').value = "";
-        //         cedulaRepetida = false;
-        //       }
-        //     }).catch(error => console.error(error))
-        // } else cedulaRepetida = false;
+      // if (boxInput.value.length >= 7) {
+      //   await fetch(`./Controllers/EstudiantesController.php?ope=VerificarCedula&&id=${boxInput.value}`)
+      //     .then(response => response.json())
+      //     .then(result => {
+      //       if (result.data.cedula_persona) {
+      //         alert("Esta cedula ya esta registrada")
+      //         cedulaRepetida = true;
+      //         document.querySelector('#nombre').disabled = false;
+      //       } else {
+      //         document.querySelector('#nombre').disabled = true;
+      //         document.querySelector('#nombre').value = "";
+      //         document.querySelector('#apellido').disabled = true;
+      //         document.querySelector('#apellido').value = "";
+      //         document.querySelector('#fecha_n_persona').disabled = true;
+      //         document.querySelector('#fecha_n_persona').value = "";
+      //         document.querySelector('#direccion_persona').disabled = true;
+      //         document.querySelector('#direccion_persona').value = "";
+      //         document.querySelector('#direccion').disabled = true;
+      //         document.querySelector('#direccion').value = "";
+      //         cedulaRepetida = false;
+      //       }
+      //     }).catch(error => console.error(error))
+      // } else cedulaRepetida = false;
 
-        // if (boxInput.value.length < 7 || boxInput.value.length > 8) {
-        //   console.error('Campo vacío o cédula inválida')
-        //   mostrarError(true, box);
-        //   cedulaValida = false;
-        //   document.querySelector('#nombre').disabled = true;
-        //   document.querySelector('#nombre').value = "";
-        //   document.querySelector('#apellido').disabled = true;
-        //   document.querySelector('#apellido').value = "";
-        //   document.querySelector('#fecha_n_persona').disabled = true;
-        //   document.querySelector('#fecha_n_persona').value = "";
-        //   document.querySelector('#direccion_persona').disabled = true;
-        //   document.querySelector('#direccion_persona').value = "";
-        //   document.querySelector('#direccion').disabled = true;
-        //   document.querySelector('#direccion').value = "";
-        // } else if (isNaN(boxInput.value)) {
-        //   console.error(`${boxInput.value} no es un numero`);
-        //   mostrarError(true, box);
-        //   cedulaValida = false
-        //   document.querySelector('#nombre').disabled = true;
-        //   document.querySelector('#nombre').value = "";
-        //   document.querySelector('#apellido').disabled = true;
-        //   document.querySelector('#apellido').value = "";
-        //   document.querySelector('#fecha_n_persona').disabled = true;
-        //   document.querySelector('#fecha_n_persona').value = "";
-        //   document.querySelector('#direccion_persona').disabled = true;
-        //   document.querySelector('#direccion_persona').value = "";
-        //   document.querySelector('#direccion').disabled = true;
-        //   document.querySelector('#direccion').value = "";
-        // } else if (cedulaRepetida) {
-        //   console.error(`${boxInput.value} Ya esta registrado`);
-        //   mostrarError(true, box);
-        //   cedulaValida = false;
-        //   document.querySelector('#nombre').disabled = true;
-        //   document.querySelector('#nombre').value = "";
-        //   document.querySelector('#apellido').disabled = true;
-        //   document.querySelector('#apellido').value = "";
-        //   document.querySelector('#fecha_n_persona').disabled = true;
-        //   document.querySelector('#fecha_n_persona').value = "";
-        //   document.querySelector('#direccion_persona').disabled = true;
-        //   document.querySelector('#direccion_persona').value = "";
-        //   document.querySelector('#direccion').disabled = true;
-        //   document.querySelector('#direccion').value = "";
-        // } else {
-        //   mostrarError(false, box);
-        //   cedulaValida = true;
-        //   document.querySelector('#nombre').disabled = false;
-        // }
+      // if (boxInput.value.length < 7 || boxInput.value.length > 8) {
+      //   console.error('Campo vacío o cédula inválida')
+      //   mostrarError(true, box);
+      //   cedulaValida = false;
+      //   document.querySelector('#nombre').disabled = true;
+      //   document.querySelector('#nombre').value = "";
+      //   document.querySelector('#apellido').disabled = true;
+      //   document.querySelector('#apellido').value = "";
+      //   document.querySelector('#fecha_n_persona').disabled = true;
+      //   document.querySelector('#fecha_n_persona').value = "";
+      //   document.querySelector('#direccion_persona').disabled = true;
+      //   document.querySelector('#direccion_persona').value = "";
+      //   document.querySelector('#direccion').disabled = true;
+      //   document.querySelector('#direccion').value = "";
+      // } else if (isNaN(boxInput.value)) {
+      //   console.error(`${boxInput.value} no es un numero`);
+      //   mostrarError(true, box);
+      //   cedulaValida = false
+      //   document.querySelector('#nombre').disabled = true;
+      //   document.querySelector('#nombre').value = "";
+      //   document.querySelector('#apellido').disabled = true;
+      //   document.querySelector('#apellido').value = "";
+      //   document.querySelector('#fecha_n_persona').disabled = true;
+      //   document.querySelector('#fecha_n_persona').value = "";
+      //   document.querySelector('#direccion_persona').disabled = true;
+      //   document.querySelector('#direccion_persona').value = "";
+      //   document.querySelector('#direccion').disabled = true;
+      //   document.querySelector('#direccion').value = "";
+      // } else if (cedulaRepetida) {
+      //   console.error(`${boxInput.value} Ya esta registrado`);
+      //   mostrarError(true, box);
+      //   cedulaValida = false;
+      //   document.querySelector('#nombre').disabled = true;
+      //   document.querySelector('#nombre').value = "";
+      //   document.querySelector('#apellido').disabled = true;
+      //   document.querySelector('#apellido').value = "";
+      //   document.querySelector('#fecha_n_persona').disabled = true;
+      //   document.querySelector('#fecha_n_persona').value = "";
+      //   document.querySelector('#direccion_persona').disabled = true;
+      //   document.querySelector('#direccion_persona').value = "";
+      //   document.querySelector('#direccion').disabled = true;
+      //   document.querySelector('#direccion').value = "";
+      // } else {
+      //   mostrarError(false, box);
+      //   cedulaValida = true;
+      //   document.querySelector('#nombre').disabled = false;
+      // }
       // }
       // if (boxInput != null && boxInput.name == "nombre") {
       //   const letrasEspeciales = ["@", "/", "%", "#", ".", "*", "$", "!", ",", "?", "¿", "¡", "&", "-", "_", "(", ")", "{", "}", "[", "]", "'", '"', "=", "´", "+", ":", ";", "|", "°", "¬"];

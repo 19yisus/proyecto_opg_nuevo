@@ -39,8 +39,7 @@ class InstitucionModel extends DB
           entidad_federal,
           zona_educativa,
           telefono, estatus_institucion
-          ) VALUES(:descripcion, :codigo, :direccion, :municipio, :entidad, :zona, :telefono: estatus);");
-        $pdo->bindParam(':estatus', 0);
+          ) VALUES(:descripcion, :codigo, :direccion, :municipio, :entidad, :zona, :telefono,0);");
       } else {
         $pdo = $this->driver->prepare("INSERT INTO institucion(
           des_institucion, 
@@ -59,6 +58,16 @@ class InstitucionModel extends DB
       $pdo->bindParam(':entidad', $this->entidad_federal);
       $pdo->bindParam(':zona', $this->zona_educativa);
       $pdo->bindParam(':telefono', $this->telefono);
+
+      // var_dump("INSERT INTO institucion(
+      //   des_institucion, 
+      //   codigo_institucion, 
+      //   direccion_institucion,
+      //   municipio,
+      //   entidad_federal,
+      //   zona_educativa,
+      //   telefono, estatus_institucion
+      //   ) VALUES('$this->des_institucion', '$this->codigo_institucion','$this->direccion_institucion','$this->municipio,'$this->entidad_federal','$this->zona_educativa','$this->telefono',0);");
 
       if ($pdo->execute()){
         $id = $this->driver->lastInsertId();

@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php $this->Head(); ?>
+<?php 
+  $this->Head(); 
+  require_once("Models/PeriodoModel.php");
+  $mod = new PeriodoModel();
+  $res = $mod->GetActivo('algo');
+  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
+?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
@@ -331,12 +337,10 @@
             }) => {
               if (data[0]) {
                 this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                if (data[1]) {
+                  this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                }
               }
-
-              if (data[1]) {
-                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
-              }
-              console.log(data)
             }).catch(Error => console.error(Error))
         },
         async ChangeState(id) {
@@ -434,7 +438,6 @@
             .then(res => res.json()).then(({
               data
             }) => {
-              console.log(data)
               return data;
             }).catch(error => console.error(error));
 
@@ -450,7 +453,10 @@
               }
             })
             this.id_materia[index] = lista;
-          } else ViewAlert("No existe pensum para el año solicitado", "error");
+          } else {
+            this.id_materia[index] = [];
+            ViewAlert("No hay materias registradas para el año solicitado", "error");
+          }
         },
         async MateriaRepetida(index) {
 

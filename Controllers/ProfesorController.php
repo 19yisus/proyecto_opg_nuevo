@@ -46,6 +46,7 @@
 	}
 
 	function SaveData(){
+		var_dump($_POST);
 		$PersonasModel = new PersonasModel();
 		$PersonasModel->SetData($_POST);
 		

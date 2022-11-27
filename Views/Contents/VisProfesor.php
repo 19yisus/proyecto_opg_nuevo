@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php $this->Head(); ?>
+<?php 
+  $this->Head(); 
+  require_once("Models/PeriodoModel.php");
+  $mod = new PeriodoModel();
+  $res = $mod->GetActivo('algo');
+  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
+?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
@@ -89,7 +95,7 @@
 
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Cédula:</span>
-                    <input type="number" step="1" v-bind:disabled="nacionalidad == '' " name="cedula" v-model="cedula" v-bind:maxlength="[ nacionalidad == 'V' ? 8: 6 ]" class="form-control form-control-sm" id="" required placeholder="Ingrese la cédula del profesor" :readonly="action == 'Asignar' " style="width:70%;">
+                    <input type="text" step="1" v-bind:disabled="nacionalidad == '' " name="cedula" v-model="cedula" v-bind:maxlength="[ nacionalidad == 'V' ? 8: 6 ]" class="form-control form-control-sm" id="cedula" required placeholder="Ingrese la cédula del profesor" :readonly="action == 'Asignar' " style="width:70%;">
                     <span class="error-text">Cedula incorrecta</span>
                   </div>
 
@@ -299,9 +305,8 @@
               this.nombre = profesor.nombre_persona;
               this.apellido = profesor.apellido_persona;
               this.direccion = profesor.direccion;
-              this.fecha_n = moment(profesor.fecha_n_persona).format("D/MM/YYYY");
+              this.fecha_n = profesor.fecha_n_persona
               this.correo_persona = profesor.correo_persona;
-
               this.sexo = profesor.sexo_persona;
 
               if (data.Asignaciones[0] != undefined) {
@@ -418,14 +423,12 @@
           .then(res => res.json()).then(({
               data
             }) => {
-              if(data[0]){
+              if (data[0]) {
                 this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                if (data[1]) {
+                  this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                }
               }
-
-              if(data[1]){
-                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
-              }
-              console.log(data)
             }).catch(Error => console.error(Error))
         },
         async consultarMaterias(e) {
@@ -886,11 +889,11 @@
           mostrarError(false, box);
           correoValida = true;
           document.querySelector('#direccion').disabled = false;
-          document.querySelector('#direccion').value = "";
         } else {
           mostrarError(true, box);
           correoValida = false;
           document.querySelector('#direccion').disabled = true;
+          document.querySelector('#direccion').value = "";
         }
       }
       if (boxInput != null && boxInput.name == "direccion") {
@@ -963,6 +966,17 @@
         return false;
       }
     });
+
+    $("#cedula").bind('keypress', function(event) {
+      var regex = new RegExp("^[0-9]+$");
+      var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+      if (!regex.test(key)) {
+        event.preventDefault();
+        return false;
+      }
+    });
+
+
   </script>
 
   <!-- <script src="./views/js/Seccion/index.js"></script> -->

@@ -53,13 +53,12 @@
 		
 		if($PersonasModel->SaveDatos()){
 			$EstudiantesModel->SetData($_POST);
-			$EstudiantesModel->SaveDatos();
-
-			// if($EstudiantesModel->SaveDatos()){
-			// 	$EstudiantesModel->AsignarEstudiante();	
-			// }else{
-			// 	$PersonasModel->ResJSON("Operacionn Fallida!", "error");	
-			// }
+			// $EstudiantesModel->SaveDatos();
+			if($EstudiantesModel->SaveDatos()){
+				$EstudiantesModel->AsignarEstudiante();	
+			}else{
+				$PersonasModel->ResJSON("Operacionn Fallida!", "error");	
+			}
 			
 		}else{
 			$PersonasModel->ResJSON("Operacionn Fallida!", "error");

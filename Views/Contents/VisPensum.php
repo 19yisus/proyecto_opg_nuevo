@@ -2,8 +2,11 @@
 <html lang="en">
 <?php 
   $this->Head(); 
+  require_once("Models/PeriodoModel.php");
+  $mod = new PeriodoModel();
+  $res = $mod->GetActivo('algo');
+  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
 ?>
-
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
     <div class="row">
@@ -235,6 +238,7 @@
             ViewAlert(result.mensaje, result.estado);
             this.periodo_activo();
             this.LimpiarForm();
+            this.Get_pengums();
           }).catch(Error => console.error(Error))
         },
         // aumentar(materia = []) {
@@ -310,14 +314,12 @@
           .then(res => res.json()).then(({
               data
             }) => {
-              if(data[0]){
+              if (data[0]) {
                 this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                if (data[1]) {
+                  this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                }
               }
-
-              if(data[1]){
-                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
-              }
-              console.log(data)
             }).catch(Error => console.error(Error))
         },
         async periodo_activo() {

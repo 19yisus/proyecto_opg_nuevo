@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php $this->Head(); ?>
+<?php 
+  $this->Head(); 
+  // require_once("Models/PeriodoModel.php");
+  // $mod = new PeriodoModel();
+  // $res = $mod->GetActivo();
+  // if(!isset($res[0])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
+?>
 
 <body>
 <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
@@ -41,6 +47,7 @@
                     <th class="text-center" scope="col">Código</th>
                     <th class="text-center" scope="col">Descripción</th>
                     <th class="text-center" scope="col">Dirección</th>
+                    <th class="text-center" scope="col">Estatus</th>
                     <th class="text-center" scope="col">Opciones</th>
                   </tr>
                 </thead>
@@ -74,42 +81,42 @@
                 <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Nombre de la institución:</span>
-                    <input type="text" minlength="1" maxlength="60" v-model="des_institucion" name="des_institucion" class="form-control form-control-sm" id="des_institucion" required id="des_materia" placeholder="Nombre de la institución" style="width:70%; text-transform:uppercase;" disabled>
+                    <input type="text" minlength="1" maxlength="60" v-model="des_institucion" name="des_institucion" class="form-control form-control-sm" id="des_institucion" required id="des_materia" placeholder="Nombre de la institución" style="width:70%; text-transform:uppercase;" v-bind:disabled="action == 'Save'">
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
                 <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Dirección de la institución:</span>
-                    <input v-model="direccion_institucion" maxlength="120" name="direccion_institucion" class="form-control form-control-sm" id="direccion_institucion" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" disabled>
+                    <input v-model="direccion_institucion" maxlength="120" name="direccion_institucion" class="form-control form-control-sm" id="direccion_institucion" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" v-bind:disabled="action == 'Save'">
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
                 <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Municipio:</span>
-                    <input v-model="municipio" maxlength="60" name="municipio" class="form-control form-control-sm" id="municipio" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" >
+                    <input v-model="municipio" maxlength="60" name="municipio" class="form-control form-control-sm" id="municipio" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" v-bind:disabled="action == 'Save'">
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
                 <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Entidad Federal:</span>
-                    <input v-model="entidad_federal" maxlength="60" name="entidad_federal" class="form-control form-control-sm" id="entidad" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" >
+                    <input v-model="entidad_federal" maxlength="60" name="entidad_federal" class="form-control form-control-sm" id="entidad_federal" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" v-bind:disabled="action == 'Save'">
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
                 <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Zona Educativa:</span>
-                    <input v-model="zona_educativa" maxlength="60" name="zona_educativa" class="form-control form-control-sm" id="zona" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" >
+                    <input v-model="zona_educativa" maxlength="60" name="zona_educativa" class="form-control form-control-sm" id="zona_educativa" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" v-bind:disabled="action == 'Save'">
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
                 <div class="col-md-12 mt-3">
                   <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Telefono de la institución:</span>
-                    <input v-model="telefono" maxlength="12" name="telefono" class="form-control form-control-sm" id="telefono" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" >
+                    <input v-model="telefono" maxlength="11" name="telefono" class="form-control form-control-sm" id="telefono" cols="30" required rows="2" placeholder="Dirección de la institución" style="width:70%; text-transform:uppercase;" v-bind:disabled="action == 'Save'">
                     <span class="error-text">Rellene el campo correctamente</span>
                   </div>
                 </div>
@@ -231,6 +238,12 @@
           data: "direccion_institucion"
         },
         {
+          data: "estatus_institucion",
+          render(data){
+            return (data == '1') ? "Activo" : "Inactivo";
+          }
+        },
+        {
           defaultContent: '',
           render: function(data, type, row) {
             let btns = `
@@ -259,6 +272,16 @@
     let descripcionValida = false;
     let direccionValida = false;
     let codigoValida = false;
+    let municipioValida = false;
+    let entidadFValida = false;
+    let telefonoValida = false;
+    let zonaEValida = false;
+    let entidadEValida= false;
+
+
+
+
+
 
     document.querySelectorAll('.form-box').forEach((box) => {
       app.formulario_valido = false;
@@ -277,29 +300,20 @@
         console.log(document.getElementById("Formulario").des_institucion)
         validacion(box, boxInput);
         // app.ToggleModal();
-        descripcionValida = false;
-        direccionValida = false;
-        codigoValida = false;
+            descripcionValida = false;
+            direccionValida = false;
+            codigoValida = false;
+            municipioValida = false;
+            entidadFValida = false;
+            telefonoValida = false;
+            zonaEValida = false;
+            entidadEValida= false;
       })
     });
 
     function validacion(box, boxInput) {
 
 
-      if (boxInput != null && boxInput.name == "des_institucion") {
-        if (boxInput.value.length < 1) {
-          console.log('descripcion')
-          mostrarError(true, box);
-          descripcionValida = false;
-          document.querySelector('#direccion_institucion').value = ""
-          document.querySelector("#direccion_institucion").disabled = true;
-        } else {
-          console.log('descripcion')
-          mostrarError(false, box);
-          descripcionValida = true;
-          document.querySelector("#direccion_institucion").disabled = false;
-        }
-      }
       if (boxInput != null && boxInput.name == "codigo_institucion") {
         if (boxInput.value.length < 1) {
           console.log('codigo')
@@ -307,8 +321,16 @@
           codigoValida = false;
           document.querySelector('#direccion_institucion').value = ""
           document.querySelector("#direccion_institucion").disabled = true;
-          document.querySelector('#des_institucion').value = ""
-          document.querySelector("#des_institucion").disabled = true;
+          document.querySelector('#des_institucion').disabled = true;
+          document.querySelector('#des_institucion').value = '';
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = '';
+          document.querySelector('#entidad_federal').disabled = true;
+          document.querySelector('#entidad_federal').value = '';
+          document.querySelector('#zona_educativa').disabled = true;
+          document.querySelector('#zona_educativa').value = '';
+          document.querySelector('#telefono').disabled = true;
+          document.querySelector('#telefono').value = '';
         } else {
           console.log('codigo')
           mostrarError(false, box);
@@ -316,17 +338,118 @@
           document.querySelector("#des_institucion").disabled = false;
         }
       }
+
+
+      if (boxInput != null && boxInput.name == "des_institucion") {
+        if (boxInput.value.length < 1) {
+          console.log('descripcion')
+          mostrarError(true, box);
+          descripcionValida = false;
+          document.querySelector('#des_institucion').disabled = true;
+          document.querySelector('#des_institucion').value = '';
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = '';
+          document.querySelector('#entidad_federal').disabled = true;
+          document.querySelector('#entidad_federal').value = '';
+          document.querySelector('#zona_educativa').disabled = true;
+          document.querySelector('#zona_educativa').value = '';
+          document.querySelector('#telefono').disabled = true;
+          document.querySelector('#telefono').value = '';
+        } else {
+          console.log('descripcion')
+          mostrarError(false, box);
+          descripcionValida = true;
+          document.querySelector("#direccion_institucion").disabled = false;
+        }
+      }
+      
       if (boxInput != null && boxInput.name == "direccion_institucion") {
         if (boxInput.value.length < 1) {
           console.log('direccion')
           mostrarError(true, box);
-          descripcionValida = false;
+          direccionIValida = false;
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = '';
+          document.querySelector('#entidad_federal').disabled = true;
+          document.querySelector('#entidad_federal').value = '';
+          document.querySelector('#zona_educativa').disabled = true;
+          document.querySelector('#zona_educativa').value = '';
+          document.querySelector('#telefono').disabled = true;
+          document.querySelector('#telefono').value = '';
         } else {
           console.log('direccion')
           mostrarError(false, box);
-          descripcionValida = true;
+          document.querySelector('#municipio').disabled = false;
+          direccionIValida = true;
         }
       }
+
+      if (boxInput != null && boxInput.name == "municipio") {
+        if (boxInput.value.length < 1) {
+          console.log('municipio')
+          mostrarError(true, box);
+          municipioValida = false;
+          document.querySelector('#entidad_federal').disabled = true;
+          document.querySelector('#entidad_federal').value = '';
+          document.querySelector('#zona_educativa').disabled = true;
+          document.querySelector('#zona_educativa').value = '';
+          document.querySelector('#telefono').disabled = true;
+          document.querySelector('#telefono').value = '';
+        } else {
+          console.log('municipio')
+          document.querySelector('#entidad_federal').disabled = false;
+          mostrarError(false, box);
+          municipioValida = true;
+        }
+      }
+
+      if (boxInput != null && boxInput.name == "entidad_federal") {
+        if (boxInput.value.length < 1) {
+          console.log('entidad_federal')
+          mostrarError(true, box);
+          entidadFValida = false;
+          document.querySelector('#zona_educativa').disabled = true;
+          document.querySelector('#zona_educativa').value = '';
+          document.querySelector('#telefono').disabled = true;
+          document.querySelector('#telefono').value = '';
+        } else {
+          console.log('entidad_federal')
+          document.querySelector('#zona_educativa').disabled = false;
+          mostrarError(false, box);
+          entidadFValida = true;
+        }
+      }
+
+      if (boxInput != null && boxInput.name == "zona_educativa") {
+        if (boxInput.value.length < 1) {
+          console.log('zona_educativa')
+          mostrarError(true, box);
+          zonaEValida = false;
+          document.querySelector('#telefono').disabled = true;
+          document.querySelector('#telefono').value = '';
+        
+        }else{
+          console.log('zona_educativa')
+          document.querySelector('#telefono').disabled = false;
+          mostrarError(false, box);
+          zonaEValida = true;
+        }
+      }
+
+      if (boxInput != null && boxInput.name == "telefono") {
+        if (boxInput.value.length < 1) {
+          console.log('telefono')
+          mostrarError(true, box);
+          telefonoValida = false;
+        } else {
+          console.log('telefono')
+          mostrarError(false, box);
+          telefonoValida = true;
+        }
+      }
+
+
+      
       // direccionValida codigoValida
       // console.log(descripcionValida, codigoValida)
       // ARREGLAR VALIDACIONES
@@ -352,8 +475,17 @@
     }
 
 
-    $("#des_institucion").bind('keypress', function(event) {
+    $("#des_institucion, #municipio, #zona_educativa, #entidad_federal").bind('keypress', function(event) {
       var regex = new RegExp("^[a-zA-Z ]+$");
+      var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+      if (!regex.test(key)) {
+        event.preventDefault();
+        return false;
+      }
+    });
+
+    $("#telefono").bind('keypress', function(event) {
+      var regex = new RegExp("^[0-9]+$");
       var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
       if (!regex.test(key)) {
         event.preventDefault();

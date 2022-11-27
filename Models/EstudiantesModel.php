@@ -35,8 +35,9 @@ class EstudiantesModel extends DB
 					'descripcion' => "REGISTRO",
 					'id_registro' => $this->cedula_estudiante
 				]);
-				$this->ResJSON("Operacion Exitosa!", "success");
-			} else $this->ResJSON("Operacion Fallida!", "error");
+				// $this->ResJSON("Operacion Exitosa!", "success");
+				return true;
+			} else return false;
 		} catch (PDOException $e) {
 			error_log("MateriasModel(line0------) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida!", "error");
@@ -139,9 +140,7 @@ class EstudiantesModel extends DB
 						INNER JOIN personas ON estudiante.cedula_estudiante = personas.cedula_persona
 						LEFT JOIN asignacion_estudiante_seccion ON asignacion_estudiante_seccion.cedula_estu_asignacion = estudiante.cedula_estudiante
 						LEFT JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = asignacion_estudiante_seccion.id_periodo 
-						LEFT JOIN seccion ON seccion.idSeccion = asignacion_estudiante_seccion.id_seccion
-						;");
-				// WHERE periodo_escolar.estatus_periodo_escolar = 1
+						LEFT JOIN seccion ON seccion.idSeccion = asignacion_estudiante_seccion.id_seccion WHERE periodo_escolar.estatus_periodo_escolar = 1 GROUP BY estudiante.cedula_estudiante;");
 			}
 
 

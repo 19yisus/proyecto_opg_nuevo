@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php $this->Head(); ?>
+<?php 
+  $this->Head(); 
+  require_once("Models/PeriodoModel.php");
+  $mod = new PeriodoModel();
+  $res = $mod->GetActivo('algo');
+  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
+?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">

@@ -2,7 +2,10 @@
 <html lang="en">
 <?php 
   $this->Head(); 
-
+  require_once("Models/PeriodoModel.php");
+  $mod = new PeriodoModel();
+  $res = $mod->GetActivo('algo');
+  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
 ?>
 
 <body>
@@ -23,15 +26,20 @@
           </div>
         </div>
 
-
         <div class="col-md-12 mx-auto px-2 ">
-
-
-
-
-
           <!-- contenedor de la tabla -->
           <div class="col-md-12 card p-3 shadow ">
+            <div class="col-md-12 d-flex justify-content-between container-fluid row " style="margin: 0; padding: 0;">
+              <div class="col-md-5" style="margin: 0; padding: 0;">
+                <div class="input-group input-group-sm mb-3">
+                  <span class="input-group-text" id="inputGroup-sizing-sm">Periodo escolar:</span>
+                  <select class="form-select" v-model="id_periodoFiltro" aria-label="Default select example">
+                    <option value="" selected>Seleccionar</option>
+                    <option :value="item.id_periodo_escolar" v-for="item in periodosFiltro">{{item.periodoescolar}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             <div class="col-md-12 d-flex justify-content-end" style="margin: 0; padding: 0;">
               <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px">
                 <i class="fa-regular fa-user"></i> AGREGAR
@@ -92,7 +100,7 @@
 
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Cédula:</span>
-                    <input type="number" step="1" v-bind:disabled="nacionalidad == '' " name="cedula" :readonly="action == 'Update' || action == 'Asignacion'" v-model="cedula" v-bind:maxlength="[ nacionalidad == 'V' ? 8: 6 ]" class="form-control form-control-sm" id="cedula" required placeholder="Ingrese la cédula del estudiante" style="width:70%;">
+                    <input type="text" step="1" v-bind:disabled="nacionalidad == '' " name="cedula" :readonly="action == 'Update' || action == 'Asignacion'" v-model="cedula" v-bind:maxlength="[ nacionalidad == 'V' ? 8: 6 ]" class="form-control form-control-sm" id="cedula" required placeholder="Ingrese la cédula del estudiante" style="width:70%;">
                     <span class="error-text">Cedula incorrecta</span>
                   </div>
                 </div>
@@ -134,10 +142,10 @@
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Seguimiento:</span>
                     <input type="number" min="1" max="6" maxlength="1" :readonly="action == 'Update' || action == 'Asignacion' " minlength="1" name="seguimiento_estudiante" class="form-control form-control-sm" id="" v-model="seguimiento" placeholder="Año">
-                    <!-- <select name="id_seccion" v-model="id_seccion" id="seccion" class="form-select" :disabled="desactivado" aria-label="Default select example" required disabled>
+                    <select name="id_seccion" v-model="id_seccion" id="seccion" class="form-select" :disabled="desactivado" aria-label="Default select example" required disabled>
                       <option value="0">Seleccione una opción</option>
                       <option :value="item.idSeccion" v-for="item in secciones">{{item.id_seccion}}</option>
-                    </select> -->
+                    </select>
                     <span class="error-text">Selecciona año y sección</span>
                   </div>
                 </div>
@@ -247,7 +255,7 @@
                 this.cedula = data.cedula_estudiante
                 this.nombre = data.nombre_persona
                 this.apellido = data.apellido_persona
-                this.fecha_n = moment(data.fecha_n_persona).format("D/MM/YYYY")
+                this.fecha_n = data.fecha_n_persona
                 this.lugar_n = data.direccion_n_persona
                 this.direccion = data.direccion_persona
                 this.sexo = data.sexo_persona
@@ -283,12 +291,10 @@
             }) => {
               if (data[0]) {
                 this.info_pensum_1 = `${data[0].cod_pensum} - ${data[0].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                if (data[1]) {
+                  this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
+                }
               }
-
-              if (data[1]) {
-                this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
-              }
-              console.log(data)
             }).catch(Error => console.error(Error))
         },
         async ChangeState(id) {
@@ -827,7 +833,6 @@
           mostrarError(false, box);
           lugarNValida = true;
           document.querySelector('#direccion').disabled = false;
-          document.querySelector('#direccion').value = "";
         }
       }
       if (boxInput != null && boxInput.name == "direccion") {
@@ -877,6 +882,15 @@
 
     $("#nombre, #apellido").bind('keypress', function(event) {
       var regex = new RegExp("^[a-zA-Z ]+$");
+      var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+      if (!regex.test(key)) {
+        event.preventDefault();
+        return false;
+      }
+    });
+
+    $("#cedula").bind('keypress', function(event) {
+      var regex = new RegExp("^[0-9]+$");
       var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
       if (!regex.test(key)) {
         event.preventDefault();

@@ -360,12 +360,12 @@ class NotasModel extends DB
         INNER JOIN personas ON personas.cedula_persona = estudiante.cedula_estudiante 
         WHERE estudiante.cedula_estudiante = '$cedula';";
 
-    $sqlNotasHistoricas = "SELECT *,pensum.cod_pensum FROM nota 
-        INNER JOIN materia ON materia.id_materia = nota.materia_id 
-        INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = nota.periodo_escolar_id 
-        INNER JOIN seccion ON seccion.id_seccion = nota.seccion_id
-        LEFT JOIN pensum ON pensum.periodo_id = periodo_escolar.id_periodo_escolar
-        WHERE nota.estatusNotas = 0 AND nota.cedula_estudiante = '$cedula' GROUP BY nota.idNota ORDER BY nota.seccion_id;";
+    $sqlNotasHistoricas = "SELECT * FROM nota 
+    INNER JOIN materia ON materia.id_materia = nota.materia_id
+    INNER JOIN seccion ON seccion.idSeccion = nota.seccion_id
+    INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = nota.periodo_escolar_id
+    INNER JOIN pensum ON pensum.periodo_id = periodo_escolar.id_periodo_escolar
+    WHERE nota.cedula_estudiante = '$cedula' AND nota.estatusNotas = 0 GROUP BY nota.idNota";
     
     // var_dump($sqlNotasHistoricas);
     // die("DDD");

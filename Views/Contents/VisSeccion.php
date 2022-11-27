@@ -2,6 +2,10 @@
 <html lang="en">
 <?php 
   $this->Head(); 
+  require_once("Models/PeriodoModel.php");
+  $mod = new PeriodoModel();
+  $res = $mod->GetActivo('algo');
+  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
 ?>
 
 <body>

@@ -142,7 +142,8 @@ class ProfesorModel extends DB
 
 			$result = $this->consultAll("SELECT * FROM profesor 
 					INNER JOIN personas ON personas.cedula_persona = profesor.cedula_profesor
-					LEFT JOIN asignacion_profesor_seccion ON asignacion_profesor_seccion.profesor_cedula = profesor.cedula_profesor GROUP BY  profesor.cedula_profesor;");
+					LEFT JOIN asignacion_profesor_seccion ON asignacion_profesor_seccion.profesor_cedula = profesor.cedula_profesor 
+					GROUP BY  profesor.cedula_profesor;");
 
 			if (isset($result[0])) $this->ResDataJSON($result);
 			else $this->ResDataJSON([]);
