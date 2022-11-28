@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 28-11-2022 a las 00:29:08
+-- Tiempo de generación: 28-11-2022 a las 14:04:44
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.4.22
 
@@ -37,6 +37,21 @@ CREATE TABLE `asignacion_estudiante_seccion` (
   `estatus_asig_estu` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `asignacion_estudiante_seccion`
+--
+
+INSERT INTO `asignacion_estudiante_seccion` (`id_asignacion_estu`, `cedula_estu_asignacion`, `id_seccion`, `id_periodo`, `estatus_asig_estu`) VALUES
+(1, '2762468', 1, 1, 0),
+(2, '2762468', 3, 2, 0),
+(3, '2762468', 5, 3, 0),
+(4, '27132642', 5, 3, 0),
+(5, '30640465', 5, 3, 0),
+(6, '32456479', 5, 3, 0),
+(7, '1234576', 3, 2, 1),
+(8, '12345699', 3, 2, 1),
+(9, '88888888', 3, 2, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -67,6 +82,39 @@ CREATE TABLE `bitacora_notas` (
   `notas_antiguas` varchar(230) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `bitacora_notas`
+--
+
+INSERT INTO `bitacora_notas` (`id_bitacora`, `usuario_id`, `nota_id`, `fecha_bitacora`, `observacion_bitacora`, `notas_antiguas`) VALUES
+(1, 2, 1, '2022-11-27 18:46:51', 'no', 'Nuevo Registro'),
+(2, 2, 2, '2022-11-27 18:46:51', 'no', 'Nuevo Registro'),
+(3, 2, 3, '2022-11-27 18:46:51', 'no', 'Nuevo Registro'),
+(4, 2, 4, '2022-11-27 19:01:27', 'no', 'Nuevo Registro'),
+(5, 2, 5, '2022-11-27 19:01:27', 'no', 'Nuevo Registro'),
+(6, 2, 6, '2022-11-27 19:17:31', 'no', 'Nuevo Registro'),
+(7, 2, 7, '2022-11-27 19:17:32', 'no', 'Nuevo Registro'),
+(8, 2, 8, '2022-11-27 19:17:32', 'no', 'Nuevo Registro'),
+(9, 2, 9, '2022-11-27 21:25:05', 'no', 'Nuevo Registro'),
+(10, 2, 10, '2022-11-27 21:25:05', 'no', 'Nuevo Registro'),
+(11, 2, 11, '2022-11-27 21:25:05', 'no', 'Nuevo Registro'),
+(12, 2, 12, '2022-11-27 21:27:08', 'no', 'Nuevo Registro'),
+(13, 2, 13, '2022-11-27 21:27:08', 'no', 'Nuevo Registro'),
+(14, 2, 14, '2022-11-27 21:27:08', 'no', 'Nuevo Registro'),
+(15, 2, 15, '2022-11-27 21:27:23', 'no', 'Nuevo Registro'),
+(16, 2, 16, '2022-11-27 21:27:23', 'no', 'Nuevo Registro'),
+(17, 2, 17, '2022-11-27 21:27:23', 'no', 'Nuevo Registro'),
+(18, 2, 15, '2022-11-27 21:27:45', 'no', 'Actualizacion de notas: recuperativo_1 = 0 => 1 | recuperativo_2 = 0 => 1 | recuperativo_3 = 0 => 1 | recuperativo_4 = 0 => 1 | '),
+(19, 2, 16, '2022-11-27 21:27:45', 'no', 'Actualizacion de notas: recuperativo_1 = 0 => 1 | recuperativo_2 = 0 => 1 | recuperativo_3 = 0 => 1 | recuperativo_4 = 0 => 1 | '),
+(20, 2, 17, '2022-11-27 21:27:45', 'no', 'Actualizacion de notas: recuperativo_1 = 0 => 1 | recuperativo_2 = 0 => 1 | recuperativo_3 = 0 => 1 | recuperativo_4 = 0 => 1 | '),
+(21, 2, 16, '2022-11-27 21:27:57', 'no', 'Actualizacion de notas: recuperativo_3 = 1 => 2 | '),
+(22, 2, 15, '2022-11-27 22:11:17', 'no', 'Actualizacion de notas: nota_final = 1 => 11 | '),
+(23, 2, 16, '2022-11-27 22:11:17', 'no', 'Actualizacion de notas: nota_final = 1 => 20 | '),
+(24, 2, 17, '2022-11-27 22:11:17', 'no', 'Actualizacion de notas: nota_final = 1 => 20 | '),
+(25, 2, 15, '2022-11-27 22:11:26', 'no', 'Actualizacion de notas: nota_final = 11 => 8 | recuperativo_1 = 1 => 0 | recuperativo_2 = 1 => 0 | recuperativo_3 = 1 => 0 | recuperativo_4 = 1 => 0 | '),
+(26, 2, 16, '2022-11-27 22:11:26', 'no', 'Actualizacion de notas: nota_final = 20 => 4 | recuperativo_1 = 1 => 0 | recuperativo_2 = 1 => 0 | recuperativo_3 = 2 => 0 | recuperativo_4 = 1 => 0 | '),
+(27, 2, 17, '2022-11-27 22:11:26', 'no', 'Actualizacion de notas: nota_final = 20 => 4 | recuperativo_1 = 1 => 0 | recuperativo_2 = 1 => 0 | recuperativo_3 = 1 => 0 | recuperativo_4 = 1 => 0 | ');
+
 -- --------------------------------------------------------
 
 --
@@ -82,6 +130,68 @@ CREATE TABLE `bitacora_sistema` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `bitacora_sistema`
+--
+
+INSERT INTO `bitacora_sistema` (`id`, `name_tabla`, `descripcion`, `registro_id`, `fecha_hora`, `user_id`) VALUES
+(2, 'periodo_escolar', 'REGISTRO', '1', '2022-11-27 17:59:04', 2),
+(3, 'Institucion', 'REGISTRO', '1', '2022-11-27 18:18:20', 2),
+(4, 'periodo_escolar', 'REGISTRO', '1', '2022-11-27 18:18:53', 2),
+(5, 'pensum', 'REGISTRO', '1', '2022-11-27 18:31:02', 2),
+(6, 'pensum', 'REGISTRO', '2', '2022-11-27 18:31:10', 2),
+(7, 'pensum', 'CAMBIO DE ESTATUS', '1', '2022-11-27 18:31:57', 2),
+(8, 'pensum', 'CAMBIO DE ESTATUS', '2', '2022-11-27 18:32:29', 2),
+(9, 'pensum', 'CAMBIO DE ESTATUS', '2', '2022-11-27 18:32:30', 2),
+(10, 'pensum', 'CAMBIO DE ESTATUS', '1', '2022-11-27 18:32:31', 2),
+(11, 'pensum', 'CAMBIO DE ESTATUS', '2', '2022-11-27 18:32:32', 2),
+(12, 'seccion', 'REGISTRO', '1', '2022-11-27 18:32:50', 2),
+(13, 'seccion', 'REGISTRO', '2', '2022-11-27 18:32:50', 2),
+(14, 'materia', 'REGISTRO', '1', '2022-11-27 18:41:54', 2),
+(15, 'materia', 'REGISTRO', '2', '2022-11-27 18:42:42', 2),
+(16, 'pensum', 'CAMBIO DE ESTATUS', '2', '2022-11-27 18:43:26', 2),
+(17, 'materia', 'REGISTRO', '3', '2022-11-27 18:43:55', 2),
+(18, 'materia', 'REGISTRO', '4', '2022-11-27 18:44:06', 2),
+(19, 'materia', 'ACTUALIZACION', '4', '2022-11-27 18:44:24', 2),
+(20, 'periodo_escolar', 'REGISTRO', '2', '2022-11-27 18:48:06', 2),
+(21, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-11-27 18:48:10', 2),
+(22, 'periodo_escolar', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '2', '2022-11-27 18:48:12', 2),
+(23, 'pensum', 'REGISTRO', '3', '2022-11-27 18:50:35', 2),
+(24, 'seccion', 'REGISTRO', '3', '2022-11-27 18:53:09', 2),
+(25, 'seccion', 'REGISTRO', '4', '2022-11-27 18:53:09', 2),
+(26, 'materia', 'REGISTRO', '5', '2022-11-27 18:53:52', 2),
+(27, 'materia', 'REGISTRO', '6', '2022-11-27 18:54:07', 2),
+(28, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '2', '2022-11-27 19:03:43', 2),
+(29, 'periodo_escolar', 'REGISTRO', '3', '2022-11-27 19:03:56', 2),
+(30, 'pensum', 'REGISTRO', '4', '2022-11-27 19:04:24', 2),
+(31, 'seccion', 'REGISTRO', '5', '2022-11-27 19:04:45', 2),
+(32, 'seccion', 'REGISTRO', '6', '2022-11-27 19:04:45', 2),
+(33, 'materia', 'REGISTRO', '7', '2022-11-27 19:08:27', 2),
+(34, 'materia', 'REGISTRO', '8', '2022-11-27 19:08:47', 2),
+(35, 'materia', 'REGISTRO', '9', '2022-11-27 19:09:05', 2),
+(36, 'materia', 'REGISTRO', '10', '2022-11-27 19:09:06', 2),
+(37, 'materia', 'REGISTRO', '11', '2022-11-27 19:10:44', 2),
+(38, 'materia', 'REGISTRO', '12', '2022-11-27 19:13:15', 2),
+(39, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '3', '2022-11-27 19:37:36', 2),
+(40, 'periodo_escolar', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '1', '2022-11-27 19:37:38', 2),
+(41, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-11-27 19:52:11', 2),
+(42, 'periodo_escolar', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '2', '2022-11-27 19:52:12', 2),
+(43, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '2', '2022-11-27 19:52:35', 2),
+(44, 'periodo_escolar', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '1', '2022-11-27 19:52:38', 2),
+(45, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-11-27 19:53:04', 2),
+(46, 'periodo_escolar', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '3', '2022-11-27 19:53:06', 2),
+(47, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '3', '2022-11-27 21:32:22', 2),
+(48, 'periodo_escolar', 'REGISTRO', '4', '2022-11-27 21:32:36', 2),
+(49, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '4', '2022-11-27 21:42:41', 2),
+(50, 'periodo_escolar', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '2', '2022-11-27 21:42:43', 2),
+(51, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '2', '2022-11-27 21:56:24', 2),
+(52, 'periodo_escolar', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '3', '2022-11-27 21:56:27', 2),
+(53, 'institucion', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-11-28 07:30:19', 2),
+(54, 'institucion', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '1', '2022-11-28 07:32:31', 2),
+(55, 'institucion', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-11-28 07:32:52', 2),
+(56, 'institucion', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '1', '2022-11-28 08:53:34', 2),
+(57, 'institucion', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-11-28 08:53:36', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -93,6 +203,19 @@ CREATE TABLE `estudiante` (
   `seguimiento_estudiante` int(11) NOT NULL,
   `estatus_estudiante` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `estudiante`
+--
+
+INSERT INTO `estudiante` (`cedula_estudiante`, `seguimiento_estudiante`, `estatus_estudiante`) VALUES
+('12345699', 2, 1),
+('1234576', 2, 1),
+('27132642', 4, 1),
+('2762468', 4, 1),
+('30640465', 4, 1),
+('32456479', 3, 1),
+('88888888', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -111,6 +234,13 @@ CREATE TABLE `institucion` (
   `telefono` varchar(12) COLLATE utf8_spanish_ci NOT NULL,
   `estatus_institucion` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `institucion`
+--
+
+INSERT INTO `institucion` (`id_institucion`, `des_institucion`, `codigo_institucion`, `direccion_institucion`, `municipio`, `entidad_federal`, `zona_educativa`, `telefono`, `estatus_institucion`) VALUES
+(1, 'uen oscar picon giacopini', '1s3sdaddfs', 'agua blanca', 'agua blanca', 'portuguesa', 'portuguesa', '02557921017', 1);
 
 -- --------------------------------------------------------
 
@@ -131,6 +261,21 @@ CREATE TABLE `materia` (
   `quinto` tinyint(1) NOT NULL DEFAULT 0,
   `sexto` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `materia`
+--
+
+INSERT INTO `materia` (`id_materia`, `des_materia`, `estatus_materia`, `id_periodo_ma`, `id_pensum_ma`, `primero`, `segundo`, `tercero`, `cuarto`, `quinto`, `sexto`) VALUES
+(1, 'materia 1', 1, 1, 1, 1, 1, 1, 0, 0, 0),
+(2, 'materia2', 1, 1, 1, 1, 1, 1, 0, 0, 0),
+(3, 'materia 3', 1, 1, 1, 1, 1, 1, 0, 0, 0),
+(4, 'materia 5', 1, 1, 2, 0, 0, 0, 0, 0, 0),
+(5, 'materia 1', 1, 2, 3, 1, 1, 1, 0, 0, 0),
+(6, 'materia 2', 1, 2, 3, 1, 1, 1, 0, 0, 0),
+(7, 'materia 1', 1, 3, 4, 1, 1, 1, 0, 0, 0),
+(8, 'materia 2', 1, 3, 4, 1, 1, 1, 0, 0, 0),
+(9, 'materia 3', 1, 3, 4, 1, 1, 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -156,6 +301,29 @@ CREATE TABLE `nota` (
   `estatusNotas` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `nota`
+--
+
+INSERT INTO `nota` (`idNota`, `cedula_estudiante`, `periodo_escolar_id`, `seccion_id`, `materia_id`, `lapso_id`, `nota_lapso1`, `nota_lapso2`, `nota_lapso3`, `nota_final`, `recuperativo_1`, `recuperativo_2`, `recuperativo_3`, `recuperativo_4`, `estatusNotas`) VALUES
+(1, '2762468', 1, 1, 1, NULL, NULL, NULL, NULL, 10, 0, 0, 0, 0, 0),
+(2, '2762468', 1, 1, 2, NULL, NULL, NULL, NULL, 10, 0, 0, 0, 0, 0),
+(3, '2762468', 1, 1, 3, NULL, NULL, NULL, NULL, 20, 0, 0, 0, 0, 0),
+(4, '2762468', 2, 3, 5, NULL, NULL, NULL, NULL, 20, 0, 0, 0, 0, 0),
+(5, '2762468', 2, 3, 6, NULL, NULL, NULL, NULL, 20, 0, 0, 0, 0, 0),
+(6, '2762468', 3, 5, 7, NULL, NULL, NULL, NULL, 20, 0, 0, 0, 0, 0),
+(7, '2762468', 3, 5, 8, NULL, NULL, NULL, NULL, 20, 0, 0, 0, 0, 0),
+(8, '2762468', 3, 5, 9, NULL, NULL, NULL, NULL, 20, 0, 0, 0, 0, 0),
+(9, '27132642', 3, 5, 7, NULL, NULL, NULL, NULL, 15, 0, 0, 0, 0, 0),
+(10, '27132642', 3, 5, 8, NULL, NULL, NULL, NULL, 15, 0, 0, 0, 0, 0),
+(11, '27132642', 3, 5, 9, NULL, NULL, NULL, NULL, 15, 0, 0, 0, 0, 0),
+(12, '30640465', 3, 5, 7, NULL, NULL, NULL, NULL, 16, 0, 0, 0, 0, 0),
+(13, '30640465', 3, 5, 8, NULL, NULL, NULL, NULL, 14, 0, 0, 0, 0, 0),
+(14, '30640465', 3, 5, 9, NULL, NULL, NULL, NULL, 13, 0, 0, 0, 0, 0),
+(15, '32456479', 3, 5, 7, NULL, NULL, NULL, NULL, 8, 0, 0, 0, 0, 0),
+(16, '32456479', 3, 5, 8, NULL, NULL, NULL, NULL, 4, 0, 0, 0, 0, 0),
+(17, '32456479', 3, 5, 9, NULL, NULL, NULL, NULL, 4, 0, 0, 0, 0, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -169,6 +337,16 @@ CREATE TABLE `pensum` (
   `periodo_id` int(11) NOT NULL,
   `estatus_pensum` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `pensum`
+--
+
+INSERT INTO `pensum` (`id`, `cod_pensum`, `anios_abarcados`, `periodo_id`, `estatus_pensum`) VALUES
+(1, '15554', 'B', 1, 1),
+(2, '15554', 'D', 1, 1),
+(3, '40155', 'B', 2, 1),
+(4, '14405', 'B', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -184,6 +362,16 @@ CREATE TABLE `periodo_escolar` (
   `estatus_periodo_escolar` tinyint(1) NOT NULL,
   `institucion_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `periodo_escolar`
+--
+
+INSERT INTO `periodo_escolar` (`id_periodo_escolar`, `periodoescolar`, `fecha_inicio`, `fecha_cierre`, `estatus_periodo_escolar`, `institucion_id`) VALUES
+(1, '1987-1988', '1987-09-01', '1988-07-28', 0, 1),
+(2, '1988-1989', '1988-09-01', '1989-07-28', 0, 1),
+(3, '1989-1990', '1989-09-01', '1990-07-28', 1, 1),
+(4, '1990-1991', '1990-09-01', '1991-07-28', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -203,6 +391,21 @@ CREATE TABLE `personas` (
   `telefono_persona` varchar(12) COLLATE utf8_spanish_ci DEFAULT NULL,
   `direccion_n_persona` varchar(120) COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `personas`
+--
+
+INSERT INTO `personas` (`cedula_persona`, `nombre_persona`, `apellido_persona`, `nacionalidad_persona`, `sexo_persona`, `correo_persona`, `fecha_n_persona`, `direccion_persona`, `telefono_persona`, `direccion_n_persona`) VALUES
+('12332646', 'alfonsino director', 'medina', 'V', 'M', 'fasdfasdfadsfasd@gmail.com', '1971-05-10', '', NULL, NULL),
+('12345699', 'asdasdasd', 'dasdasd', 'V', 'M', NULL, '1972-02-02', 'sadasdasd', '12345699', 'asdasdasd'),
+('1234576', 'asdasdasd', 'asdasdad', 'V', 'M', NULL, '1971-08-11', 'asdasdas', '1234576', 'sdasdasd'),
+('27132642', 'jesus', 'morales', 'V', 'M', NULL, '1977-08-29', 'fasdfasdfasd', '27132642', 'fasdfasdfasdf'),
+('2762468', 'Jose Manuel', 'Perez Lopez', 'V', 'M', NULL, '1975-01-01', 'asdasdasd', '2762468', 'sadasdasd'),
+('30640465', 'nose', 'perez', 'V', 'M', NULL, '1977-08-30', 'fasdfasdfadsfadsf', '30640465', 'fasdfasdfasdf'),
+('32456479', 'fasdfadfasdf', 'fasdfasdfadsf', 'V', 'M', NULL, '1977-05-01', 'fasdfasdfasdf', '32456479', 'fasdfasdfasdf'),
+('45654987', 'fasdfasdfa', 'fasdfasdfasd', 'V', 'M', 'fasdfasdfasdfasdfasdf@gmail.com', '1970-05-10', 'fasdfasdfasdf', '45654987', NULL),
+('88888888', 'asasdasda', 'daasdasdsa', 'V', 'M', NULL, '1972-02-02', 'asdasdasdas', '88888888', 'sdasdasd');
 
 -- --------------------------------------------------------
 
@@ -236,6 +439,14 @@ CREATE TABLE `profesor` (
   `estatus_profesor` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `profesor`
+--
+
+INSERT INTO `profesor` (`cedula_profesor`, `estatus_profesor`) VALUES
+('12332646', 1),
+('45654987', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -268,6 +479,18 @@ CREATE TABLE `seccion` (
   `estatus_seccion` tinyint(1) NOT NULL,
   `id_sec_periodo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `seccion`
+--
+
+INSERT INTO `seccion` (`idSeccion`, `id_seccion`, `ano_seguimiento`, `estatus_seccion`, `id_sec_periodo`) VALUES
+(1, '1A', 1, 1, 1),
+(2, '1B', 1, 1, 1),
+(3, '2A', 2, 1, 2),
+(4, '2B', 2, 1, 2),
+(5, '3A', 3, 1, 3),
+(6, '3B', 3, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -427,7 +650,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `asignacion_estudiante_seccion`
 --
 ALTER TABLE `asignacion_estudiante_seccion`
-  MODIFY `id_asignacion_estu` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_asignacion_estu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacion_profesor_seccion`
@@ -439,43 +662,43 @@ ALTER TABLE `asignacion_profesor_seccion`
 -- AUTO_INCREMENT de la tabla `bitacora_notas`
 --
 ALTER TABLE `bitacora_notas`
-  MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `bitacora_sistema`
 --
 ALTER TABLE `bitacora_sistema`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT de la tabla `institucion`
 --
 ALTER TABLE `institucion`
-  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `materia`
 --
 ALTER TABLE `materia`
-  MODIFY `id_materia` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_materia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `nota`
 --
 ALTER TABLE `nota`
-  MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `pensum`
 --
 ALTER TABLE `pensum`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `periodo_escolar`
 --
 ALTER TABLE `periodo_escolar`
-  MODIFY `id_periodo_escolar` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_periodo_escolar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas`
@@ -493,7 +716,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `seccion`
 --
 ALTER TABLE `seccion`
-  MODIFY `idSeccion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idSeccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
