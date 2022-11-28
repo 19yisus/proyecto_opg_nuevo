@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
-  $this->Head(); 
-  // require_once("Models/PeriodoModel.php");
-  // $mod = new PeriodoModel();
-  // $res = $mod->GetActivo();
-  // if(!isset($res[0])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
+<?php
+$this->Head();
+// require_once("Models/PeriodoModel.php");
+// $mod = new PeriodoModel();
+// $res = $mod->GetActivo();
+// if(!isset($res[0])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
 ?>
 
 <body>
-<div class="col-md-12 bg-hero-azul h-100" id="App_vue">
-<div class="row  h-100 " >
+  <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
+    <div class="row  h-100 ">
       <!-- CONTENEDOR DE NAVBAR -->
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
-      <div class="col-md-12 px-2 overflow-scroll"  style="height:90%">
+      <div class="col-md-12 px-2 overflow-scroll" style="height:90%">
         <div class="col-md-12  mt-2 py-2 mx-auto px-2">
           <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
             <div class="col-md-7 my-auto px-3  ">
@@ -175,6 +175,23 @@
             this.periodo_activo();
           }).catch(Error => console.error(Error))
         },
+        ChangeState(id) {
+          this.id_institucion = id;
+          this.action = "ChangeStatus";
+
+          setTimeout(() => {
+            let form = new FormData(document.getElementById("Formulario"));
+            fetch(`./Controllers/InstitucionController.php`, {
+              method: "POST",
+              body: form
+            }).then(res => res.json()).then(result => {
+              ViewAlert(result.mensaje, result.estado);
+              $("#datatable").DataTable().ajax.reload(null, false);
+              this.action = "Save";
+              this.periodo_activo();
+            }).catch(error => console.error(error))
+          }, 100);
+        },
         async GetData(id) {
           await fetch(`./Controllers/InstitucionController.php?ope=ConsultOne&&id=${id}`)
             .then(res => res.json()).then(({
@@ -239,19 +256,25 @@
         },
         {
           data: "estatus_institucion",
-          render(data){
+          render(data) {
             return (data == '1') ? "Activo" : "Inactivo";
           }
         },
         {
           defaultContent: '',
           render: function(data, type, row) {
+            let classStatus = row.estatus_institucion == 1 ? 'success' : 'danger';
+            let disabled = row.estatus_institucion == 1 ? '' : 'disabled';
             let btns = `
-              <div class="d-flex justify-content-center">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.id_institucion}' class="btn btn-sm btn-info">
+              <div class="d-flex btn-group">
+                <button type="button" data-bs-toggle="modal" disabled='${disabled}' data-bs-target="#staticBackdrop" onClick="Consult(this)" data-id='${row.id_institucion}' class="btn btn-sm btn-info">
                   <i class="fa-solid fa-edit"></i>
                 </button>
-              </div>`;
+                <button type="button" onClick="CambiarEstatus(this)" data-id='${row.id_institucion}' class='btn btn-sm mx-auto btn-${classStatus}'>
+                  <i class="fas fa-power-off"></i>
+                </button>
+              </div>
+              `;
             return btns;
           }
         }
@@ -276,7 +299,7 @@
     let entidadFValida = false;
     let telefonoValida = false;
     let zonaEValida = false;
-    let entidadEValida= false;
+    let entidadEValida = false;
 
 
 
@@ -300,14 +323,14 @@
         console.log(document.getElementById("Formulario").des_institucion)
         validacion(box, boxInput);
         // app.ToggleModal();
-            descripcionValida = false;
-            direccionValida = false;
-            codigoValida = false;
-            municipioValida = false;
-            entidadFValida = false;
-            telefonoValida = false;
-            zonaEValida = false;
-            entidadEValida= false;
+        descripcionValida = false;
+        direccionValida = false;
+        codigoValida = false;
+        municipioValida = false;
+        entidadFValida = false;
+        telefonoValida = false;
+        zonaEValida = false;
+        entidadEValida = false;
       })
     });
 
@@ -362,7 +385,7 @@
           document.querySelector("#direccion_institucion").disabled = false;
         }
       }
-      
+
       if (boxInput != null && boxInput.name == "direccion_institucion") {
         if (boxInput.value.length < 1) {
           console.log('direccion')
@@ -427,8 +450,8 @@
           zonaEValida = false;
           document.querySelector('#telefono').disabled = true;
           document.querySelector('#telefono').value = '';
-        
-        }else{
+
+        } else {
           console.log('zona_educativa')
           document.querySelector('#telefono').disabled = false;
           mostrarError(false, box);
@@ -449,7 +472,7 @@
       }
 
 
-      
+
       // direccionValida codigoValida
       // console.log(descripcionValida, codigoValida)
       // ARREGLAR VALIDACIONES

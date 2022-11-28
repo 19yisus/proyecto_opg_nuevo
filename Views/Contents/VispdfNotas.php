@@ -627,9 +627,9 @@
 														<td>
 															<input type="text" class="plantel_input" value="Director(a)"><br>
 															<input type="text" class="plantel_input" value="Apellidos y Nombres"><br>
-															<input type="text" class="plantel_input" value=""><br>
+															<input type="text" class="plantel_input" value="<?php echo isset($director['nombre_persona']) ? $director['nombre_persona'].$director['apellido_persona'] : ''; ?>"><br>
 															<input type="text" class="plantel_input" value="Cedula de Identidad"><br>
-															<input type="text" class="plantel_input" value=""><br>
+															<input type="text" class="plantel_input" value="<?php echo isset($director['nacionalidad_persona']) ? $director['nacionalidad_persona'].$director['cedula_persona'] : ''; ?>"><br>
 															<input type="text" class="plantel_input" value="Firma: "><br>
 															<input type="text" class="plantel_input" value="Para efectos de su Validez Nacional">
 														</td>

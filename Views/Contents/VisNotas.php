@@ -2,6 +2,11 @@
 <html lang="en">
 <?php
 $this->Head();
+require_once("./Models/InstitucionModel.php");
+$mod = new InstitucionModel();
+$datos_institucion = $mod->GetActivo();
+if (!isset($datos_institucion[0])) header("Location: ./VisInstitucion?codigo=400&&mensaje=no existen datos de la institución activo, debes de registrar uno");
+
 require_once("Models/PeriodoModel.php");
 $mod = new PeriodoModel();
 $res = $mod->GetActivo('algo');

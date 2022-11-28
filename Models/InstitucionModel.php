@@ -122,6 +122,47 @@ class InstitucionModel extends DB
     }
   }
 
+  public function ChangeStatus()
+  {
+    try {
+      $pdo = null;
+      $result = $this->consult("SELECT estatus_institucion FROM institucion WHERE id_institucion = $this->id_institucion ");
+      
+      if ($result['estatus_institucion'] == 0) {
+        $result = $this->consult("SELECT * FROM institucion WHERE estatus_institucion = 1 AND id_institucion != $this->id_institucion ");
+
+        if (!isset($result[0])) {
+          $pdo = $this->driver->prepare("UPDATE institucion SET estatus_institucion = 1 WHERE id_institucion = :id ;");
+          $pdo->bindParam(':id', $this->id_institucion);
+          if ($pdo->execute()) {
+            $this->registrar_bitacora_sistema([
+              'table' => "institucion",
+              'descripcion' => "CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)",
+              'id_registro' => $this->id_institucion
+            ]);
+
+            $this->ResJSON("Operacion Exitosa!", "success");
+          } else $this->ResJSON("Operacion Fallida!", "error");
+        } else $this->ResJSON("No se pueden tener dos periodos escolares activos!", "error");
+      } else {
+        $pdo = $this->driver->prepare("UPDATE institucion SET estatus_institucion = 0 WHERE id_institucion = :id ;");
+        $pdo->bindParam(':id', $this->id_institucion);
+        if ($pdo->execute()) {
+          $this->registrar_bitacora_sistema([
+            'table' => "institucion",
+            'descripcion' => "CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)",
+            'id_registro' => $this->id_institucion
+          ]);
+
+          $this->ResJSON("Operacion Exitosa!", "success");
+        } else $this->ResJSON("Operacion Fallida!", "error");
+      }
+    } catch (PDOException $e) {
+      error_log("PeriodoModel(58) => " . $e->getMessages());
+      $this->ResJSON("Operacion Fallida! (error_log)", "error");
+    }
+  }
+
   public function GetAll()
   {
     try {

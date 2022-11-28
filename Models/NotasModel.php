@@ -255,6 +255,19 @@ class NotasModel extends DB
     }
   }
 
+  public function director_activo()
+	{
+		try {
+			$datosDirector = $this->consult("SELECT * FROM profesor
+					INNER JOIN personas ON personas.cedula_persona = profesor.cedula_profesor WHERE profesor.estatus_profesor = 1 ;");
+
+			return $datosDirector;
+		} catch (PDOException $e) {
+			error_log("ProfesorModel(78) => " . $e->getMessages());
+			$this->ResJSON("Operacion Fallida! (error_log)", "error");
+		}
+	}
+
   public function ConsultaDatosAcademicos($cedula)
   {
     $this->cedula_estudiante = $cedula;

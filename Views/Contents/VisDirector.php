@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
-  $this->Head(); 
-  require_once("Models/PeriodoModel.php");
-  $mod = new PeriodoModel();
-  $res = $mod->GetActivo('algo');
-  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=400&&mensaje=no existe periodo activo, debes de registrar uno");
+<?php
+$this->Head();
+require_once("./Models/InstitucionModel.php");
+$mod = new InstitucionModel();
+$datos_institucion = $mod->GetActivo();
+if (!isset($datos_institucion[0])) header("Location: ./VisInstitucion?codigo=400&&mensaje=no existen datos de la institución activo, debes de registrar uno");
+
+require_once("Models/PeriodoModel.php");
+$mod = new PeriodoModel();
+$res = $mod->GetActivo('algo');
+if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=400&&mensaje=no existe periodo activo, debes de registrar uno");
 ?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
-  <div class="row  h-100 " >
+    <div class="row  h-100 ">
       <!-- CONTENEDOR DE NAVBAR -->
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
-      <div class="col-md-12 px-2 overflow-scroll"  style="height:90%">
+      <div class="col-md-12 px-2 overflow-scroll" style="height:90%">
         <div class="col-md-12  mt-2 py-2 mx-auto px-2">
           <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
             <div class="col-md-7 my-auto px-3  ">
-              <h2 class="fw-bold text-start my-auto text-dark">Gestión de Profesores</h3>
+              <h2 class="fw-bold text-start my-auto text-dark">Gestión de Directores</h3>
             </div>
             <div class="col-md-2 p-3 card bg-primary ">
               <h5 class="fw-bold text-light text-center my-auto">Periodo: {{des_periodo}}</h5>
@@ -63,7 +68,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header bg-hero-azul fw-bold">
-              <h5 class="modal-title" id="staticBackdropLabel">Registro Profesor</h5>
+              <h5 class="modal-title" id="staticBackdropLabel">Registro Director</h5>
               <button type="button" @click="LimpiarForm" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!--
@@ -247,8 +252,8 @@
           periodosFiltro: [],
           formulario_valido: false,
           evitandoDobleSubmit: false,
-          info_pensum_1:"",
-          info_pensum_2:"",
+          info_pensum_1: "",
+          info_pensum_2: "",
           bucle: 1,
           fecha_maxima: "",
           action: "Save",
@@ -418,9 +423,9 @@
           } else ViewAlert("No hay suficientes secciones registradas", "error");
 
         },
-        async Get_pengums(){
+        async Get_pengums() {
           await fetch(`./Controllers/PensumController.php?ope=ConsulAll`)
-          .then(res => res.json()).then(({
+            .then(res => res.json()).then(({
               data
             }) => {
               if (data[0]) {
@@ -723,27 +728,30 @@
         let cedulaRepetida = false;
 
         if (boxInput.value.length >= 7) {
-          await fetch(`./Controllers/EstudiantesController.php?ope=VerificarCedula&&id=${boxInput.value}`)
-            .then(response => response.json())
-            .then(result => {
-              if (result.data.cedula_persona) {
-                alert("Esta cedula ya esta registrada")
-                cedulaRepetida = true;
-                document.querySelector('#nombre').disabled = false;
-              } else {
-                document.querySelector('#nombre').disabled = true;
-                document.querySelector('#nombre').value = "";
-                document.querySelector('#apellido').disabled = true;
-                document.querySelector('#apellido').value = "";
-                document.querySelector('#fecha_n_persona').disabled = true;
-                document.querySelector('#fecha_n_persona').value = "";
-                document.querySelector('#correo_persona').disabled = true;
-                document.querySelector('#correo_persona').value = "";
-                document.querySelector('#direccion').disabled = true;
-                document.querySelector('#direccion').value = "";
-                cedulaRepetida = false;
-              }
-            }).catch(error => console.error(error))
+          if (app.action != "Update") {
+            await fetch(`./Controllers/EstudiantesController.php?ope=VerificarCedula&&id=${boxInput.value}`)
+              .then(response => response.json())
+              .then(result => {
+                if (result.data.cedula_persona) {
+                  alert("Esta cedula ya esta registrada")
+                  cedulaRepetida = true;
+                  document.querySelector('#nombre').disabled = false;
+                } else {
+                  document.querySelector('#nombre').disabled = true;
+                  document.querySelector('#nombre').value = "";
+                  document.querySelector('#apellido').disabled = true;
+                  document.querySelector('#apellido').value = "";
+                  document.querySelector('#fecha_n_persona').disabled = true;
+                  document.querySelector('#fecha_n_persona').value = "";
+                  document.querySelector('#correo_persona').disabled = true;
+                  document.querySelector('#correo_persona').value = "";
+                  document.querySelector('#direccion').disabled = true;
+                  document.querySelector('#direccion').value = "";
+                  cedulaRepetida = false;
+                }
+              }).catch(error => console.error(error))
+          }
+
         } else cedulaRepetida = false;
 
         if (boxInput.value.length < 7 || boxInput.value.length > 8) {
@@ -975,8 +983,6 @@
         return false;
       }
     });
-
-
   </script>
 
   <!-- <script src="./views/js/Seccion/index.js"></script> -->

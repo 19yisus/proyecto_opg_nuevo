@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
-  require_once("Models/PeriodoModel.php");
-  $mod = new PeriodoModel();
-  $res = $mod->GetActivo('algo');
-  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=400&&mensaje=no existe periodo activo, debes de registrar uno");
-  $this->Head(); 
+<?php
+require_once("./Models/InstitucionModel.php");
+$mod = new InstitucionModel();
+$datos_institucion = $mod->GetActivo();
+if (!isset($datos_institucion[0])) header("Location: ./VisInstitucion?codigo=400&&mensaje=no existen datos de la institución activo, debes de registrar uno");
+
+require_once("Models/PeriodoModel.php");
+$mod = new PeriodoModel();
+$res = $mod->GetActivo('algo');
+if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=400&&mensaje=no existe periodo activo, debes de registrar uno");
+$this->Head();
 ?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
-  <div class="row  h-100 " >
+    <div class="row  h-100 ">
       <!-- CONTENEDOR DE NAVBAR -->
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
-      <div class="col-md-12 px-2 overflow-scroll"  style="height:90%">
+      <div class="col-md-12 px-2 overflow-scroll" style="height:90%">
         <div class="col-md-12  mt-2 py-2 mx-auto px-2">
           <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
             <div class="col-md-7 my-auto px-3  ">
@@ -71,7 +76,7 @@
               -->
             <form action="#" @submit.preventDefault="SendData" id="Formulario" class="needs-validation" novalidate autocomplete="off">
               <div class="col-md-12 mx-auto rounded border d-flex justify-content-between mt-2 row">
-              <h5 class="text-start col-md-8">Pensum: {{info_pensum_1}} | {{info_pensum_2}}</h5>
+                <h5 class="text-start col-md-8">Pensum: {{info_pensum_1}} | {{info_pensum_2}}</h5>
                 <h5 class="text-end col-md-4">Periodo: {{des_periodo}}</h5>
               </div>
               <div class="modal-body row py-2" style="padding: 0 70px ;">
@@ -162,8 +167,8 @@
           registro_btn_disabled: true,
           tipo_pensum: "",
           pensums: [],
-          info_pensum_1:"",
-          info_pensum_2:"",
+          info_pensum_1: "",
+          info_pensum_2: "",
           action: "Save",
         }
       },
@@ -187,16 +192,16 @@
             this.periodo_activo();
           }).catch(Error => console.error(Error))
         },
-        ValidaPensum(e){
-          let pensum = this.pensums.filter( item =>{
-            if(item.id == e.target.value) return item;
+        ValidaPensum(e) {
+          let pensum = this.pensums.filter(item => {
+            if (item.id == e.target.value) return item;
           })[0]
 
           this.tipo_pensum = pensum.anios_abarcados;
         },
-        async Get_pengums(){
+        async Get_pengums() {
           await fetch(`./Controllers/PensumController.php?ope=ConsulActivos`)
-          .then(res => res.json()).then(({
+            .then(res => res.json()).then(({
               data
             }) => {
               if (data[0]) {
@@ -205,7 +210,7 @@
                 if (data[1]) {
                   this.info_pensum_2 = `${data[1].cod_pensum} - ${data[1].anios_abarcados == 'B' ? 'Basica' : 'Diversificado'}`;
                 }
-              }else{
+              } else {
                 this.registro_btn_disabled = true;
               }
             }).catch(Error => console.error(Error))
@@ -262,8 +267,8 @@
             .then(res => res.json()).then(({
               data
             }) => {
-              let res = data.filter( item =>{
-                if(item.estatus_pensum == '1') return item;
+              let res = data.filter(item => {
+                if (item.estatus_pensum == '1') return item;
               });
               this.pensums = res;
             }).catch(Error => console.error(Error))
@@ -277,13 +282,13 @@
           this.id = "";
           this.des_materia = "";
           this.id_pensum = "";
-          this.primero =""
-          this.segundo =""
-          this.tercero =""
-          this.cuarto =""
-          this.quinto =""
+          this.primero = ""
+          this.segundo = ""
+          this.tercero = ""
+          this.cuarto = ""
+          this.quinto = ""
           this.sexto = ""
-          
+
           document.getElementById("primero").checked = false;
           document.getElementById("segundo").checked = false;
           document.getElementById("tercero").checked = false;
@@ -308,8 +313,7 @@
         url: "./Controllers/MateriasController.php?ope=ConsulAll",
         dataSrc: "data"
       },
-      columns: [
-        {
+      columns: [{
           data: "des_materia",
           render(data) {
             return data.toUpperCase()

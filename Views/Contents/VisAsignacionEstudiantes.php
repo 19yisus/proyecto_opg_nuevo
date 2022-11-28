@@ -2,6 +2,11 @@
 <html lang="en">
 <?php
 $this->Head();
+require_once("./Models/InstitucionModel.php");
+$mod = new InstitucionModel();
+$datos_institucion = $mod->GetActivo();
+if (!isset($datos_institucion[0])) header("Location: ./VisInstitucion?codigo=400&&mensaje=no existen datos de la institución activo, debes de registrar uno");
+
 require_once("Models/PeriodoModel.php");
 $mod = new PeriodoModel();
 $res = $mod->GetActivo('algo');
@@ -10,11 +15,11 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
-  <div class="row  h-100 " >
+    <div class="row  h-100 ">
       <!-- CONTENEDOR DE NAVBAR -->
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
-      <div class="col-md-12 px-2 overflow-scroll"  style="height:90%">
+      <div class="col-md-12 px-2 overflow-scroll" style="height:90%">
         <div class="col-md-12  mt-2 py-2 mx-auto px-2">
           <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
             <div class="col-md-7 my-auto px-3  ">

@@ -12,6 +12,10 @@ if (isset($_POST['ope'])) {
       UpdateDatos();
       break;
 
+    case 'ChangeStatus':
+      ChangeStatusData();
+      break;
+
     default:
       die("No hay datos");
       break;
@@ -51,6 +55,13 @@ function GetDatas()
 {
   $InstitucionModel = new InstitucionModel();
   $InstitucionModel->GetAll();
+}
+
+function ChangeStatusData()
+{
+  $InstitucionModel = new InstitucionModel();
+  $InstitucionModel->SetData($_POST);
+  $InstitucionModel->ChangeStatus();
 }
 
 function GetData()

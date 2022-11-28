@@ -40,7 +40,7 @@
               <a class="list-group-item list-group-item-action bg-light" href="./VisPensum"><i class="fas fa-book-open mx-2"></i>Pensum</a>
               <a class="list-group-item list-group-item-action bg-light" href="./VisSeccion"><i class="fas fa-bars mx-2"></i>Secciones</a>
               <a class="list-group-item list-group-item-action bg-light" href="./VisMaterias"><i class="fas fa-atlas mx-2"></i>Materias</a>
-              <!-- <a class="list-group-item list-group-item-action bg-light" href="./VisProfesor"><i class="fas fa-user-tie mx-2"></i>Profesores</a> -->
+              <a class="list-group-item list-group-item-action bg-light" href="./VisDirector"><i class="fas fa-user-tie mx-2"></i>Director</a>
               <a class="list-group-item list-group-item-action bg-light" href="./VisEstudiantes"><i class="fas fa-user-edit mx-2"></i>Estudiantes</a>
 
             </ul>
