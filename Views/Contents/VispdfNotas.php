@@ -14,7 +14,7 @@
 					<div>
 						<div class="planEstudio" >
 							<span class="title">I. Plan de Estudio:</span>
-							<span class="educacion-media">EDUCACIÓN MEDIA GENERAL </span> Código: <input type="text" class="codigo" value="30120">
+							<span class="educacion-media">EDUCACIÓN MEDIA GENERAL </span> Código: <input type="text" class="codigo" value="<?php echo $code_pensum;?>">
 						</div>
 						<div class="planFecha">
 							<span class="title">Lugar y Fecha de Expedición: </span><input type="text" class="lugar-fecha" value="AGUA BLANCA <?php echo $fecha_actual; ?>">
@@ -23,13 +23,13 @@
 							<span class="title">II. Datos del Plantel o Zona Educativa que Emite la certificación: </span>
 						</div>
 						<div class="datosPlantel">
-							Código: <input type="text" class="cedulaE" value="S1185D1801"> Nombre:<span class="nombreInstitución">UNIDAD EDUCATIVA NACIONAL ÓSCAR PICÓN GIACOPÍNI</span>
+							Código: <input type="text" class="cedulaE" value="<?php echo strtoupper($inst['codigo_institucion']);?>"> Nombre:<span class="nombreInstitución"><?php echo strtoupper($inst['des_institucion']);?></span>
 						</div>
 						<div class="datosPlantel">
-							Dirección:<input type="text" class="ubicacion" value="PROLONGACIÓN CALLE 10 AGUA BLANCA"> Teléfono: <input type="text" class="telefono" value="0424-5883315">
+							Dirección:<input type="text" class="ubicacion" value="<?php echo strtoupper($inst['direccion_institucion']);?>"> Teléfono: <input type="text" class="telefono" value="<?php echo $inst['telefono'];?>">
 						</div>
 						<div class="datosPlantel">
-							Municipio:<span class="municipio">AGUA BLANCA</span> Entidad Federal:<span class="entidadF">PORTUGUESA</span> Zona Educativa:<span class="zonaE">PORTUGUESA</span>
+							Municipio:<span class="municipio"><?php echo strtoupper($inst['municipio']);?></span> Entidad Federal:<span class="entidadF"><?php echo strtoupper($inst['entidad_federal']); ?></span> Zona Educativa:<span class="zonaE"><?php echo strtoupper($inst['zona_educativa']);?></span>
 						</div>
 						<div class="datosPlantel">
 							<span class="title"> III. Datos de Identificación del Estudiante: </span>

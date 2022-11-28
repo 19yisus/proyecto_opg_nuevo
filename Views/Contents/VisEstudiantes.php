@@ -5,16 +5,16 @@
   require_once("Models/PeriodoModel.php");
   $mod = new PeriodoModel();
   $res = $mod->GetActivo('algo');
-  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
+  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=400&&mensaje=no existe periodo activo, debes de registrar uno");
 ?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
-    <div class="row">
+  <div class="row  h-100 " >
       <!-- CONTENEDOR DE NAVBAR -->
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
-      <div class="col-md-12 px-2">
+      <div class="col-md-12 px-2 overflow-scroll"  style="height:90%">
         <div class="col-md-12  mt-2 py-2 mx-auto px-2">
           <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
             <div class="col-md-7 my-auto px-3  ">
@@ -124,7 +124,7 @@
                 <div class="col-md-6 " style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box form-box-fecha" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Fecha de Nacimiento:</span>
-                    <input type="date" :max="fecha_maxima" name="fecha_n_persona" disabled v-model="fecha_n" class="form-control form-control-sm" id="fecha_n_persona" placeholder="dd/mm/aaaa" required style="width:50%;" disabled>
+                    <input type="date" :min="fecha_minima" :max="fecha_maxima" name="fecha_n_persona" disabled v-model="fecha_n" class="form-control form-control-sm" id="fecha_n_persona" placeholder="dd/mm/aaaa" required style="width:50%;" disabled>
                     <span class="error-text">Formato o fecha inválida</span>
                   </div>
 
@@ -215,6 +215,7 @@
           formulario_valido: false,
           desactivado: false,
           fecha_maxima: "",
+          fecha_minima: "",
           action: "Save",
         }
       },
@@ -377,7 +378,8 @@
             return false;
           }
           this.id_periodo = res.id_periodo_escolar;
-          this.fecha_maxima = moment(res.fecha_inicio).subtract(12, "years").format("YYYY-MM-DD");
+          this.fecha_maxima = moment(res.fecha_inicio).subtract(11, "years").format("YYYY-MM-DD");
+          this.fecha_minima = moment(res.fecha_inicio).subtract(18, "years").format("YYYY-MM-DD");
         },
       },
       computed: {
@@ -632,8 +634,8 @@
             .then(result => {
               if (result.data.cedula_persona) {
                 alert("Esta cedula ya esta registrada")
-                cedulaRepetida = true;
-                document.querySelector('#nombre').disabled = false;
+                cedulaRepetida = false;
+                document.querySelector('#nombre').disabled = true;
               } else {
                 document.querySelector('#nombre').disabled = true;
                 document.querySelector('#nombre').value = "";

@@ -194,9 +194,21 @@ class NotasModel extends DB
   private function desactiva_asignacion_seccion()
   {
     $slq_asignacion_seccion = "UPDATE asignacion_estudiante_seccion SET estatus_asig_estu = 0
-        WHERE cedula_estu_asignacion = '$this->cedula_estudiante' ";
+        WHERE cedula_estu_asignacion = '$this->cedula_estudiante' AND id_periodo = $this->id_periodo";
 
     $this->driver->query($slq_asignacion_seccion);
+  }
+
+  public function reprobar_estudiante()
+  {
+    // foreach ($this->materias as $materia) {
+    //   $idNota = $materia['id_nota'];
+    //   $sql_estado_notas = "UPDATE nota SET estatusNotas = 0 WHERE idNota = $idNota ;";
+
+    //   $this->driver->query($sql_estado_notas);
+    // }
+    $this->desactiva_asignacion_seccion();
+    return $this->ResJSON("El estudiante con la cedula: $this->cedula_estudiante, ah reprobado!", "success");
   }
 
   public function ChangeStatus()
@@ -277,16 +289,16 @@ class NotasModel extends DB
     $seccion = $result_consulta_estudiante['idSeccion'];
     $seguimiento = $result_consulta_estudiante['ano_seguimiento'];
     $seguimiento = intval($seguimiento);
-    if ($seguimiento < 4){
-      if($seguimiento == 1) $string = "materia.primero = 1";
-      if($seguimiento == 2) $string = "materia.segundo = 1";
-      if($seguimiento == 3) $string = "materia.tercero = 1";
+    if ($seguimiento < 4) {
+      if ($seguimiento == 1) $string = "materia.primero = 1";
+      if ($seguimiento == 2) $string = "materia.segundo = 1";
+      if ($seguimiento == 3) $string = "materia.tercero = 1";
       $clasificacion = 'B';
-    }else{
+    } else {
       $clasificacion = 'D';
-      if($seguimiento == 4) $string = "materia.cuarto = 1";
-      if($seguimiento == 5) $string = "materia.quinto = 1";
-      if($seguimiento == 6) $string = "materia.sexto = 1";
+      if ($seguimiento == 4) $string = "materia.cuarto = 1";
+      if ($seguimiento == 5) $string = "materia.quinto = 1";
+      if ($seguimiento == 6) $string = "materia.sexto = 1";
     }
     // $sql_pensum = "SELECT * FROM pensum WHERE anios_abarcados = '$clasificacion' ;";
     $resultPensum = $this->consultAll("SELECT materia.* FROM materia 
@@ -354,7 +366,7 @@ class NotasModel extends DB
     ]);
   }
 
-  public function ConsultaParaPdf($cedula)
+  public function ConsultaParaPdf($cedula, $periodo)
   {
     $sqlDatos = "SELECT * FROM estudiante
         INNER JOIN personas ON personas.cedula_persona = estudiante.cedula_estudiante 
@@ -365,17 +377,20 @@ class NotasModel extends DB
     INNER JOIN seccion ON seccion.idSeccion = nota.seccion_id
     INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = nota.periodo_escolar_id
     INNER JOIN pensum ON pensum.periodo_id = periodo_escolar.id_periodo_escolar
-    WHERE nota.cedula_estudiante = '$cedula' AND nota.estatusNotas = 0 GROUP BY nota.idNota";
-    
-    // var_dump($sqlNotasHistoricas);
-    // die("DDD");
-    
+    WHERE nota.cedula_estudiante = '$cedula' AND periodo_escolar.id_periodo_escolar <= $periodo AND nota.estatusNotas = 0 GROUP BY nota.idNota";
+
+    $sqlInstitucion = "SELECT institucion.* FROM periodo_escolar 
+    INNER JOIN institucion on institucion.id_institucion = periodo_escolar.institucion_id
+    WHERE periodo_escolar.estatus_periodo_escolar = 1";
+
     $result_datos_estudiante = $this->consult($sqlDatos);
+    $result_datos_institucion = $this->consult($sqlInstitucion);
     $result_datos_notas = $this->consultAll($sqlNotasHistoricas);
 
     return [
       'datos' => $result_datos_estudiante,
-      'notas' => $result_datos_notas
+      'notas' => $result_datos_notas,
+      'institucion' => $result_datos_institucion
     ];
   }
 

@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
-  $this->Head(); 
-  require_once("Models/PeriodoModel.php");
-  $mod = new PeriodoModel();
-  $res = $mod->GetActivo('algo');
-  if(!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?no existe periodo activo, debes de registrar uno");
+<?php
+$this->Head();
+require_once("Models/PeriodoModel.php");
+$mod = new PeriodoModel();
+$res = $mod->GetActivo('algo');
+if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=400&&mensaje=no existe periodo activo, debes de registrar uno");
 ?>
 
 <body>
   <div class="col-md-12 bg-hero-azul h-100" id="App_vue">
-    <div class="row">
+    <div class="row  h-100 ">
       <!-- CONTENEDOR DE NAVBAR -->
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
-      <div class="col-md-12">
+      <div class="col-md-12 px-2 overflow-scroll" style="height:90%">
         <div class="col-md-12  mt-2 py-2 mx-auto px-2">
           <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
             <div class="col-md-7 my-auto px-3  ">
@@ -56,6 +56,7 @@
             </div>
             <form action="./VisCreatePdfNotas" method="GET" target="__blank" id="Form_pdf">
               <input type="hidden" name="cedula" v-model="cedula_estudiante">
+              <input type="hidden" name="periodo" v-model="id_periodo">
             </form>
             <div class="col ">
               <table class="table border" id="datatable">
@@ -149,19 +150,24 @@
                         </td>
 
                         <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center">
-                          <input :value="item.recuperativo_1" :disabled="item.estatus_nota == 0" name="rp1[]" type="number" max="20" min="0" maxlength="2" class="form-control form-control-sm" id="" placeholder="">
+                          <input :value="item.recuperativo_1" :disabled="item.estatus_nota == 0" name="rp1[]" type="number" @keypress="validar" max="20" min="1" maxlength="2" class="form-control form-control-sm" id="" placeholder="">
                         </td>
-                        <input v-else type="hidden" name="rp1[]" value="0" :disabled="item.estatus_nota == 0">
+                        <input v-else type="hidden" name="rp1[]" value="1" :disabled="item.estatus_nota == 0">
 
-                        <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center"> <input :value="item.recuperativo_2" :disabled="item.estatus_nota == 0" name="rp2[]" type="number" max="20" min="0" maxlength="2" class="form-control form-control-sm" id="" placeholder=""></td>
-                        <input v-else type="hidden" name="rp2[]" value="0" :disabled="item.estatus_nota == 0">
-
-                        <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center"> <input :value="item.recuperativo_3" :disabled="item.estatus_nota == 0" name="rp3[]" type="number" max="20" min="0" maxlength="2" class="form-control form-control-sm" id="" placeholder=""></td>
-                        <input v-else type="hidden" name="rp3[]" value="0" :disabled="item.estatus_nota == 0">
-
-                        <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center"> <input :value="item.recuperativo_4" :disabled="item.estatus_nota == 0" name="rp4[]" type="number" max="20" min="0" maxlength="2" class="form-control form-control-sm" id="" placeholder="">
+                        <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center">
+                          <input :value="item.recuperativo_2" :disabled="item.estatus_nota == 0" name="rp2[]" type="number" @keypress="validar" max="20" min="1" maxlength="2" class="form-control form-control-sm" id="" placeholder="">
                         </td>
-                        <input v-else type="hidden" name="rp4[]" value="0" :disabled="item.estatus_nota == 0">
+                        <input v-else type="hidden" name="rp2[]" value="1" :disabled="item.estatus_nota == 0">
+
+                        <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center">
+                          <input :value="item.recuperativo_3" :disabled="item.estatus_nota == 0" name="rp3[]" type="number" @keypress="validar" max="20" min="1" maxlength="2" class="form-control form-control-sm" id="" placeholder="">
+                        </td>
+                        <input v-else type="hidden" name="rp3[]" value="1" :disabled="item.estatus_nota == 0">
+
+                        <td v-if="item.nota_final < 10 && item.nota_final != null" class="text-center">
+                          <input :value="item.recuperativo_4" :disabled="item.estatus_nota == 0" name="rp4[]" type="number" @keypress="validar" max="20" min="1" maxlength="2" class="form-control form-control-sm" id="" placeholder="">
+                        </td>
+                        <input v-else type="hidden" name="rp4[]" value="1" :disabled="item.estatus_nota == 0">
                       </tr>
                     </tbody>
                   </table>
@@ -172,6 +178,9 @@
                 <input type="hidden" name="ope" v-model="action">
                 <button type="submit" value="Aprobar" class="btn btn-sm btn-success" v-if="aprobar">
                   <i class="fa-regular fa-circle-check"></i>Promocionar
+                </button>
+                <button type="submit" value="Reprobar" @click="this.action = 'Reprobar'" class="btn btn-sm btn-warning" v-if="if_reprobar">
+                  <i class="fa-regular fa-circle-check"></i>Reprobar
                 </button>
                 <button type="submit" value="Save" :disabled="!boton_desactivado" class="btn btn-sm btn-primary">
                   <i class="fa-regular fa-circle-check"></i>GUARDAR
@@ -224,6 +233,7 @@
             if (parseInt(e.target.value) <= 0) e.target.value = 1;
           }, 100);
         },
+
         SendData(e) {
           this.action = e.submitter.value;
           e.preventDefault();
@@ -333,6 +343,26 @@
       watch: {
         id_seccion(seccion) {
           $("#datatable").DataTable().ajax.url(`./Controllers/NotasController.php?ope=ConsulAll&&idSeccion=${this.id_seccion}`).load();
+        }
+      },
+      computed: {
+        if_reprobar() {
+          console.log(this.aprobar, this.boton_desactivado, this.recuperacion)
+          if (this.aprobar == false && this.boton_desactivado == true) {
+            if (this.recuperacion == true) {
+              let reprobar = true;
+              this.materias.forEach(item => {
+                if (parseInt(item.recuperativo_1) > 10 && item.estatus_nota == '1') reprobar = false;
+                if (parseInt(item.recuperativo_2) > 10 && item.estatus_nota == '1') reprobar = false;
+                if (parseInt(item.recuperativo_3) > 10 && item.estatus_nota == '1') reprobar = false;
+                if (parseInt(item.recuperativo_4) > 10 && item.estatus_nota == '1') reprobar = false;
+              })
+
+              return reprobar;
+            }
+          }
+
+          return false;
         }
       },
       async mounted() {

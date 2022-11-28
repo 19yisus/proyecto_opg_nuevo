@@ -69,7 +69,7 @@ class InstitucionModel extends DB
       //   telefono, estatus_institucion
       //   ) VALUES('$this->des_institucion', '$this->codigo_institucion','$this->direccion_institucion','$this->municipio,'$this->entidad_federal','$this->zona_educativa','$this->telefono',0);");
 
-      if ($pdo->execute()){
+      if ($pdo->execute()) {
         $id = $this->driver->lastInsertId();
         $this->registrar_bitacora_sistema([
           'table' => "Institucion",
@@ -77,8 +77,7 @@ class InstitucionModel extends DB
           'id_registro' => $id
         ]);
         $this->ResJSON("Operacion Exitosa!", "success");
-      }
-      else $this->ResJSON("Operacion Fallida!", "error");
+      } else $this->ResJSON("Operacion Fallida!", "error");
     } catch (PDOException $e) {
       error_log("InstitucionModel(line0------) => " . $e->getMessages());
       $this->ResJSON("Operacion Fallida!", "error");
@@ -108,7 +107,7 @@ class InstitucionModel extends DB
       $pdo->bindParam(':zona', $this->zona_educativa);
       $pdo->bindParam(':telefono', $this->telefono);
 
-      if ($pdo->execute()){
+      if ($pdo->execute()) {
         $this->registrar_bitacora_sistema([
           'table' => "institucion",
           'descripcion' => "ACTUALIZACION",
@@ -116,8 +115,7 @@ class InstitucionModel extends DB
         ]);
 
         $this->ResJSON("Operacion Exitosa!", "success");
-      }
-      else $this->ResJSON("Operacion Fallida!", "error");
+      } else $this->ResJSON("Operacion Fallida!", "error");
     } catch (PDOException $e) {
       error_log("InstitucionModel(line1------) => " . $e->getMessages());
       $this->ResJSON("Operacion Fallida!", "error");
@@ -151,10 +149,26 @@ class InstitucionModel extends DB
   public function GetActivo()
   {
     try {
-      $result =$this->consult("SELECT * FROM institucion WHERE estatus_institucion = 1;");
+      $result = $this->consult("SELECT * FROM institucion WHERE estatus_institucion = 1;");
 
       if (isset($result[0])) return $result;
       else [];
+    } catch (PDOException $e) {
+      error_log("InstitucionModel(82) => " . $e->getMessages());
+      $this->ResJSON("Operacion Fallida! (error_log)", "error");
+    }
+  }
+
+  public function GetBitacora()
+  {
+    try {
+      $result = $this->consultAll("SELECT * FROM bitacora_sistema 
+      INNER JOIN usuario ON usuario.id = bitacora_sistema.user_id
+      INNER JOIN roles ON roles.id = usuario.id_rol
+      ;");
+
+      if (isset($result[0])) $this->ResDataJSON($result);
+      else $this->ResDataJSON([]);
     } catch (PDOException $e) {
       error_log("InstitucionModel(82) => " . $e->getMessages());
       $this->ResJSON("Operacion Fallida! (error_log)", "error");

@@ -1,8 +1,7 @@
 <?php
     require_once("./Models/NotasModel.php");
     $nota_model = new NotasModel();
-    $datos = $nota_model->ConsultaParaPdf($_GET['cedula']);
-
+    $datos = $nota_model->ConsultaParaPdf($_GET['cedula'], $_GET['periodo']);
     if(!isset($datos['notas'][0])){
         echo "<script>
             alert('No hay datos suficiente para generar este reporte');
@@ -12,6 +11,7 @@
 
     $resultado = $datos['datos'];
     $notas = $datos['notas'];
+    $inst = $datos['institucion'];
 
     $nacionalidad = $resultado['nacionalidad_persona'];
     $cedula = $resultado['cedula_estudiante'];
@@ -24,8 +24,9 @@
     $seguimiento = $resultado['seguimiento_estudiante'];
     $primero = $segundo = $tercero = $cuarto = $quinto = $sexto = [];
     $fecha_actual = date("d/m/Y");
-    $code_pensum_basica = $datos['notas'][2]['cod_pensum'];
-    $code_pensum_diversificado = $datos['notas'][4]['cod_pensum'];
+    $code_pensum = $notas[sizeof($notas) - 1]['cod_pensum'];
+    // $code_pensum_basica = $datos['notas'][2]['cod_pensum'];
+    // $code_pensum_diversificado = $datos['notas'][4]['cod_pensum'];
 
     // var_dump($notas);
     // die("SS");

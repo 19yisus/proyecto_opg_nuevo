@@ -9,37 +9,29 @@ $preguntas = $mod->GetPreguntas();
 ?>
 
 <body>
-  <div class="col-md-12" id="App_vue">
-    <div class="row">
+<div class="col-md-12 bg-hero-azul h-100" id="App_vue">
+  <div class="row  h-100 " >
       <!-- CONTENEDOR DE NAVBAR -->
       <?php $this->Navbar(); ?>
       <!-- CONTENEDOR DE TABLA Y BUSCADOR -->
-      <div class="col-md-12">
-        <div class="col-md-12 mx-auto px-2">
-          <div class="col-md-3 p-3 card ml-3 bg-hero mt-2">
-            <h5 class="fw-bold text-light text-center my-auto">Periodo: {{des_periodo}}</h5>
+      <div class="col-md-12 px-2 overflow-scroll"  style="height:90%">
+        <div class="col-md-12  mt-2 py-2 mx-auto px-2">
+          <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
+            <div class="col-md-7 my-auto px-3  ">
+              <h2 class="fw-bold text-start my-auto text-dark">Gestión de Usuarios</h3>
+            </div>
+            <div class="col-md-2 p-3 card bg-primary ">
+              <h5 class="fw-bold text-light text-center my-auto">Periodo: {{des_periodo}}</h5>
+            </div>
           </div>
         </div>
 
 
-        <div class="col-md-8 mx-auto " style="margin-top:5%;">
-
-          <!-- input de busqueda -->
-          <div class="col-md-12 mx-auto">
-            <div class="col-md-7 mx-auto">
-              <h3 class="fw-bold text-center text-success">Gestión de Usuarios</h3>
-            </div>
-          </div>
-          <div class="col-md-12 row justify-content-end" style="margin: 0; padding: 0;">
+        <div class="col-md-12 px-2 mx-auto  ">
 
 
 
-            <div class="col-md-2 justify-content-end" style="margin: 0; padding: 0;">
-              <button type="button" class="btn btn-sm btn-primary" @click="LimpiarForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 10px">
-                <i class="fa-regular fa-user"></i> AGREGAR
-              </button>
-            </div>
-          </div>
+
 
           <!-- contenedor de la tabla -->
           <div class="col-md-12 card p-2 shadow">

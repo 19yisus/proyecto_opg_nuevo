@@ -28,6 +28,9 @@ if (isset($_GET['ope'])) {
     case 'ConsultOne':
       GetData();
       break;
+    case 'ConsulAll_bitacora':
+      GetBitacora();
+      break;
   }
 }
 
@@ -54,4 +57,10 @@ function GetData()
 {
   $InstitucionModel = new InstitucionModel();
   $InstitucionModel->GetOne();
+}
+
+function GetBitacora()
+{
+  $InstitucionModel = new InstitucionModel();
+  $InstitucionModel->GetBitacora();
 }
