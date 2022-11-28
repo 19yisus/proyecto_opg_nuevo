@@ -30,11 +30,6 @@
 
 
         <div class="col-md-12 mx-auto px-2 ">
-
-
-
-
-
           <!-- contenedor de la tabla -->
           <div class="col-md-12 card p-3 shadow ">
             <div class="col-md-12 d-flex justify-content-end" style="margin: 0; padding: 0;">
