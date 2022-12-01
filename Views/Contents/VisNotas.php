@@ -48,7 +48,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                 </div>
 
               </div>
-              <!-- <div class="col-md-5 d-flex justify-content-end">
+              <div class="col-md-5 d-flex justify-content-end">
                 <form action="./Controllers/CreatePdfEstudiantes.php" method="POST" target="__blank">
                   <input type="hidden" name="id_seccion" v-model="id_seccion">
                   <input type="hidden" name="id_periodo" v-model="id_periodo">
@@ -57,7 +57,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                     <i class="fas fa-file-pdf"></i>
                   </button>
                 </form>
-              </div> -->
+              </div>
             </div>
             <form action="./VisCreatePdfNotas" method="GET" target="__blank" id="Form_pdf">
               <input type="hidden" name="cedula" v-model="cedula_estudiante">
