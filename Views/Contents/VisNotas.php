@@ -48,12 +48,28 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                 </div>
 
               </div>
-              <div class="col-md-5 d-flex justify-content-end">
+              <div class="col-md-7 d-flex justify-content-end">
                 <form action="./Controllers/CreatePdfEstudiantes.php" method="POST" target="__blank">
+                  <input type="hidden" name="ope" v-model='ope'>
                   <input type="hidden" name="id_seccion" v-model="id_seccion">
                   <input type="hidden" name="id_periodo" v-model="id_periodo">
-                  <button type="submit" class="btn btn-danger" v-bind:disabled="id_seccion == '' || id_periodo == ''">
-                    Reporte por sección
+                  <button type="submit" class="btn btn-sm btn-danger mx-2" @click="ope = '1'" v-bind:disabled="id_seccion == '' || id_periodo == ''">
+                  <a style="text-decoration: none; color: white;" href="./1.html"> 
+                    Reporte por sección F.
+                  </a> 
+                    <i class="fas fa-file-pdf"></i>
+                  </button>
+                  <button type="submit" class="btn btn-sm btn-danger" @click="ope = '2'" v-bind:disabled="id_seccion == '' || id_periodo == ''">
+                  <a style="text-decoration: none; color: white;" href="./1.html">
+                  Reporte por sección R.
+                  </a>
+                    <i class="fas fa-file-pdf"></i>
+                  </button>
+                  <button type="submit" class="btn btn-sm btn-danger" @click="ope = '3'" v-bind:disabled="id_seccion == '' || id_periodo == ''">
+                    <a style="text-decoration: none; color: white;" href="./VisPdfSeccion_revision.html">
+                    Reporte por sección M.P
+                    </a>
+                  
                     <i class="fas fa-file-pdf"></i>
                   </button>
                 </form>
@@ -221,6 +237,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           cedula_estudiante: "",
           recuperacion: false,
           aprobar: true,
+          ope:'',
           boton_desactivado: true,
           action: "Save",
         }

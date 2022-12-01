@@ -3,9 +3,19 @@
 require_once("./fpdf/fpdf.php");
 require_once("../Models/NotasModel.php");
 $model = new NotasModel();
+var_dump($_POST);
 $estudiante = $model->reportePorseccion($_POST['id_seccion'], $_POST['id_periodo']);
 
-require_once('../Views/Contents/VisPdfSeccion.php');
+// if($_POST['ope'] == '1'){
+//   require_once('../Views/Contents/VisPdfSeccion.html');
+// }
+// if($_POST['ope'] == '2'){
+//   require_once('../Views/Contents/VisPdfSeccion_revision.html');
+// }
+// if($_POST['ope'] == '3'){
+//   require_once('../Views/Contents/VisPdfSeccion_pendiente.html');
+// }
+
 
 
 
