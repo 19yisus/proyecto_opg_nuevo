@@ -23,7 +23,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
         <div class="col-md-12  mt-2 py-2 mx-auto px-2">
           <div class="col-md-12 border bg-light rounded py-2 mx-auto 2 d-flex justify-content-between row">
             <div class="col-md-7 my-auto px-3  ">
-              <h2 class="fw-bold text-start my-auto text-dark">Gestión de Directores</h3>
+              <h2 class="fw-bold text-start my-auto text-dark">Gestión de Profesor</h3>
             </div>
             <div class="col-md-2 p-3 card bg-primary ">
               <h5 class="fw-bold text-light text-center my-auto">Periodo: {{des_periodo}}</h5>
@@ -68,7 +68,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header bg-hero-azul fw-bold">
-              <h5 class="modal-title" id="staticBackdropLabel">Registro Director</h5>
+              <h5 class="modal-title" id="staticBackdropLabel">Registro Profesor</h5>
               <button type="button" @click="LimpiarForm" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <!--

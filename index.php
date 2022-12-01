@@ -8,7 +8,7 @@
 	
 	class App{
 		private $vistasPublicas = ['VisLogin'];
-		private $vistasPrivadas = ['VisEstudiantes','VisBitacoraSistema','VisUsuarios','VisAsignacionProfesor','VisAsignacionEstudiantes','VisPrincipal','VisInicio','VisMaterias','VisNotas','VisPensum','VisPeriodo','VisDirector','VisSeccion','VispdfNotas','VisCreatePdfNotas','VisCreatePdfEstudiantes','VisInstitucion'];
+		private $vistasPrivadas = ['VisEstudiantes','VisBitacoraSistema','VisUsuarios','VisAsignacionProfesor','VisAsignacionEstudiantes','VisPrincipal','VisInicio','VisMaterias','VisNotas','VisPensum','VisPeriodo','VisProfesor','VisSeccion','VispdfNotas','VisCreatePdfNotas','VisCreatePdfEstudiantes','VisInstitucion'];
 
 		public function __construct(){
 			$url = $this->GetURL();
@@ -27,6 +27,13 @@
 
 		private function GetView($url){
 			$file = "./Views/Contents/".$url[0].".php";
+			// if(strpos($url[0], 'Pdf') !== false){
+			// // 	var_dump($url[0]);
+			// // 	var_dump("Views/Contents/".$url[0]);
+			// // 	var_dump(file_exists("Views/Contents/".$url[0]));
+			// // die('s');
+			// 	require_once "Views/Contents/".$url[0];
+			// }
 			if(strpos($url[0], 'Vis') !== false){
 				if(file_exists($file)){
 					if($this->validarVistasPrivadas($url[0])) require_once $file; else header("Location: ./VisLogin");

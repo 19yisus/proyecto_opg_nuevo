@@ -40,7 +40,7 @@
               <a class="list-group-item list-group-item-action bg-light" href="./VisPensum"><i class="fas fa-book-open mx-2"></i>Pensum</a>
               <a class="list-group-item list-group-item-action bg-light" href="./VisSeccion"><i class="fas fa-bars mx-2"></i>Secciones</a>
               <a class="list-group-item list-group-item-action bg-light" href="./VisMaterias"><i class="fas fa-atlas mx-2"></i>Materias</a>
-              <a class="list-group-item list-group-item-action bg-light" href="./VisDirector"><i class="fas fa-user-tie mx-2"></i>Director</a>
+              <a class="list-group-item list-group-item-action bg-light" href="./VisProfesor"><i class="fas fa-user-tie mx-2"></i>Profesor</a>
               <a class="list-group-item list-group-item-action bg-light" href="./VisEstudiantes"><i class="fas fa-user-edit mx-2"></i>Estudiantes</a>
 
             </ul>
@@ -55,7 +55,7 @@
           <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#accordionExample">
             <ul class="list-group">
               <a class="list-group-item list-group-item-action" href="./VisAsignacionEstudiantes"> <i class="fas fa-chalkboard-teacher mx-2"></i>Asignar Estudiante</a>
-              <!-- <a class="list-group-item list-group-item-action" href="./VisAsignacionProfesor"> <i class="fas fa-chalkboard-teacher mx-2"></i>Asignar Materias a Profesor</a> -->
+              <a class="list-group-item list-group-item-action" href="./VisAsignacionProfesor"> <i class="fas fa-chalkboard-teacher mx-2"></i>Asignar Materias a Profesor</a>
               <a class="list-group-item list-group-item-action bg-light" href="./VisNotas"><i class="fas fa-notes-medical mx-2"></i>Cargar Nota</a>
               <a class="list-group-item list-group-item-action" href="./VisBitacoraSistema"> <i class="fas fa-chalkboard-teacher mx-2"></i>Bitacora del sistema</a>
 

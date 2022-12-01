@@ -6,15 +6,15 @@ $model = new NotasModel();
 var_dump($_POST);
 $estudiante = $model->reportePorseccion($_POST['id_seccion'], $_POST['id_periodo']);
 
-// if($_POST['ope'] == '1'){
-//   require_once('../Views/Contents/VisPdfSeccion.html');
-// }
-// if($_POST['ope'] == '2'){
-//   require_once('../Views/Contents/VisPdfSeccion_revision.html');
-// }
-// if($_POST['ope'] == '3'){
-//   require_once('../Views/Contents/VisPdfSeccion_pendiente.html');
-// }
+if($_POST['ope'] == '1'){
+  header('location: ../Views/Contents/PdfSeccion.html.pdf');
+}
+if($_POST['ope'] == '2'){
+  header('location: ../Views/Contents/PdfSeccion_revision.html.pdf');
+}
+if($_POST['ope'] == '3'){
+  header('location: ../Views/Contents/PdfSeccion_pendiente.html.pdf');
+}
 
 
 

@@ -22,18 +22,18 @@ class ProfesorModel extends DB
 	public function SaveDatos()
 	{
 		try {
-			$result = $this->consult("SELECT * FROM profesor WHERE estatus_profesor = 1;");
-			if (!isset($result[0])) $estatus = 1;
-			else $estatus = 0;
+			// $result = $this->consult("SELECT * FROM profesor WHERE estatus_profesor = 1;");
+			// if (!isset($result[0])) $estatus = 1;
+			// else $estatus = 0;
 
-			$pdo = $this->driver->prepare("INSERT INTO profesor(cedula_profesor, estatus_profesor) VALUES(:cedula_profesor, :estatus);");
+			$pdo = $this->driver->prepare("INSERT INTO profesor(cedula_profesor, estatus_profesor) VALUES(:cedula_profesor, 1);");
 			$pdo->bindParam(':cedula_profesor', $this->cedula_profesor);
-			$pdo->bindParam(':estatus', $estatus);
+			// $pdo->bindParam(':estatus', 1);
 
 			// if($pdo->execute()) return true; else return false;
 			if ($pdo->execute()) {
 				$this->registrar_bitacora_sistema([
-					'table' => "director",
+					'table' => "profesor",
 					'descripcion' => "REGISTRO",
 					'id_registro' => $this->cedula_profesor
 				]);
@@ -114,35 +114,37 @@ class ProfesorModel extends DB
 	public function ChangeStatus()
 	{
 		try {
-			$result = $this->consult("SELECT estatus_profesor FROM profesor WHERE cedula_profesor = '$this->cedula_profesor' ");
-			if ($result['estatus_profesor'] == 0) {
-				$result2 = $this->consult("SELECT estatus_profesor FROM profesor WHERE estatus_profesor = 1 AND cedula_profesor != '$this->cedula_profesor' ");
-				if (!isset($result2[0])) {
-					$pdo = $this->driver->prepare("UPDATE profesor SET estatus_profesor = 1 WHERE cedula_profesor = :cedula ;");
-					$pdo->bindParam(':cedula', $this->cedula_profesor);
 
-					if ($pdo->execute()) {
-						$this->registrar_bitacora_sistema([
-							'table' => "director",
-							'descripcion' => "CAMBIO DE ESTATUS",
-							'id_registro' => $this->cedula_profesor
-						]);
-						$this->ResJSON("Operacion Exitosa!", "success");
-					} else $this->ResJSON("Operacion Fallida!", "error");
-				} else $this->ResJSON("No se pueden tener a dos directores activos!", "error");
-			} else {
-				$pdo = $this->driver->prepare("UPDATE profesor SET estatus_profesor = 0 WHERE cedula_profesor = :cedula ;");
-				$pdo->bindParam(':cedula', $this->cedula_profesor);
+			$pdo = $this->driver->prepare("UPDATE profesor SET estatus_profesor = !estatus_profesor WHERE cedula_profesor = :cedula ;");
+			$pdo->bindParam(':cedula', $this->cedula_profesor);
 
-				if ($pdo->execute()) {
-					$this->registrar_bitacora_sistema([
-						'table' => "director",
-						'descripcion' => "CAMBIO DE ESTATUS",
-						'id_registro' => $this->cedula_profesor
-					]);
-					$this->ResJSON("Operacion Exitosa!", "success");
-				} else $this->ResJSON("Operacion Fallida!", "error");
-			}
+			if ($pdo->execute()) {
+				$this->registrar_bitacora_sistema([
+					'table' => "director",
+					'descripcion' => "CAMBIO DE ESTATUS",
+					'id_registro' => $this->cedula_profesor
+				]);
+				$this->ResJSON("Operacion Exitosa!", "success");
+			} else $this->ResJSON("Operacion Fallida!", "error");
+
+			// $result = $this->consult("SELECT estatus_profesor FROM profesor WHERE cedula_profesor = '$this->cedula_profesor' ");
+			// if ($result['estatus_profesor'] == 0) {
+			// 	$result2 = $this->consult("SELECT estatus_profesor FROM profesor WHERE estatus_profesor = 1 AND cedula_profesor != '$this->cedula_profesor' ");
+			// 	if (!isset($result2[0])) {
+			// 	} else $this->ResJSON("No se pueden tener a dos directores activos!", "error");
+			// } else {
+			// 	$pdo = $this->driver->prepare("UPDATE profesor SET estatus_profesor = 0 WHERE cedula_profesor = :cedula ;");
+			// 	$pdo->bindParam(':cedula', $this->cedula_profesor);
+
+			// 	if ($pdo->execute()) {
+			// 		$this->registrar_bitacora_sistema([
+			// 			'table' => "director",
+			// 			'descripcion' => "CAMBIO DE ESTATUS",
+			// 			'id_registro' => $this->cedula_profesor
+			// 		]);
+			// 		$this->ResJSON("Operacion Exitosa!", "success");
+			// 	} else $this->ResJSON("Operacion Fallida!", "error");
+			// }
 		} catch (PDOException $e) {
 			error_log("ProfesorModel(54) => " . $e->getMessages());
 			$this->ResJSON("Operacion Fallida! (error_log)", "error");
