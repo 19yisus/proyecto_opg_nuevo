@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 28-11-2022 a las 14:04:44
+-- Tiempo de generación: 02-12-2022 a las 01:18:49
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.4.22
 
@@ -66,6 +66,13 @@ CREATE TABLE `asignacion_profesor_seccion` (
   `periodo_id` int(11) NOT NULL,
   `estatus_asignacion` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `asignacion_profesor_seccion`
+--
+
+INSERT INTO `asignacion_profesor_seccion` (`id_asignacion`, `profesor_cedula`, `materia_id`, `seccion_id`, `periodo_id`, `estatus_asignacion`) VALUES
+(3, '12345678', 7, 5, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -190,7 +197,8 @@ INSERT INTO `bitacora_sistema` (`id`, `name_tabla`, `descripcion`, `registro_id`
 (54, 'institucion', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '1', '2022-11-28 07:32:31', 2),
 (55, 'institucion', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-11-28 07:32:52', 2),
 (56, 'institucion', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '1', '2022-11-28 08:53:34', 2),
-(57, 'institucion', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-11-28 08:53:36', 2);
+(57, 'institucion', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-11-28 08:53:36', 2),
+(58, 'institucion', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '1', '2022-11-28 09:05:37', 2);
 
 -- --------------------------------------------------------
 
@@ -397,11 +405,14 @@ CREATE TABLE `personas` (
 --
 
 INSERT INTO `personas` (`cedula_persona`, `nombre_persona`, `apellido_persona`, `nacionalidad_persona`, `sexo_persona`, `correo_persona`, `fecha_n_persona`, `direccion_persona`, `telefono_persona`, `direccion_n_persona`) VALUES
+('10001231', 'fasdfasfasd', 'gsgsdgsdf', 'V', 'M', 'dadsfsdgdgdfsg@gmail.com', '1971-01-01', 'sdgsgsggfdg', '10001231', NULL),
 ('12332646', 'alfonsino director', 'medina', 'V', 'M', 'fasdfasdfadsfasd@gmail.com', '1971-05-10', '', NULL, NULL),
+('12345678', 'Jose Manuel', 'Perez Lopez', 'V', 'M', 'asdasasdasd@gmail.com', '1971-09-01', 'asdasdasd', '12345678', NULL),
 ('12345699', 'asdasdasd', 'dasdasd', 'V', 'M', NULL, '1972-02-02', 'sadasdasd', '12345699', 'asdasdasd'),
 ('1234576', 'asdasdasd', 'asdasdad', 'V', 'M', NULL, '1971-08-11', 'asdasdas', '1234576', 'sdasdasd'),
 ('27132642', 'jesus', 'morales', 'V', 'M', NULL, '1977-08-29', 'fasdfasdfasd', '27132642', 'fasdfasdfasdf'),
 ('2762468', 'Jose Manuel', 'Perez Lopez', 'V', 'M', NULL, '1975-01-01', 'asdasdasd', '2762468', 'sadasdasd'),
+('29775742', 'jesus', 'pichardo', 'V', 'M', 'muraa_mari@gmail.com', '1950-04-18', 'casaca', '29775742', NULL),
 ('30640465', 'nose', 'perez', 'V', 'M', NULL, '1977-08-30', 'fasdfasdfadsfadsf', '30640465', 'fasdfasdfasdf'),
 ('32456479', 'fasdfadfasdf', 'fasdfasdfadsf', 'V', 'M', NULL, '1977-05-01', 'fasdfasdfasdf', '32456479', 'fasdfasdfasdf'),
 ('45654987', 'fasdfasdfa', 'fasdfasdfasd', 'V', 'M', 'fasdfasdfasdfasdfasdf@gmail.com', '1970-05-10', 'fasdfasdfasdf', '45654987', NULL),
@@ -444,8 +455,10 @@ CREATE TABLE `profesor` (
 --
 
 INSERT INTO `profesor` (`cedula_profesor`, `estatus_profesor`) VALUES
+('10001231', 1),
 ('12332646', 1),
-('45654987', 0);
+('12345678', 1),
+('45654987', 1);
 
 -- --------------------------------------------------------
 
@@ -656,7 +669,7 @@ ALTER TABLE `asignacion_estudiante_seccion`
 -- AUTO_INCREMENT de la tabla `asignacion_profesor_seccion`
 --
 ALTER TABLE `asignacion_profesor_seccion`
-  MODIFY `id_asignacion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_asignacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `bitacora_notas`
@@ -668,7 +681,7 @@ ALTER TABLE `bitacora_notas`
 -- AUTO_INCREMENT de la tabla `bitacora_sistema`
 --
 ALTER TABLE `bitacora_sistema`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT de la tabla `institucion`
