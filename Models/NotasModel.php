@@ -4,6 +4,7 @@ require("db.php");
 class NotasModel extends DB
 {
   private $id, $cedula_estudiante, $id_materia, $materias, $id_periodo, $id_seccion, $estatus, $observacion, $usuario;
+  private $plantel;
 
   public function __construct()
   {
@@ -19,6 +20,7 @@ class NotasModel extends DB
     $this->estatus = isset($estu[0]['estatus']) ? $estu[0]['estatus'] : 1;
     $this->observacion = isset($estu[0]['observacion']) ? $estu[0]['observacion'] : Null;
     $this->usuario_id = $_SESSION['id_user'];
+    // $this->plantel = isset($estu[0]['plantel']) ? $estu[0]['plantel'] : $estu[0]['plantel'];
     $this->materias = $materias;
   }
 
@@ -83,7 +85,7 @@ class NotasModel extends DB
               break;
             }
 
-            $sql_bitacora = "INSERT INTO bitacora_notas(id_bitacora,usuario_id,nota_id,fecha_bitacora,observacion_bitacora, notas_antiguas)
+            $sql_bitacora = "INSERT INTO bitacora_notas(id_bitacora,usuario_id,nota_id,fecha_bitacora,observacion_bitacora, notas_antiguas);
               VALUES(Null,$this->usuario_id,$idNota,NOW(), '$this->observacion','$notasAntiguas')";
             $sql_bitacora = str_ireplace("''", "NULL", $sql_bitacora);
 
@@ -256,17 +258,17 @@ class NotasModel extends DB
   }
 
   public function director_activo()
-	{
-		try {
-			$datosDirector = $this->consult("SELECT * FROM profesor
+  {
+    try {
+      $datosDirector = $this->consult("SELECT * FROM profesor
 					INNER JOIN personas ON personas.cedula_persona = profesor.cedula_profesor WHERE profesor.estatus_profesor = 1 ;");
 
-			return $datosDirector;
-		} catch (PDOException $e) {
-			error_log("ProfesorModel(78) => " . $e->getMessages());
-			$this->ResJSON("Operacion Fallida! (error_log)", "error");
-		}
-	}
+      return $datosDirector;
+    } catch (PDOException $e) {
+      error_log("ProfesorModel(78) => " . $e->getMessages());
+      $this->ResJSON("Operacion Fallida! (error_log)", "error");
+    }
+  }
 
   public function ConsultaDatosAcademicos($cedula)
   {
@@ -385,13 +387,16 @@ class NotasModel extends DB
         INNER JOIN personas ON personas.cedula_persona = estudiante.cedula_estudiante 
         WHERE estudiante.cedula_estudiante = '$cedula';";
 
-    $sqlNotasHistoricas = "SELECT * FROM nota 
+    $sqlNotasHistoricas = "SELECT * FROM (nota, institucion)
     INNER JOIN materia ON materia.id_materia = nota.materia_id
     INNER JOIN seccion ON seccion.idSeccion = nota.seccion_id
     INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = nota.periodo_escolar_id
     INNER JOIN pensum ON pensum.periodo_id = periodo_escolar.id_periodo_escolar
-    WHERE nota.cedula_estudiante = '$cedula' AND periodo_escolar.id_periodo_escolar <= $periodo AND nota.estatusNotas = 0 GROUP BY nota.idNota";
+    WHERE nota.cedula_estudiante = '$cedula' AND periodo_escolar.id_periodo_escolar <= $periodo AND nota.estatusNotas = 0 AND nota.plantel = institucion.id_institucion
+    GROUP BY nota.idNota";
 
+    // var_dump($sqlNotasHistoricas);
+    // die("FDF");
     $sqlInstitucion = "SELECT institucion.* FROM periodo_escolar 
     INNER JOIN institucion on institucion.id_institucion = periodo_escolar.institucion_id
     WHERE periodo_escolar.estatus_periodo_escolar = 1";
@@ -400,10 +405,25 @@ class NotasModel extends DB
     $result_datos_institucion = $this->consult($sqlInstitucion);
     $result_datos_notas = $this->consultAll($sqlNotasHistoricas);
 
+    $id_anterior = 0;
+    $array_planteles = [];
+    foreach ($result_datos_notas as $item) {
+      $institucion = $item['plantel'];
+      if ($institucion != $id_anterior) {
+        $sqlPlanteles = "SELECT * FROM institucion WHERE id_institucion = $institucion";
+        $result_datos_planteles = $this->consult($sqlPlanteles);
+        $id_anterior = $result_datos_planteles['id_institucion'];
+        array_push($array_planteles, $result_datos_planteles);
+      }
+    }
+    // var_dump($sqlNotasHistoricas);
+    // die('FDF');
+
     return [
       'datos' => $result_datos_estudiante,
       'notas' => $result_datos_notas,
-      'institucion' => $result_datos_institucion
+      'institucion' => $result_datos_institucion,
+      'planteles' => $array_planteles
     ];
   }
 
@@ -434,7 +454,9 @@ class NotasModel extends DB
         'nombre' => $estu['nombre_persona'],
         'apellido' => $estu['apellido_persona'],
         'fec' => $estu['fecha_n_persona'],
-        'lugar' => $estu['direccion_n_persona'],
+        'lugar' => $estu['direccion_persona'],
+        'lugar_n' => $estu['direccion_n_persona'],
+        'sexo' => $estu['sexo_persona'],
         'notas' => $result2
       ]);
     }

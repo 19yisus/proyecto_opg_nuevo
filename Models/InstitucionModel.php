@@ -28,7 +28,7 @@ class InstitucionModel extends DB
   public function SaveDatos()
   {
     try {
-      $result2 = $this->consult("SELECT * FROM institucion WHERE estatus_institucion = 1");
+      $result2 = $this->consult("SELECT * FROM institucion WHERE estatus_institucion = 1 && si_externa = 0");
 
       if (isset($result2[0])) {
         $pdo = $this->driver->prepare("INSERT INTO institucion(
@@ -38,8 +38,8 @@ class InstitucionModel extends DB
           municipio,
           entidad_federal,
           zona_educativa,
-          telefono, estatus_institucion
-          ) VALUES(:descripcion, :codigo, :direccion, :municipio, :entidad, :zona, :telefono,0);");
+          telefono, estatus_institucion, si_externa
+          ) VALUES(:descripcion, :codigo, :direccion, :municipio, :entidad, :zona, :telefono,0,0);");
       } else {
         $pdo = $this->driver->prepare("INSERT INTO institucion(
           des_institucion, 
@@ -69,6 +69,42 @@ class InstitucionModel extends DB
       //   telefono, estatus_institucion
       //   ) VALUES('$this->des_institucion', '$this->codigo_institucion','$this->direccion_institucion','$this->municipio,'$this->entidad_federal','$this->zona_educativa','$this->telefono',0);");
 
+      if ($pdo->execute()) {
+        $id = $this->driver->lastInsertId();
+        $this->registrar_bitacora_sistema([
+          'table' => "Institucion",
+          'descripcion' => "REGISTRO",
+          'id_registro' => $id
+        ]);
+        $this->ResJSON("Operacion Exitosa!", "success");
+      } else $this->ResJSON("Operacion Fallida!", "error");
+    } catch (PDOException $e) {
+      error_log("InstitucionModel(line0------) => " . $e->getMessages());
+      $this->ResJSON("Operacion Fallida!", "error");
+    }
+  }
+
+  public function SaveDatos_externa()
+  {
+    try {
+      $pdo = $this->driver->prepare("INSERT INTO institucion(
+        des_institucion, 
+        codigo_institucion, 
+        direccion_institucion,
+        municipio,
+        entidad_federal,
+        zona_educativa,
+        telefono, estatus_institucion, si_externa
+        ) VALUES(:descripcion, :codigo, :direccion, :municipio, :entidad, :zona, :telefono,0,1);");
+
+      $pdo->bindParam(':descripcion', $this->des_institucion);
+      $pdo->bindParam(':codigo', $this->codigo_institucion);
+      $pdo->bindParam(':direccion', $this->direccion_institucion);
+      $pdo->bindParam(':municipio', $this->municipio);
+      $pdo->bindParam(':entidad', $this->entidad_federal);
+      $pdo->bindParam(':zona', $this->zona_educativa);
+      $pdo->bindParam(':telefono', $this->telefono);
+      
       if ($pdo->execute()) {
         $id = $this->driver->lastInsertId();
         $this->registrar_bitacora_sistema([
@@ -166,7 +202,19 @@ class InstitucionModel extends DB
   public function GetAll()
   {
     try {
-      $result = $this->consultAll("SELECT * FROM institucion;");
+      $result = $this->consultAll("SELECT * FROM institucion WHERE si_externa = 0;");
+      if (isset($result[0])) $this->ResDataJSON($result);
+      else $this->ResDataJSON([]);
+    } catch (PDOException $e) {
+      error_log("InstitucionModel(66) => " . $e->getMessages());
+      $this->ResJSON("Operacion Fallida! (error_log)", "error");
+    }
+  }
+
+  public function GetExternas()
+  {
+    try {
+      $result = $this->consultAll("SELECT * FROM institucion WHERE si_externa = 1;");
       if (isset($result[0])) $this->ResDataJSON($result);
       else $this->ResDataJSON([]);
     } catch (PDOException $e) {

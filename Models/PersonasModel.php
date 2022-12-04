@@ -3,7 +3,8 @@ require("db.php");
 
 class PersonasModel extends DB
 {
-	private $cedula_persona, $nombre_persona, $apellido_persona, $nacionalidad_persona, $sexo_persona, $fecha_n_persona, $direccion_persona, $telefono_persona, $direccion_n_persona, $correo_persona;
+	public $cedula_persona, $nombre_persona, $apellido_persona, $nacionalidad_persona, $sexo_persona, $fecha_n_persona, $direccion_persona, $telefono_persona, $direccion_n_persona, $correo_persona;
+	public $pais, $entidad, $municipio;
 
 	public function __construct()
 	{
@@ -22,6 +23,9 @@ class PersonasModel extends DB
 		$this->telefono_persona = isset($datos['telefono_persona']) ? $datos['telefono_persona'] : null;
 		$this->direccion_n_persona = isset($datos['direccion_n_persona']) ? $datos['direccion_n_persona'] : null;
 		$this->correo_persona = isset($datos['correo_persona']) ? $datos['correo_persona'] : null;
+		$this->pais = isset($datos['pais']) ? $datos['pais'] : null;
+		$this->entidad = isset($datos['estado']) ? $datos['estado'] : null;
+		$this->municipio = isset($datos['municipio']) ? $datos['municipio'] : null;
 	}
 
 	public function SaveDatos()
@@ -30,10 +34,11 @@ class PersonasModel extends DB
 			$pdo = $this->driver->prepare("
 				INSERT INTO personas(cedula_persona, nombre_persona, apellido_persona, 
 				nacionalidad_persona, sexo_persona, correo_persona, fecha_n_persona, direccion_persona, 
-				telefono_persona, direccion_n_persona) 
+				telefono_persona, direccion_n_persona, pais, entidad_federal, municipio) 
 				
 				VALUES(:cedula, :nombre, :apellido, :nacionalidad, :sexo, 
-				:correo, :fecha_nacimiento, :direccion_persona, :telefono, :direccion_nacimiento)");
+				:correo, :fecha_nacimiento, :direccion_persona, :telefono, :direccion_nacimiento,
+				:pais, :entidad, :municipio)");
 
 			$pdo->bindParam(':cedula', $this->cedula_persona);
 			$pdo->bindParam(':nombre', $this->nombre_persona);
@@ -45,6 +50,9 @@ class PersonasModel extends DB
 			$pdo->bindParam(':fecha_nacimiento', $this->fecha_n_persona);
 			$pdo->bindParam(':direccion_persona', $this->direccion_persona);
 			$pdo->bindParam(':telefono', $this->cedula_persona);
+			$pdo->bindParam(':pais', $this->pais);
+			$pdo->bindParam(':entidad', $this->entidad);
+			$pdo->bindParam(':municipio', $this->municipio);
 
 
 			if ($pdo->execute()) {

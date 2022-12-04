@@ -3,11 +3,25 @@
 require_once("./fpdf/fpdf.php");
 require_once("../Models/NotasModel.php");
 $model = new NotasModel();
-var_dump($_POST);
 $estudiante = $model->reportePorseccion($_POST['id_seccion'], $_POST['id_periodo']);
 
 if($_POST['ope'] == '1'){
-  header('location: ../Views/Contents/PdfSeccion.html.pdf');
+  require_once('../Views/Contents/VisPdfSeccion_final.php');
+  // var_dump($estudiante);
+  // for($i = 0; $i < 30; $i++){
+  //   if(isset($estudiante[$i])){
+  //     for($x = 0; $x < 9; $x++){
+  //       if(isset($estudiante[$i]['notas'][$x])){
+  //         echo 'Notas del estudiante '.$estudiante[$i]['cedula'];
+  //         echo '<br/>';
+  //         var_dump($estudiante[$i]['notas'][$x]);  
+  //         echo '<br/><br/>';
+  //       }
+        
+  //     }
+  //   }
+  // }
+  // header('location: ../Views/Contents/PdfSeccion.html.pdf');
 }
 if($_POST['ope'] == '2'){
   header('location: ../Views/Contents/PdfSeccion_revision.html.pdf');

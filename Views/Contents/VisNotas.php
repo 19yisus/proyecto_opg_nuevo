@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
+
 $this->Head();
 // require_once("./Models/InstitucionModel.php");
 // $mod = new InstitucionModel();
@@ -58,11 +59,11 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                     <i class="fas fa-file-pdf"></i>
                   </button>
                   <button type="submit" class="btn btn-sm btn-danger" @click="ope = '2'" v-bind:disabled="id_seccion == '' || id_periodo == ''">
-                  Reporte por sección R.
+                    Reporte por sección R.
                     <i class="fas fa-file-pdf"></i>
                   </button>
                   <button type="submit" class="btn btn-sm btn-danger" @click="ope = '3'" v-bind:disabled="id_seccion == '' || id_periodo == ''">
-                    Reporte por sección M.P                  
+                    Reporte por sección M.P
                     <i class="fas fa-file-pdf"></i>
                   </button>
                 </form>
@@ -130,18 +131,20 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
               <input type="hidden" name="estatus_notas" value="1">
               <div class="modal-body row" style="padding: 0 70px ;">
                 <div class="container">
-                  <table class="table">
+                  <div class="row">
+                    <div class="form-control">
+                      <label for="">Seleccione el plantel de {{nuevo_plantel}} las notas</label>
+                      <select name="id_plantel" id="" class="form-control">
+                        <option value="">Seleccione una opcion</option>
+                        <option v-for="item in planteles" :value="item.id_institucion">{{item.des_institucion}} {{item.entidad_federal}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <table class="table" v-show="!nuevo_plantel">
                     <thead>
                       <tr>
                         <th class="text-center" scope="col">Materia</th>
-                        <!-- <th class="text-center" scope="col">Lapso 1</th>
-                        <th class="text-center" scope="col">Lapso 2</th>
-                        <th class="text-center" scope="col">Lapso 3</th> -->
                         <th class="text-center" scope="col">Nota Final</th>
-                        <th v-if="recuperacion" class="text-center" scope="col">Rec. 1</th>
-                        <th v-if="recuperacion" class="text-center" scope="col">Rec. 2</th>
-                        <th v-if="recuperacion" class="text-center" scope="col">Rec. 3</th>
-                        <th v-if="recuperacion" class="text-center" scope="col">Rec. 4</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -150,15 +153,6 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                         <input type="hidden" name="id_materia[]" :value="item.materia_id">
                         <input type="hidden" name="des_materia[]" :value="item.des_materia">
                         <td class="text-center">{{item.des_materia}}</td>
-                        <!-- <td class="text-center">
-                          <input max="20" min="1" @keypress="validar" :value="item.nota_lapso1" :disabled="item.estatus_nota == 0" name="nota1[]" type="number" class="form-control form-control-sm" id="" placeholder="">
-                        </td>
-                        <td class="text-center">
-                          <input max="20" min="1" @keypress="validar" maxlength="2" :value="item.nota_lapso2" :disabled="item.estatus_nota == 0" name="nota2[]" type="number" class="form-control form-control-sm" id="" placeholder="">
-                        </td>
-                        <td class="text-center">
-                          <input max="20" min="1" @keypress="validar" maxlength="2" :value="item.nota_lapso3" :disabled="item.estatus_nota == 0" name="nota3[]" type="number" class="form-control form-control-sm" id="" placeholder="">
-                        </td> -->
                         <td class="text-center">
                           <input max="20" min="1" maxlength="2" @keypress="validar" :value="item.nota_final" :disabled="item.estatus_nota == 0" name="nota4[]" type="number" class="form-control form-control-sm" id="" placeholder="">
                         </td>
@@ -207,248 +201,376 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           </div>
         </div>
       </div>
+      <!-- Registro de planteles -->
+      <div class="modal modal-md fade" id="staticBackdrop2" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h6 class="modal-title" id="staticBackdropLabel">Registro del plantel</h6>
+            </div>
+            <form action="#" @submit.preventDefault="SendDataPlantel" id="Formulario_plantel" class="needs-validation" novalidate>
+
+              <div class="modal-body row " style="padding: 0 70px ;">
+                <!-- <input type="hidden" name="id" v-model="id" v-if="id != '' "> -->
+                <div class="col-md-12 " style="margin:0; padding:5px;">
+                  <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Nombre del plantel:</span>
+                    <input type="text" minlength="1" maxlength="30" v-model="des_institucion" name="des_institucion" class="form-control form-control-sm" required id="des_materia" placeholder="Nombre del plantel" style="width:70%; text-transform:uppercase;">
+                    <span class="error-text">Rellene el campo correctamente</span>
+                  </div>
+                </div>
+                <div class="col-md-12 " style="margin:0; padding:5px;">
+                  <div class="input-group input-group-sm form-group form-box" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Localidad del plantel:</span>
+                    <input type="text" minlength="1" maxlength="30" v-model="entidad_federal" name="entidad_federal" class="form-control form-control-sm" required id="des_materia" placeholder="Ubicacion del plantel" style="width:70%; text-transform:uppercase;">
+                    <span class="error-text">Rellene el campo correctamente</span>
+                  </div>
+                </div>
+
+              </div>
+              <div class="modal-footer mx-auto">
+                <input type="hidden" name="ope" v-model="action">
+                <button type="submit" value="Save" class="btn btn-sm btn-primary">
+                  <i class="fa-regular fa-circle-check"></i>GUARDAR
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
+                  <i class="fa-regular fa-circle-xmark"></i>SALIR
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Vista de plantales -->
+      <div class="modal modal-md fade" id="staticBackdrop3" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h6 class="modal-title" id="staticBackdropLabel">Planteles</h6>
+            </div>
+            <!-- Boton -->
+            <button type="button" onClick="Consult(this)" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">Registrar
+            </button>
+
+            <!-- select de planteles -->
+            <select name="id_plantel" id="" class="form-select">
+              <option value="">Seleccione una opcion</option>
+              <option v-for="item in planteles" :value="item.id_institucion">{{item.des_institucion}}</option>
+            </select>
+            <div class="modal-footer mx-auto">
+              <input type="hidden" name="ope" v-model="action">
+              <button type="submit" value="Save" :disabled="!boton_desactivado" class="btn btn-sm btn-success">
+                <i class="fa-regular fa-circle-check"></i>GUARDAR
+              </button>
+              <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
+                <i class="fa-regular fa-circle-xmark"></i>SALIR
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ventana emergente para preguntar sobre el plantel -->
+      <div class="modal fade" tabindex="-1" id="deleteEmployeeModal" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p style="text-align: center;"> El estudiante pertenece a otro plantel ?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" onClick="Consult(this)" data-seguimiento='${row.seguimiento_estudiante}' data-id='${row.cedula_estudiante}' class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">Si
+              </button>
+              <button type="button" onClick="Consult(this)" data-seguimiento='${row.seguimiento_estudiante}' data-id='${row.cedula_estudiante}' class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">No
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <?php $this->Script(); ?>
-  <script>
-    const app = Vue.createApp({
-      data() {
-        return {
-          des_periodo: "actual",
-          id: "",
-          des_materia: "",
-          estatus: "",
-          id_seccion: "",
-          id_periodo: "",
-          seccionesFiltro: "",
-          cedula: "",
-          nombre: "",
-          periodo: "",
-          seccion: "",
-          materias: [],
-          cedula_estudiante: "",
-          recuperacion: false,
-          aprobar: true,
-          ope:'',
-          boton_desactivado: true,
-          action: "Save",
-        }
-      },
-      methods: {
-        getPdf(cedula) {
-          this.cedula_estudiante = cedula;
-          setTimeout(() => {
-            document.getElementById("Form_pdf").submit();
-          }, 100)
+    <?php $this->Script(); ?>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            des_periodo: "actual",
+            id: "",
+            des_materia: "",
+            estatus: "",
+            id_seccion: "",
+            id_periodo: "",
+            seccionesFiltro: "",
+            cedula: "",
+            nombre: "",
+            periodo: "",
+            seccion: "",
+            materias: [],
+            cedula_estudiante: "",
+            // 
+            entidad_federal: '',
+            des_institucion: '',
+            planteles: [{
+              id_institucion: ''
+            }],
+            nuevo_plantel: true,
+            recuperacion: false,
+            aprobar: true,
+            ope: '',
+            boton_desactivado: true,
+            action: "Save",
+          }
         },
-        validar(e) {
-          setTimeout(() => {
-            if (parseInt(e.target.value) > 20) e.target.value = 20;
-            if (parseInt(e.target.value) <= 0) e.target.value = 1;
-          }, 100);
-        },
+        methods: {
+          getPdf(cedula) {
+            this.cedula_estudiante = cedula;
+            setTimeout(() => {
+              document.getElementById("Form_pdf").submit();
+            }, 100)
+          },
+          validar(e) {
+            setTimeout(() => {
+              if (parseInt(e.target.value) > 20) e.target.value = 20;
+              if (parseInt(e.target.value) <= 0) e.target.value = 1;
+            }, 100);
+          },
+          async obtener_externas() {
+            fetch("./Controllers/InstitucionController.php?ope=externas")
+              .then(res => res.json()).then(result => {
+                console.log(result)
+                this.planteles = result.data
+              }).catch(Error => console.error(Error))
+          },
+          SendDataPlantel(e) {
+            this.action = 'save_externo';
+            e.preventDefault();
+            $('#staticBackdrop2').modal('hide')
+            $('#staticBackdrop').modal('show') // if(!$("#Formulario").valid()) return false;
 
-        SendData(e) {
-          this.action = e.submitter.value;
-          e.preventDefault();
-          // if(!$("#Formulario").valid()) return false;
+            setTimeout(() => {
+              let form = new FormData(e.target);
+              fetch("./Controllers/InstitucionController.php", {
+                method: "POST",
+                body: form
+              }).then(res => res.json()).then(result => {
+                $("#datatable").DataTable().ajax.reload(null, false);
+                /* this.ToggleModal(); */
+                ViewAlert(result.mensaje, result.estado);
+                this.periodo_activo();
+                this.GetData(this.cedula);
+                this.obtener_externas();
+              }).catch(Error => console.error(Error))
+            }, 100);
+          },
+          SendData(e) {
+            this.action = e.submitter.value;
+            e.preventDefault();
+            // if(!$("#Formulario").valid()) return false;
 
-          setTimeout(() => {
-            let form = new FormData(e.target);
-            fetch("./Controllers/NotasController.php", {
-              method: "POST",
-              body: form
-            }).then(res => res.json()).then(result => {
-              $("#datatable").DataTable().ajax.reload(null, false);
-              /* this.ToggleModal(); */
-              ViewAlert(result.mensaje, result.estado);
-              this.periodo_activo();
-              this.GetData(this.cedula);
-            }).catch(Error => console.error(Error))
-          }, 100);
-        },
-        async GetData(cedula) {
-          this.materias = [];
-          this.aprobar = true;
-          this.boton_desactivado = true;
-          this.recuperacion = false;
+            setTimeout(() => {
+              let form = new FormData(e.target);
+              fetch("./Controllers/NotasController.php", {
+                method: "POST",
+                body: form
+              }).then(res => res.json()).then(result => {
+                $("#datatable").DataTable().ajax.reload(null, false);
+                /* this.ToggleModal(); */
+                ViewAlert(result.mensaje, result.estado);
+                this.periodo_activo();
+                this.GetData(this.cedula);
+              }).catch(Error => console.error(Error))
+            }, 100);
+          },
+          async GetData(cedula) {
+            this.materias = [];
+            this.aprobar = true;
+            this.boton_desactivado = true;
+            this.recuperacion = false;
 
-          await fetch(`./Controllers/NotasController.php?ope=ConsultDatosAcademicos&&cedula=${cedula}`)
-            .then(res => res.json()).then((res) => {
-              if (res.mensaje) {
-                ViewAlert(res.mensaje, res.estado);
+            await fetch(`./Controllers/NotasController.php?ope=ConsultDatosAcademicos&&cedula=${cedula}`)
+              .then(res => res.json()).then((res) => {
+                if (res.mensaje) {
+                  ViewAlert(res.mensaje, res.estado);
 
-                setTimeout(() => {
-                  this.ToggleModal();
-                }, 200)
-                return false;
-              }
+                  setTimeout(() => {
+                    this.ToggleModal();
+                  }, 200)
+                  return false;
+                }
 
-              let data = res.data;
-              this.recuperacion = false;
-              this.aprobar = true;
-              this.seccion = data.estudiante.idSeccion;
-              this.periodo = data.estudiante.periodoescolar;
-              this.id_periodo = data.estudiante.id_periodo_escolar;
-              this.nombre = data.estudiante.nombre_persona + ' ' + data.estudiante.apellido_persona;
-              this.cedula = data.estudiante.cedula_persona;
-              this.materias = data.materias;
+                let data = res.data;
+                this.recuperacion = false;
+                this.aprobar = true;
+                this.seccion = data.estudiante.idSeccion;
+                this.periodo = data.estudiante.periodoescolar;
+                this.id_periodo = data.estudiante.id_periodo_escolar;
+                this.nombre = data.estudiante.nombre_persona + ' ' + data.estudiante.apellido_persona;
+                this.cedula = data.estudiante.cedula_persona;
+                this.materias = data.materias;
+                // console.log(data.materias)
 
-              data.materias.forEach(item => {
-                if (item.nota_final != null && parseInt(item.nota_final) < 10) this.recuperacion = true;
-                if (item.nota_final != null && parseInt(item.nota_final) < 10) {
-                  if (item.recuperativo_1 != null && parseInt(item.recuperativo_1) < 10) {
-                    if (item.recuperativo_2 != null && parseInt(item.recuperativo_2) < 10) {
-                      if (item.recuperativo_3 != null && parseInt(item.recuperativo_3) < 10) {
-                        if (item.recuperativo_4 != null && parseInt(item.recuperativo_4) < 10) {
-                          this.aprobar = false;
+                data.materias.forEach(item => {
+                  
+                  if (item.nota_final != null && parseInt(item.nota_final) < 10){
+                    this.recuperacion = true;
+                    this.nuevo_plantel = false;
+                  }
+                  if (item.nota_final != null && parseInt(item.nota_final) < 10) {
+                    if (item.recuperativo_1 != null && parseInt(item.recuperativo_1) < 10) {
+                      if (item.recuperativo_2 != null && parseInt(item.recuperativo_2) < 10) {
+                        if (item.recuperativo_3 != null && parseInt(item.recuperativo_3) < 10) {
+                          if (item.recuperativo_4 != null && parseInt(item.recuperativo_4) < 10) {
+                            this.aprobar = false;
+                          }
                         }
                       }
                     }
                   }
+
+                  if (item.nota_final == null) this.aprobar = false;
+                  if (item.estatus_nota == "0") {
+                    this.aprobar = false;
+                    this.boton_desactivado = false;
+                  }
+
+                });
+
+              }).catch(error => console.error(error))
+          },
+          async consultarSecciones() {
+            const res = await fetch(`./Controllers/SeccionController.php?ope=ConsulAll`)
+              .then(res => res.json()).then(({
+                data
+              }) => {
+                return data;
+              }).catch(error => console.error(error));
+            this.seccionesFiltro = res.filter(item => item.estatus_seccion == '1');
+          },
+          async periodo_activo() {
+            await fetch(`./Controllers/PeriodoController.php?ope=ConsultPeriodoActivo`)
+              .then(res => res.json()).then(({
+                data
+              }) => {
+                if (data[0] != undefined) {
+                  this.id_periodo = data.id_periodo_escolar
+                  this.des_periodo = data.periodoescolar;
+                } else {
+                  this.id_periodo = "";
+                  this.des_periodo = "No hay Periodo Escolar Activo";
                 }
 
-                if (item.nota_final == null) this.aprobar = false;
-                if (item.estatus_nota == "0") {
-                  this.aprobar = false;
-                  this.boton_desactivado = false;
-                }
-
-              });
-
-            }).catch(error => console.error(error))
+              }).catch(Error => console.error(Error))
+          },
+          ToggleModal() {
+            $("#staticBackdrop").modal("hide");
+            $("body").removeClass("modal-open");
+            $(".modal-backdrop").remove();
+          },
+          LimpiarForm() {
+            this.id = "";
+            this.des_materia = "";
+            this.estatus = "";
+            this.action = "Save";
+          }
         },
-        async consultarSecciones() {
-          const res = await fetch(`./Controllers/SeccionController.php?ope=ConsulAll`)
-            .then(res => res.json()).then(({
-              data
-            }) => {
-              return data;
-            }).catch(error => console.error(error));
-          this.seccionesFiltro = res.filter(item => item.estatus_seccion == '1');
+        watch: {
+          id_seccion(seccion) {
+            $("#datatable").DataTable().ajax.url(`./Controllers/NotasController.php?ope=ConsulAll&&idSeccion=${this.id_seccion}`).load();
+          }
         },
-        async periodo_activo() {
-          await fetch(`./Controllers/PeriodoController.php?ope=ConsultPeriodoActivo`)
-            .then(res => res.json()).then(({
-              data
-            }) => {
-              if (data[0] != undefined) {
-                this.id_periodo = data.id_periodo_escolar
-                this.des_periodo = data.periodoescolar;
-              } else {
-                this.id_periodo = "";
-                this.des_periodo = "No hay Periodo Escolar Activo";
+        computed: {
+          if_reprobar() {
+            console.log(this.aprobar, this.boton_desactivado, this.recuperacion)
+            if (this.aprobar == false && this.boton_desactivado == true) {
+              if (this.recuperacion == true) {
+                let reprobar = true;
+                this.materias.forEach(item => {
+                  if (parseInt(item.recuperativo_1) > 10 && item.estatus_nota == '1') reprobar = false;
+                  if (parseInt(item.recuperativo_2) > 10 && item.estatus_nota == '1') reprobar = false;
+                  if (parseInt(item.recuperativo_3) > 10 && item.estatus_nota == '1') reprobar = false;
+                  if (parseInt(item.recuperativo_4) > 10 && item.estatus_nota == '1') reprobar = false;
+                })
+
+                return reprobar;
               }
-
-            }).catch(Error => console.error(Error))
-        },
-        ToggleModal() {
-          $("#staticBackdrop").modal("hide");
-          $("body").removeClass("modal-open");
-          $(".modal-backdrop").remove();
-        },
-        LimpiarForm() {
-          this.id = "";
-          this.des_materia = "";
-          this.estatus = "";
-          this.action = "Save";
-        }
-      },
-      watch: {
-        id_seccion(seccion) {
-          $("#datatable").DataTable().ajax.url(`./Controllers/NotasController.php?ope=ConsulAll&&idSeccion=${this.id_seccion}`).load();
-        }
-      },
-      computed: {
-        if_reprobar() {
-          console.log(this.aprobar, this.boton_desactivado, this.recuperacion)
-          if (this.aprobar == false && this.boton_desactivado == true) {
-            if (this.recuperacion == true) {
-              let reprobar = true;
-              this.materias.forEach(item => {
-                if (parseInt(item.recuperativo_1) > 10 && item.estatus_nota == '1') reprobar = false;
-                if (parseInt(item.recuperativo_2) > 10 && item.estatus_nota == '1') reprobar = false;
-                if (parseInt(item.recuperativo_3) > 10 && item.estatus_nota == '1') reprobar = false;
-                if (parseInt(item.recuperativo_4) > 10 && item.estatus_nota == '1') reprobar = false;
-              })
-
-              return reprobar;
             }
-          }
 
-          return false;
+            return false;
+          }
+        },
+        async mounted() {
+          await this.periodo_activo();
+          await this.consultarSecciones()
+          await this.obtener_externas()
+
         }
-      },
-      async mounted() {
-        await this.periodo_activo();
-        await this.consultarSecciones()
+      }).mount("#App_vue");
 
+      const ConsultPdf = (e) => {
+        app.getPdf(e.dataset.cedula)
       }
-    }).mount("#App_vue");
-
-    const ConsultPdf = (e) => {
-      app.getPdf(e.dataset.cedula)
-    }
-    const Consult = async (e) => {
-      await app.GetData(e.dataset.id)
-    }
+      const Consult = async (e) => {
+        await app.GetData(e.dataset.id)
+      }
 
 
 
 
-    $("#datatable").DataTable({
-      ajax: {
-        url: `./Controllers/NotasController.php?ope=ConsulAll&&id_seccion=${app.id_seccion}`,
-        dataSrc: "data"
-      },
-      columns: [{
-          data: "cedula_estudiante"
+      $("#datatable").DataTable({
+        ajax: {
+          url: `./Controllers/NotasController.php?ope=ConsulAll&&id_seccion=${app.id_seccion}`,
+          dataSrc: "data"
         },
-        {
-          data: "nombre_persona",
-          render: function(data, type, row) {
-            let nombres = `${row.nombre_persona} ${row.apellido_persona}`;
-            return nombres;
-          }
-        },
-        {
-          data: "periodoescolar"
-        },
-        {
-          data: "estatus_estudiante",
-          render: function(data) {
-            return data == 1 ? "Activo" : "Inactivo"
-          }
-        },
-        {
-          defaultContent: '',
-          render: function(data, type, row) {
-            let btns = `
+        columns: [{
+            data: "cedula_estudiante"
+          },
+          {
+            data: "nombre_persona",
+            render: function(data, type, row) {
+              let nombres = `${row.nombre_persona} ${row.apellido_persona}`;
+              return nombres;
+            }
+          },
+          {
+            data: "periodoescolar"
+          },
+          {
+            data: "estatus_estudiante",
+            render: function(data) {
+              return data == 1 ? "Activo" : "Inactivo"
+            }
+          },
+          {
+            defaultContent: '',
+            render: function(data, type, row) {
+              let btns = `
               <div class="btn-group">                      
                 <button type="button" onClick="Consult(this)" data-seguimiento='${row.seguimiento_estudiante}' data-id='${row.cedula_estudiante}' class="btn btn-sm btn-primary" data-bs-toggle="modal"
                   data-bs-target="#staticBackdrop">CARGAR
                 </button>
                 <button type="button" onClick="ConsultPdf(this)" data-cedula='${row.cedula_estudiante}' class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i></button>
               </div>`;
-            return btns;
+              return btns;
+            }
           }
+        ],
+        paging: true,
+        lengthChange: false,
+        searching: true,
+        ordering: true,
+        info: true,
+        autoWidth: false,
+        responsive: true,
+        language: {
+          url: `./Views/js/DataTables.config.json`
         }
-      ],
-      paging: true,
-      lengthChange: false,
-      searching: true,
-      ordering: true,
-      info: true,
-      autoWidth: false,
-      responsive: true,
-      language: {
-        url: `./Views/js/DataTables.config.json`
-      }
-    });
-  </script>
+      });
+    </script>
 
-  <!-- <script src="./views/js/Seccion/index.js"></script> -->
+    <!-- <script src="./views/js/Seccion/index.js"></script> -->
 </body>
 
 </html>

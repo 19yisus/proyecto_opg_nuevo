@@ -145,21 +145,21 @@
         <span class="w-5/12 flex flex-row">
           Lugar de nacimiento: Pais:
           <div class="border-b border-black w-2/4 ml-1">
-            <!-- Agua Blanca -->
+            <?php echo $pais; ?>
           </div>
         </span>
 
         <span class="w-3/12 flex flex-row">
           Estado:
           <div class="border-b border-black w-full ml-1">
-            <!-- PORTUGUESA -->
+            <?php echo $enidad_federal_nacimiento; ?>
           </div>
         </span>
 
         <span class="w-4/12 flex flex-row">
           Municipio:
           <div class="border-b border-black w-full ml-1">
-            <!-- PORTUGUESA -->
+            <?php echo $municipio_nacimiento; ?>
           </div>
         </span>
       </div>
@@ -167,29 +167,29 @@
         IV. planteles donde cursó estudios:
       </span>
       <div class="flex space-x-1 space-y-1 mx-1 items-center relative h-24"">
-        <table class="table-auto border border-collapse  border-black w-3/6 h-24">
-          <thead>
-            <th class="border border-black my-2 p-1">N</th>
-            <th class="border border-black my-2 p-1">Nombre del plantel</th>
-            <th class="border border-black my-2 p-1">Localidad</th>
-            <th class="border border-black my-2 p-1">E.F</th>
-          </thead>
-          <tbody class="text-center">
-            <tr>
-              <td class="border border-black my-2 p-1">1</td>
-              <td class="border border-black my-2 p-1"></td>
-              <td class="border border-black my-2 p-1"></td>
-              <td class="border border-black my-2 p-1"></td>
-            </tr>
-            <tr>
-              <td class="border border-black my-2 p-1">2</td>
-              <td class="border border-black my-2 p-1"></td>
-              <td class="border border-black my-2 p-1"></td>
-              <td class="border border-black my-2 p-1"></td>
-            </tr>
-          </tbody>
+        <table class=" table-auto border border-collapse border-black w-3/6 h-24">
+        <thead>
+          <th class="border border-black my-2 p-1">N</th>
+          <th class="border border-black my-2 p-1">Nombre del plantel</th>
+          <th class="border border-black my-2 p-1">Localidad</th>
+          <th class="border border-black my-2 p-1">E.F</th>
+        </thead>
+        <tbody class="text-center">
+          <tr>
+            <td class="border border-black my-2 p-1">1</td>
+            <td class="border border-black my-2 p-1 font-bold"><?php echo isset($planteles[0]['des_institucion']) ? strtoupper($planteles[0]['des_institucion']) : '**'; ?></td>
+            <td class="border border-black my-2 p-1 font-bold"><?php echo isset($planteles[0]['zona_educativa']) ? strtoupper($planteles[0]['entidad_federal']) : '**'; ?></td>
+            <td class="border border-black my-2 p-1"></td>
+          </tr>
+          <tr>
+            <td class="border border-black my-2 p-1">2</td>
+            <td class="border border-black my-2 p-1"></td>
+            <td class="border border-black my-2 p-1"></td>
+            <td class="border border-black my-2 p-1"></td>
+          </tr>
+        </tbody>
         </table>
-        <table class="table-auto border border-black w-3/6 h-24 absolute text-center -right-1 -top-0" style="transform: translateY(-7px) !important; ">  
+        <table class="table-auto border border-black w-3/6 h-24 absolute text-center -right-1 -top-0" style="transform: translateY(-7px) !important; ">
           <thead class="p-2">
             <th class="border border-black p-1">N</th>
             <th class="border border-black p-1">Nombre del plantel</th>
@@ -274,32 +274,47 @@
               <?php
               for ($i = 0; $i < 7; $i++) {
                 $materias_1 = $primero[$i];
-                if (intval($materias_1['nota_final']) < 10) {
-                  if (intval($materias_1['recuperativo_1']) < 10) {
-                    if (intval($materias_1['recuperativo_2']) < 10) {
-                      if (intval($materias_1['recuperativo_3']) < 10) {
-                        if (intval($materias_1['recuperativo_4']) < 10) {
-                          $final = $materias_1['recuperativo_4'];
+                if (isset($materias_1)) {
+                  if (intval($materias_1['nota_final']) < 10) {
+                    if (intval($materias_1['recuperativo_1']) < 10) {
+                      if (intval($materias_1['recuperativo_2']) < 10) {
+                        if (intval($materias_1['recuperativo_3']) < 10) {
+                          if (intval($materias_1['recuperativo_4']) < 10) {
+                            $final = $materias_1['recuperativo_4'];
+                          } else {
+                            $final = $materias_1['recuperativo_4'];
+                          }
                         } else {
-                          $final = $materias_1['recuperativo_4'];
+                          $final = $materias_1['recuperativo_3'];
                         }
                       } else {
-                        $final = $materias_1['recuperativo_3'];
+                        $final = $materias_1['recuperativo_2'];
                       }
                     } else {
-                      $final = $materias_1['recuperativo_2'];
+                      $final = $materias_1['recuperativo_1'];
                     }
                   } else {
-                    $final = $materias_1['recuperativo_1'];
+                    $final = $materias_1['nota_final'];
                   }
+
+                  $letra = ($final >= 10) ? "F" : "R";
+                  $periodo = explode("-", $materias_1['periodoescolar']);
+                  $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
+                  $numer_letra = $number->format(intval($final));
+                  $mes = '07';
+                  $plantel = '1';
                 } else {
-                  $final = $materias_1['nota_final'];
+                  $letra = '**';
+                  $periodo = '**';
+                  $number = '**';
+                  $numer_letra = '**';
+                  $final = '**';
+                  $mes = '**';
+                  $plantel = '**';
                 }
 
-                $letra = ($final >= 10) ? "F" : "R";
-                $periodo = explode("-", $materias_1['periodoescolar']);
-                $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
-                $numer_letra = $number->format(intval($final));
+
+
               ?>
                 <tr>
                   <td class="border border-black p-1"><?php echo isset($materias_1['des_materia']) ? $materias_1['des_materia'] : '**'; ?></td>
@@ -318,13 +333,13 @@
                     <table class="table-auto border-collapse border-black w-full h-full m-0 p-0 absolute top-0">
                       <tbody>
                         <tr class="w-full">
-                          <td class="border-r border-black" style="width: 21px !important;"><?php echo isset($final) ? '07' : '**'; ?></td>
+                          <td class="border-r border-black" style="width: 21px !important;"><?php echo $mes; ?></td>
                           <td class="border-l border-black"><?php echo isset($final) ? $periodo[0] : '**'; ?></td>
                         </tr>
                       </tbody>
                     </table>
                   </td>
-                  <td class="border border-black p-1">1</td>
+                  <td class="border border-black p-1"><?php echo $plantel; ?></td>
                 </tr>
               <?php } ?>
             </tbody>
@@ -383,32 +398,47 @@
               <?php
               for ($i = 0; $i < 7; $i++) {
                 $materias_2 = $segundo[$i];
-                if (intval($materias_2['nota_final']) < 10) {
-                  if (intval($materias_2['recuperativo_1']) < 10) {
-                    if (intval($materias_2['recuperativo_2']) < 10) {
-                      if (intval($materias_2['recuperativo_3']) < 10) {
-                        if (intval($materias_2['recuperativo_4']) < 10) {
-                          $final = $materias_2['recuperativo_4'];
+                if (isset($materias_2)) {
+                  if (intval($materias_2['nota_final']) < 10) {
+                    if (intval($materias_2['recuperativo_1']) < 10) {
+                      if (intval($materias_2['recuperativo_2']) < 10) {
+                        if (intval($materias_2['recuperativo_3']) < 10) {
+                          if (intval($materias_2['recuperativo_4']) < 10) {
+                            $final = $materias_2['recuperativo_4'];
+                          } else {
+                            $final = $materias_2['recuperativo_4'];
+                          }
                         } else {
-                          $final = $materias_2['recuperativo_4'];
+                          $final = $materias_2['recuperativo_3'];
                         }
                       } else {
-                        $final = $materias_2['recuperativo_3'];
+                        $final = $materias_2['recuperativo_2'];
                       }
                     } else {
-                      $final = $materias_2['recuperativo_2'];
+                      $final = $materias_2['recuperativo_1'];
                     }
                   } else {
-                    $final = $materias_2['recuperativo_1'];
+                    $final = $materias_2['nota_final'];
                   }
+
+                  $letra = ($final >= 10) ? "F" : "R";
+                  $periodo = explode("-", $materias_2['periodoescolar']);
+                  $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
+                  $numer_letra = $number->format(intval($final));
+                  $mes = '07';
+                  $plantel = '1';
                 } else {
-                  $final = $materias_2['nota_final'];
+                  $letra = '**';
+                  $periodo = '**';
+                  $number = '**';
+                  $numer_letra = '**';
+                  $final = '**';
+                  $mes = '**';
+                  $plantel = '**';
                 }
 
-                $letra = ($final >= 10) ? "F" : "R";
-                $periodo = explode("-", $materias_2['periodoescolar']);
-                $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
-                $numer_letra = $number->format(intval($final));
+
+
               ?>
                 <tr>
                   <td class="border border-black p-1"><?php echo isset($materias_2['des_materia']) ? $materias_2['des_materia'] : '**'; ?></td>
@@ -427,13 +457,13 @@
                     <table class="table-auto border-collapse border-black w-full h-full m-0 p-0 absolute top-0">
                       <tbody>
                         <tr class="w-full">
-                          <td class="border-r border-black" style="width: 21px !important;"><?php echo isset($final) ? '07' : '**'; ?></td>
+                          <td class="border-r border-black" style="width: 21px !important;"><?php echo $mes; ?></td>
                           <td class="border-l border-black"><?php echo isset($final) ? $periodo[0] : '**'; ?></td>
                         </tr>
                       </tbody>
                     </table>
                   </td>
-                  <td class="border border-black p-1">1</td>
+                  <td class="border border-black p-1"><?php echo $plantel; ?></td>
                 </tr>
               <?php } ?>
             </tbody>
@@ -495,32 +525,47 @@
               <?php
               for ($i = 0; $i < 8; $i++) {
                 $materias_3 = $tercero[$i];
-                if (intval($materias_3['nota_final']) < 10) {
-                  if (intval($materias_3['recuperativo_1']) < 10) {
-                    if (intval($materias_3['recuperativo_2']) < 10) {
-                      if (intval($materias_3['recuperativo_3']) < 10) {
-                        if (intval($materias_3['recuperativo_4']) < 10) {
-                          $final = $materias_3['recuperativo_4'];
+                if (isset($materias_3)) {
+                  if (intval($materias_3['nota_final']) < 10) {
+                    if (intval($materias_3['recuperativo_1']) < 10) {
+                      if (intval($materias_3['recuperativo_2']) < 10) {
+                        if (intval($materias_3['recuperativo_3']) < 10) {
+                          if (intval($materias_3['recuperativo_4']) < 10) {
+                            $final = $materias_3['recuperativo_4'];
+                          } else {
+                            $final = $materias_3['recuperativo_4'];
+                          }
                         } else {
-                          $final = $materias_3['recuperativo_4'];
+                          $final = $materias_3['recuperativo_3'];
                         }
                       } else {
-                        $final = $materias_3['recuperativo_3'];
+                        $final = $materias_3['recuperativo_2'];
                       }
                     } else {
-                      $final = $materias_3['recuperativo_2'];
+                      $final = $materias_3['recuperativo_1'];
                     }
                   } else {
-                    $final = $materias_3['recuperativo_1'];
+                    $final = $materias_3['nota_final'];
                   }
+
+                  $letra = ($final >= 10) ? "F" : "R";
+                  $periodo = explode("-", $materias_3['periodoescolar']);
+                  $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
+                  $numer_letra = $number->format(intval($final));
+                  $mes = '07';
+                  $plantel = $materias_3['plantel'];
                 } else {
-                  $final = $materias_3['nota_final'];
+                  $letra = '**';
+                  $periodo = '**';
+                  $number = '**';
+                  $numer_letra = '**';
+                  $final = '**';
+                  $mes = '**';
+                  $plantel = '**';
                 }
 
-                $letra = ($final >= 10) ? "F" : "R";
-                $periodo = explode("-", $materias_3['periodoescolar']);
-                $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
-                $numer_letra = $number->format(intval($final));
+
+
               ?>
                 <tr>
                   <td class="border border-black p-1"><?php echo isset($materias_3['des_materia']) ? $materias_3['des_materia'] : '**'; ?></td>
@@ -539,13 +584,13 @@
                     <table class="table-auto border-collapse border-black w-full h-full m-0 p-0 absolute top-0">
                       <tbody>
                         <tr class="w-full">
-                          <td class="border-r border-black" style="width: 21px !important;"><?php echo isset($final) ? '07' : '**'; ?></td>
+                          <td class="border-r border-black" style="width: 21px !important;"><?php echo $mes; ?></td>
                           <td class="border-l border-black"><?php echo isset($final) ? $periodo[0] : '**'; ?></td>
                         </tr>
                       </tbody>
                     </table>
                   </td>
-                  <td class="border border-black p-1">1</td>
+                  <td class="border border-black p-1"><?php echo $plantel; ?></td>
                 </tr>
               <?php } ?>
             </tbody>
@@ -557,7 +602,7 @@
         <div class="flex flex-col text-center w-6/12">
           <span class="font-bold my-1">CUARTO AÑO</span>
           <table class="table-auto border border-collapse  border-black w-full">
-          <thead class="h-12">
+            <thead class="h-12">
               <th class="border border-black p-1">ÁREA DE FORMACIÓN</th>
               <th class="border border-black p-0 relative w-48">
                 <table class="table-auto border-collapse border-black w-full m-0 p-0 absolute left-0 top-0">
@@ -604,32 +649,47 @@
               <?php
               for ($i = 0; $i < 8; $i++) {
                 $materias_4 = $cuarto[$i];
-                if (intval($materias_4['nota_final']) < 10) {
-                  if (intval($materias_4['recuperativo_1']) < 10) {
-                    if (intval($materias_4['recuperativo_2']) < 10) {
-                      if (intval($materias_4['recuperativo_3']) < 10) {
-                        if (intval($materias_4['recuperativo_4']) < 10) {
-                          $final = $materias_4['recuperativo_4'];
+                if (isset($materias_4)) {
+                  if (intval($materias_4['nota_final']) < 10) {
+                    if (intval($materias_4['recuperativo_1']) < 10) {
+                      if (intval($materias_4['recuperativo_2']) < 10) {
+                        if (intval($materias_4['recuperativo_3']) < 10) {
+                          if (intval($materias_4['recuperativo_4']) < 10) {
+                            $final = $materias_4['recuperativo_4'];
+                          } else {
+                            $final = $materias_4['recuperativo_4'];
+                          }
                         } else {
-                          $final = $materias_4['recuperativo_4'];
+                          $final = $materias_4['recuperativo_3'];
                         }
                       } else {
-                        $final = $materias_4['recuperativo_3'];
+                        $final = $materias_4['recuperativo_2'];
                       }
                     } else {
-                      $final = $materias_4['recuperativo_2'];
+                      $final = $materias_4['recuperativo_1'];
                     }
                   } else {
-                    $final = $materias_4['recuperativo_1'];
+                    $final = $materias_4['nota_final'];
                   }
+
+                  $letra = ($final >= 10) ? "F" : "R";
+                  $periodo = explode("-", $materias_4['periodoescolar']);
+                  $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
+                  $numer_letra = $number->format(intval($final));
+                  $mes = '07';
+                  $plantel = '1';
                 } else {
-                  $final = $materias_4['nota_final'];
+                  $letra = '**';
+                  $periodo = '**';
+                  $number = '**';
+                  $numer_letra = '**';
+                  $final = '**';
+                  $mes = '**';
+                  $plantel = '**';
                 }
 
-                $letra = ($final >= 10) ? "F" : "R";
-                $periodo = explode("-", $materias_4['periodoescolar']);
-                $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
-                $numer_letra = $number->format(intval($final));
+
+
               ?>
                 <tr>
                   <td class="border border-black p-1"><?php echo isset($materias_4['des_materia']) ? $materias_4['des_materia'] : '**'; ?></td>
@@ -648,13 +708,13 @@
                     <table class="table-auto border-collapse border-black w-full h-full m-0 p-0 absolute top-0">
                       <tbody>
                         <tr class="w-full">
-                          <td class="border-r border-black" style="width: 21px !important;"><?php echo isset($final) ? '07' : '**'; ?></td>
+                          <td class="border-r border-black" style="width: 21px !important;"><?php echo $mes; ?></td>
                           <td class="border-l border-black"><?php echo isset($final) ? $periodo[0] : '**'; ?></td>
                         </tr>
                       </tbody>
                     </table>
                   </td>
-                  <td class="border border-black p-1">1</td>
+                  <td class="border border-black p-1"><?php echo $plantel; ?></td>
                 </tr>
               <?php } ?>
             </tbody>
@@ -716,32 +776,47 @@
               <?php
               for ($i = 0; $i < 10; $i++) {
                 $materias_5 = $quinto[$i];
-                if (intval($materias_5['nota_final']) < 10) {
-                  if (intval($materias_5['recuperativo_1']) < 10) {
-                    if (intval($materias_5['recuperativo_2']) < 10) {
-                      if (intval($materias_5['recuperativo_3']) < 10) {
-                        if (intval($materias_5['recuperativo_4']) < 10) {
-                          $final = $materias_5['recuperativo_4'];
+                if (isset($materias_5)) {
+                  if (intval($materias_5['nota_final']) < 10) {
+                    if (intval($materias_5['recuperativo_1']) < 10) {
+                      if (intval($materias_5['recuperativo_2']) < 10) {
+                        if (intval($materias_5['recuperativo_3']) < 10) {
+                          if (intval($materias_5['recuperativo_4']) < 10) {
+                            $final = $materias_5['recuperativo_4'];
+                          } else {
+                            $final = $materias_5['recuperativo_4'];
+                          }
                         } else {
-                          $final = $materias_5['recuperativo_4'];
+                          $final = $materias_5['recuperativo_3'];
                         }
                       } else {
-                        $final = $materias_5['recuperativo_3'];
+                        $final = $materias_5['recuperativo_2'];
                       }
                     } else {
-                      $final = $materias_5['recuperativo_2'];
+                      $final = $materias_5['recuperativo_1'];
                     }
                   } else {
-                    $final = $materias_5['recuperativo_1'];
+                    $final = $materias_5['nota_final'];
                   }
+
+                  $letra = ($final >= 10) ? "F" : "R";
+                  $periodo = explode("-", $materias_5['periodoescolar']);
+                  $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
+                  $numer_letra = $number->format(intval($final));
+                  $mes = '07';
+                  $plantel = '1';
                 } else {
-                  $final = $materias_5['nota_final'];
+                  $letra = '**';
+                  $periodo = '**';
+                  $number = '**';
+                  $numer_letra = '**';
+                  $final = '**';
+                  $mes = '**';
+                  $plantel = '**';
                 }
 
-                $letra = ($final >= 10) ? "F" : "R";
-                $periodo = explode("-", $materias_5['periodoescolar']);
-                $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
-                $numer_letra = $number->format(intval($final));
+
+
               ?>
                 <tr>
                   <td class="border border-black p-1"><?php echo isset($materias_5['des_materia']) ? $materias_5['des_materia'] : '**'; ?></td>
@@ -760,13 +835,13 @@
                     <table class="table-auto border-collapse border-black w-full h-full m-0 p-0 absolute top-0">
                       <tbody>
                         <tr class="w-full">
-                          <td class="border-r border-black" style="width: 21px !important;"><?php echo isset($final) ? '07' : '**'; ?></td>
+                          <td class="border-r border-black" style="width: 21px !important;"><?php echo $mes; ?></td>
                           <td class="border-l border-black"><?php echo isset($final) ? $periodo[0] : '**'; ?></td>
                         </tr>
                       </tbody>
                     </table>
                   </td>
-                  <td class="border border-black p-1">1</td>
+                  <td class="border border-black p-1"><?php echo $plantel; ?></td>
                 </tr>
               <?php } ?>
             </tbody>
@@ -824,32 +899,47 @@
               <?php
               for ($i = 0; $i < 10; $i++) {
                 $materias_6 = $sexto[$i];
-                if (intval($materias_6['nota_final']) < 10) {
-                  if (intval($materias_6['recuperativo_1']) < 10) {
-                    if (intval($materias_6['recuperativo_2']) < 10) {
-                      if (intval($materias_6['recuperativo_3']) < 10) {
-                        if (intval($materias_6['recuperativo_4']) < 10) {
-                          $final = $materias_6['recuperativo_4'];
+                if (isset($materias_6)) {
+                  if (intval($materias_6['nota_final']) < 10) {
+                    if (intval($materias_6['recuperativo_1']) < 10) {
+                      if (intval($materias_6['recuperativo_2']) < 10) {
+                        if (intval($materias_6['recuperativo_3']) < 10) {
+                          if (intval($materias_6['recuperativo_4']) < 10) {
+                            $final = $materias_6['recuperativo_4'];
+                          } else {
+                            $final = $materias_6['recuperativo_4'];
+                          }
                         } else {
-                          $final = $materias_6['recuperativo_4'];
+                          $final = $materias_6['recuperativo_3'];
                         }
                       } else {
-                        $final = $materias_6['recuperativo_3'];
+                        $final = $materias_6['recuperativo_2'];
                       }
                     } else {
-                      $final = $materias_6['recuperativo_2'];
+                      $final = $materias_6['recuperativo_1'];
                     }
                   } else {
-                    $final = $materias_6['recuperativo_1'];
+                    $final = $materias_6['nota_final'];
                   }
+
+                  $letra = ($final >= 10) ? "F" : "R";
+                  $periodo = explode("-", $materias_6['periodoescolar']);
+                  $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
+                  $numer_letra = $number->format(intval($final));
+                  $mes = '07';
+                  $plantel = '1';
                 } else {
-                  $final = $materias_6['nota_final'];
+                  $letra = '**';
+                  $periodo = '**';
+                  $number = '**';
+                  $numer_letra = '**';
+                  $final = '**';
+                  $mes = '**';
+                  $plantel = '**';
                 }
 
-                $letra = ($final >= 10) ? "F" : "R";
-                $periodo = explode("-", $materias_6['periodoescolar']);
-                $number = new NumberFormatter("es", NumberFormatter::SPELLOUT);
-                $numer_letra = $number->format(intval($final));
+
+
               ?>
                 <tr>
                   <td class="border border-black p-1"><?php echo isset($materias_6['des_materia']) ? $materias_6['des_materia'] : '**'; ?></td>
@@ -868,13 +958,13 @@
                     <table class="table-auto border-collapse border-black w-full h-full m-0 p-0 absolute top-0">
                       <tbody>
                         <tr class="w-full">
-                          <td class="border-r border-black" style="width: 21px !important;"><?php echo isset($final) ? '07' : '**'; ?></td>
+                          <td class="border-r border-black" style="width: 21px !important;"><?php echo $mes; ?></td>
                           <td class="border-l border-black"><?php echo isset($final) ? $periodo[0] : '**'; ?></td>
                         </tr>
                       </tbody>
                     </table>
                   </td>
-                  <td class="border border-black p-1">1</td>
+                  <td class="border border-black p-1"><?php echo $plantel; ?></td>
                 </tr>
               <?php } ?>
             </tbody>
@@ -913,16 +1003,18 @@
                       </tr>
                       <tr class="border border-black p-1">
                         <td>
-                        <!-- value="<?php //echo isset($director['nombre_persona']) ? $director['nombre_persona'] . $director['apellido_persona'] : '**'; ?>" -->
-                          <input type="text" class="w-full outline-none border-none" >
+                          <!-- value="<?php //echo isset($director['nombre_persona']) ? $director['nombre_persona'] . $director['apellido_persona'] : '**'; 
+                                      ?>" -->
+                          <input type="text" class="w-full outline-none border-none">
                         </td>
                       </tr>
                       <tr class="border border-black p-1">
                         <td>Cédula de Identidad</td>
                       </tr>
                       <tr class="border border-black p-1">
-                      <!-- value="<?php //echo isset($director['nacionalidad_persona']) ? $director['nacionalidad_persona'] . $director['cedula_persona'] : '**'; ?>" -->
-                        <td><input type="text" class="w-full outline-none border-none" ></td>
+                        <!-- value="<?php //echo isset($director['nacionalidad_persona']) ? $director['nacionalidad_persona'] . $director['cedula_persona'] : '**'; 
+                                    ?>" -->
+                        <td><input type="text" class="w-full outline-none border-none"></td>
                       </tr>
                       <tr class="border border-black p-1">
                         <td>Firma</td>
@@ -987,7 +1079,7 @@
     window.matchMedia('print').addListener((evento) => {
       if (!evento.matches) window.close()
     });
-    window.print()
+    // window.print()
   </script>
 </body>
 

@@ -134,14 +134,37 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                   </div>
 
                 </div>
-
-                <div class="col-md-6 " style="margin:0; padding:5px;">
+                <div class="col-md-6" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Lugar de Nacimiento:</span>
-                    <input type="text" name="direccion_n_persona" disabled v-model="lugar_n" class="form-control form-control-sm" id="direccion_persona" placeholder="Ingrese el lugar de nacimiento" required style="width:50%;" disabled>
-                    <span class="error-text">Rellene el campo correctamente</span>
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Dirección:</span>
+                    <input type="text" name="direccion" disabled v-model="direccion" maxlength="100" class="form-control form-control-sm" id="direccion" placeholder="Ingrese la dirección" required style="width:70%;">
+                    <span class="error-text">Direccion inválida</span>
                   </div>
                 </div>
+
+                <div class="col-md-4" style="margin:0; padding:5px;">
+                  <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Pais:</span>
+                    <input type="text" name="pais" id="pais" class="form-select" aria-label="Default select example" required disabled>
+                    <span class="error-text">Selecciona un pais</span>
+                  </div>
+                </div>
+                <div class="col-md-4" style="margin:0; padding:5px;">
+                  <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Estado:</span>
+                    <input type="text" name="estado" id="estado" class="form-select" aria-label="Default select example" required disabled>
+                    <span class="error-text">Selecciona estado</span>
+                  </div>
+                </div>
+
+                <div class="col-md-4" style="margin:0; padding:5px;">
+                  <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Municipio:</span>
+                    <input type="text" name="municipio" id="municipio" class="form-select" aria-label="Default select example" required disabled>
+                    <span class="error-text">Selecciona municipio</span>
+                  </div>
+                </div>
+
 
                 <div class="col-md-6" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
@@ -157,13 +180,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
 
                 <!-- <div class="col-md-2"></div> -->
 
-                <div class="col-md-6" style="margin:0; padding:5px;">
-                  <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Dirección:</span>
-                    <input type="text" name="direccion" disabled v-model="direccion" maxlength="100" class="form-control form-control-sm" id="direccion" placeholder="Ingrese la dirección" required style="width:70%;">
-                    <span class="error-text">Direccion inválida</span>
-                  </div>
-                </div>
+                
                 <div class="col-md-4" style="margin:0; padding: 5px;">
                   <label for="">Sexo</label>
                   <div class="d-flex">
@@ -503,6 +520,9 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
     let fechaValida = false;
     let lugarNValida = false;
     let direccionValida = false;
+    let municipioValida = false;
+    let estadoValida = false;
+    let paisValida = false;
     let seguimientoValida = false;
     let seccionValida = false;
     let radioValida = false;
@@ -531,6 +551,9 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
         let apellidoValida = false;
         let lugarNValida = false;
         let direccionValida = false;
+        let municipioValida = false;
+        let estadoValida = false;
+        let paisValida = false;
         let seguimientoValida = false;
         let seccionValida = false;
         let radioValida = false;
@@ -545,6 +568,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
         clearTimeout(tiempoFuera);
         tiempoFuera = setTimeout(() => {
           console.log(`input ${boxInput.name} value: `, boxInput.value)
+          console.log('LLEGa AQUI')
           validacionFecha(box, boxInput, null)
         });
       })
@@ -582,7 +606,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           app.formulario_valido = false
           mostrarError(true, box);
           fechaValida = false;
-          document.querySelector('#direccion_persona').disabled = true;
+          document.querySelector('#direccion').disabled = true;
           return false
         }
 
@@ -591,13 +615,13 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           app.formulario_valido = false
           mostrarError(true, box);
           fechaIValida = false;
-          document.querySelector('#direccion_persona').disabled = true;
+          document.querySelector('#direccion').disabled = true;
           return false
         } else {
           app.formulario_valido = true
           mostrarError(false, box);
           fechaValida = true;
-          document.querySelector('#direccion_persona').disabled = false;
+          document.querySelector('#direccion').disabled = false;
           return true
         }
       }
@@ -616,10 +640,14 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           document.querySelector('#apellido').value = "";
           document.querySelector('#fecha_n_persona').disabled = true;
           document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#direccion_persona').disabled = true;
-          document.querySelector('#direccion_persona').value = "";
           document.querySelector('#direccion').disabled = true;
           document.querySelector('#direccion').value = "";
+          document.querySelector('#pais').disabled = true;
+          document.querySelector('#pais').value = "";
+          document.querySelector('estado').disabled = true;
+          document.querySelector('estado').value = "";
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = "";
 
         } else {
           console.log(box);
@@ -648,10 +676,14 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                 document.querySelector('#apellido').value = "";
                 document.querySelector('#fecha_n_persona').disabled = true;
                 document.querySelector('#fecha_n_persona').value = "";
-                document.querySelector('#direccion_persona').disabled = true;
-                document.querySelector('#direccion_persona').value = "";
                 document.querySelector('#direccion').disabled = true;
                 document.querySelector('#direccion').value = "";
+                document.querySelector('#pais').disabled = true;
+                document.querySelector('#pais').value = "";
+                document.querySelector('estado').disabled = true;
+                document.querySelector('estado').value = "";
+                document.querySelector('#municipio').disabled = true;
+                document.querySelector('#municipio').value = "";
                 cedulaRepetida = false;
               }
             }).catch(error => console.error(error))
@@ -667,10 +699,14 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           document.querySelector('#apellido').value = "";
           document.querySelector('#fecha_n_persona').disabled = true;
           document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#direccion_persona').disabled = true;
-          document.querySelector('#direccion_persona').value = "";
           document.querySelector('#direccion').disabled = true;
           document.querySelector('#direccion').value = "";
+          document.querySelector('#pais').disabled = true;
+          document.querySelector('#pais').value = "";
+          document.querySelector('estado').disabled = true;
+          document.querySelector('estado').value = "";
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = "";
         } else if (isNaN(boxInput.value)) {
           console.error(`${boxInput.value} no es un numero`);
           mostrarError(true, box);
@@ -681,10 +717,14 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           document.querySelector('#apellido').value = "";
           document.querySelector('#fecha_n_persona').disabled = true;
           document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#direccion_persona').disabled = true;
-          document.querySelector('#direccion_persona').value = "";
           document.querySelector('#direccion').disabled = true;
           document.querySelector('#direccion').value = "";
+          document.querySelector('#pais').disabled = true;
+          document.querySelector('#pais').value = "";
+          document.querySelector('estado').disabled = true;
+          document.querySelector('estado').value = "";
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = "";
         } else if (cedulaRepetida) {
           console.error(`${boxInput.value} Ya esta registrado`);
           mostrarError(true, box);
@@ -695,10 +735,14 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           document.querySelector('#apellido').value = "";
           document.querySelector('#fecha_n_persona').disabled = true;
           document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#direccion_persona').disabled = true;
-          document.querySelector('#direccion_persona').value = "";
           document.querySelector('#direccion').disabled = true;
           document.querySelector('#direccion').value = "";
+          document.querySelector('#pais').disabled = true;
+          document.querySelector('#pais').value = "";
+          document.querySelector('estado').disabled = true;
+          document.querySelector('estado').value = "";
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = "";
         } else {
           mostrarError(false, box);
           cedulaValida = true;
@@ -734,10 +778,12 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           document.querySelector('#apellido').value = "";
           document.querySelector('#fecha_n_persona').disabled = true;
           document.querySelector('#fecha_n_persona').value = "";
-          document.querySelector('#direccion_persona').disabled = true;
-          document.querySelector('#direccion_persona').value = "";
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
+          document.querySelector('#pais').disabled = true;
+          document.querySelector('#pais').value = "";
+          document.querySelector('#estado').disabled = true;
+          document.querySelector('#estado').value = "";
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = "";
         } else {
           mostrarError(false, box);
           nombreValida = true;
@@ -775,6 +821,12 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           document.querySelector('#direccion_persona').value = "";
           document.querySelector('#direccion').disabled = true;
           document.querySelector('#direccion').value = "";
+          document.querySelector('#pais').disabled = true;
+          document.querySelector('#pais').value = "";
+          document.querySelector('#estado').disabled = true;
+          document.querySelector('#estado').value = "";
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = "";
 
         } else {
           mostrarError(false, box);
@@ -828,30 +880,64 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
       //   }
       // }
 
-      if (boxInput != null && boxInput.name == "direccion_n_persona") {
-        console.log("validacion lugar de nacimiento")
-        if (boxInput.value.length <= 3) {
-          console.log("validacion lugar nacimiento");
-          mostrarError(true, box);
-          lugarNValida = false;
-          document.querySelector('#direccion').disabled = true;
-          document.querySelector('#direccion').value = "";
-        } else {
-          mostrarError(false, box);
-          lugarNValida = true;
-          document.querySelector('#direccion').disabled = false;
-        }
-      }
       if (boxInput != null && boxInput.name == "direccion") {
         console.log("validacion direccion")
-        if (boxInput.value.length < 3 || boxInput.value == "" || boxInput.value == null) {
+        if (boxInput.value.length <= 3) {
+          console.log("validacion direccion");
           mostrarError(true, box);
           direccionValida = false;
+          document.querySelector('#pais').disabled = true;
+          document.querySelector('#pais').value = "";
+          document.querySelector('#estado').disabled = true;
+          document.querySelector('#estado').value = "";
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = "";
         } else {
           mostrarError(false, box);
-          direccionValida = true;
+          direcccionValida = true;
+          document.querySelector('#pais').disabled = false;
         }
       }
+      if (boxInput != null && boxInput.name == "pais") {
+        console.log("validacion pais")
+        if (boxInput.value == "" || boxInput.value == null) {
+          mostrarError(true, box);
+          paisValida = false;
+          document.querySelector('#estado').disabled = true;
+          document.querySelector('#estado').value = "";
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = "";
+        } else {
+          mostrarError(false, box);
+          paisValida = true;
+          document.querySelector('#estado').disabled = false;
+        }
+      }
+
+      if (boxInput != null && boxInput.name == "estado") {
+        console.log("validacion estado")
+        if (boxInput.value == "" || boxInput.value == null) {
+          mostrarError(true, box);
+          estadoValida = false;
+          document.querySelector('#municipio').disabled = true;
+          document.querySelector('#municipio').value = "";
+        } else {
+          mostrarError(false, box);
+          estadoValida = true;
+          document.querySelector('#municipio').disabled = false;
+        }
+      }
+      if (boxInput != null && boxInput.name == "municipio") {
+        console.log("validacion municipio")
+        if (boxInput.value == "" || boxInput.value == null) {
+          mostrarError(true, box);
+          municipioValida = false;
+        } else {
+          mostrarError(false, box);
+          municipioValida = true;
+        }
+      }
+
 
       if (boxInput != null && boxInput.name == "seguimiento_estudiante") {
         console.log("validacion seguimiento")
@@ -870,7 +956,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
       }
       // nacionalidadValida && seguimientoValida &&
 
-      if (cedulaValida && nombreValida && apellidoValida && lugarNValida && fechaValida && direccionValida && seccionValida && radioValida) {
+      if (cedulaValida && nombreValida && apellidoValida && lugarNValida && fechaValida && paisValida && estadoValida && municipioValida && direccionValida && seccionValida && radioValida) {
         app.formulario_valido = true;
       } else app.formulario_valido = false;
     }
@@ -908,3 +994,59 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+<div class="col-md-4" style="margin:0; padding:5px;">
+                  <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Pais:</span>
+                    <select name="id_pais" id="pais" class="form-select" aria-label="Default select example" required disabled>
+                      <option value="0">Seleccione una opción</option>
+                      <option :value="item.idSeccion" v-for="item in secciones"></option>
+                    </select>
+                    <span class="error-text">Selecciona un pais</span>
+                  </div>
+                </div>
+                <div class="col-md-4" style="margin:0; padding:5px;">
+                  <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Estado:</span>
+                    <select name="id_estado" id="estado" class="form-select" aria-label="Default select example" required disabled>
+                      <option value="0">Seleccione una opción</option>
+                      <option :value="item.idSeccion" v-for="item in secciones"></option>
+                    </select>
+                    <span class="error-text">Selecciona estado</span>
+                  </div>
+                </div>
+
+                <div class="col-md-4" style="margin:0; padding:5px;">
+                  <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Municipio:</span>
+                    <select name="id_municipio" id="municipio" class="form-select" aria-label="Default select example" required disabled>
+                      <option value="0">Seleccione una opción</option>
+                      <option :value="item.idSeccion" v-for="item in secciones"></option>
+                    </select>
+                    <span class="error-text">Selecciona municipio</span>
+                  </div>
+                </div> -->

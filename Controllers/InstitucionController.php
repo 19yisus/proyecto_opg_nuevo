@@ -16,6 +16,10 @@ if (isset($_POST['ope'])) {
       ChangeStatusData();
       break;
 
+    case 'save_externo':
+      Save_externa();
+    break;
+
     default:
       die("No hay datos");
       break;
@@ -32,6 +36,11 @@ if (isset($_GET['ope'])) {
     case 'ConsultOne':
       GetData();
       break;
+
+    case 'externas':
+      GetDatasExternas();
+    break;
+
     case 'ConsulAll_bitacora':
       GetBitacora();
       break;
@@ -44,6 +53,11 @@ function SaveData()
   $InstitucionModel->SetData($_POST);
   $InstitucionModel->SaveDatos();
 }
+function Save_externa(){
+  $InstitucionModel = new InstitucionModel();
+  $InstitucionModel->SetData($_POST);
+  $InstitucionModel->SaveDatos_externa();
+}
 function UpdateDatos()
 {
   $InstitucionModel = new InstitucionModel();
@@ -55,6 +69,11 @@ function GetDatas()
 {
   $InstitucionModel = new InstitucionModel();
   $InstitucionModel->GetAll();
+}
+function GetDatasExternas()
+{
+  $InstitucionModel = new InstitucionModel();
+  $InstitucionModel->GetExternas();
 }
 
 function ChangeStatusData()

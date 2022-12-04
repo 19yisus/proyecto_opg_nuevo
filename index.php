@@ -26,6 +26,7 @@
 		}
 
 		private function GetView($url){
+			session_start();
 			$file = "./Views/Contents/".$url[0].".php";
 			// if(strpos($url[0], 'Pdf') !== false){
 			// // 	var_dump($url[0]);
@@ -38,7 +39,7 @@
 				if(file_exists($file)){
 					if($this->validarVistasPrivadas($url[0])) require_once $file; else header("Location: ./VisLogin");
 				}
-				session_start();
+				
 				if(isset($_SESSION['id_user'])) header("Location: ./VisPrincipal"); else header("Location: ./VisLogin");
 			}
 			
@@ -54,7 +55,7 @@
 		private function Navbar(){ require("./Views/includes/Navbar.php"); }
 
 		private function SessionActive(){
-			session_start();
+			// session_start();
 			if(isset($_SESSION['id_user'])) return true; return false;
 		}
 	}

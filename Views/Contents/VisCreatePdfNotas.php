@@ -13,6 +13,7 @@
     $resultado = $datos['datos'];
     $notas = $datos['notas'];
     $inst = $datos['institucion'];
+    $planteles = $datos['planteles'];
 
     $nacionalidad = $resultado['nacionalidad_persona'];
     $cedula = $resultado['cedula_estudiante'];
@@ -23,6 +24,9 @@
     $direccion = $resultado['direccion_persona'];
     $fecha = new DateTime($resultado['fecha_n_persona']);
     $seguimiento = $resultado['seguimiento_estudiante'];
+    $pais = $resultado['pais'];
+    $enidad_federal_nacimiento = $resultado['entidad_federal'];
+    $municipio_nacimiento = $resultado['municipio'];
     $primero = $segundo = $tercero = $cuarto = $quinto = $sexto = [];
     $fecha_actual = date("d/m/Y");
     $code_pensum = $notas[sizeof($notas) - 1]['cod_pensum'];
