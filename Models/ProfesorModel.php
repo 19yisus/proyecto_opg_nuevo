@@ -193,7 +193,7 @@ class ProfesorModel extends DB
 					INNER JOIN asignacion_profesor_seccion ON asignacion_profesor_seccion.profesor_cedula = profesor.cedula_profesor
 					INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = asignacion_profesor_seccion.periodo_id
 					INNER JOIN materia ON materia.id_materia = asignacion_profesor_seccion.materia_id
-					INNER JOIN seccion ON seccion.id_seccion = asignacion_profesor_seccion.seccion_id
+					INNER JOIN seccion ON seccion.idSeccion = asignacion_profesor_seccion.seccion_id
 					WHERE profesor.cedula_profesor = '$id' AND periodo_escolar.estatus_periodo_escolar = 1 GROUP BY asignacion_profesor_seccion.id_asignacion;");
 
 			if (isset($datosProfesor[0])) $this->ResDataJSON(['profesor' => $datosProfesor, 'Asignaciones' => $datosAsignaciones]);

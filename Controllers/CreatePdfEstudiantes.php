@@ -2,10 +2,14 @@
 
 require_once("./fpdf/fpdf.php");
 require_once("../Models/NotasModel.php");
+require_once("../Models/InstitucionModel.php");
 $model = new NotasModel();
+$ints_model = new InstitucionModel();
 $estudiante = $model->reportePorseccion($_POST['id_seccion'], $_POST['id_periodo']);
-
+$inst = $ints_model->GetActivo();
+$director = $model->director_activo();
 if($_POST['ope'] == '1'){
+  $tipo_descripcion = "FINAL";
   require_once('../Views/Contents/VisPdfSeccion_final.php');
   // var_dump($estudiante);
   // for($i = 0; $i < 30; $i++){

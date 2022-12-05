@@ -307,6 +307,7 @@
               this.correo_persona = profesor.correo_persona;
 
               this.sexo = profesor.sexo_persona;
+              console.log(data)
 
               if (data.Asignaciones[0] != undefined) {
 

@@ -42,6 +42,7 @@
               <a class="list-group-item list-group-item-action bg-light" href="./VisMaterias"><i class="fas fa-atlas mx-2"></i>Materias</a>
               <a class="list-group-item list-group-item-action bg-light" href="./VisProfesor"><i class="fas fa-user-tie mx-2"></i>Profesor</a>
               <a class="list-group-item list-group-item-action bg-light" href="./VisEstudiantes"><i class="fas fa-user-edit mx-2"></i>Estudiantes</a>
+              <a class="list-group-item list-group-item-action bg-light" href="./VisDirector"><i class="fas fa-user-tie mx-2"></i>Director</a>
 
             </ul>
           </div>

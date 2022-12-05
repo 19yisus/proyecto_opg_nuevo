@@ -144,27 +144,43 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
 
                 <div class="col-md-4" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
-                    <span class="input-group-text" id="inputGroup-sizing-sm">Pais:</span>
-                    <input type="text" name="pais" id="pais" class="form-select" aria-label="Default select example" required disabled>
-                    <span class="error-text">Selecciona un pais</span>
+                    <!-- <list name="lista_paises">
+                      <option :value="item.codigo" v-for="item in paisesFiltro">{{item.nombre}}</option>
+                    </list> -->
+                    <span class="input-group-text" id="inputGroup-sizing-sm">País:</span>
+                    <input type="text" name="pais" id="pais" class="form-control form-control-sm" aria-label="Default select example" required disabled>
+                    <!-- <select class="form-select" v-model="id_paisFiltro" aria-label="Default select example">
+                      <option value="" selected>Seleccionar</option>
+                      <option :value="item.codigo" v-for="item in paisesFiltro">{{item.nombre}}</option>
+                    </select>                     -->
+                    <span class="error-text">Selecciona un país</span>
                   </div>
                 </div>
+
                 <div class="col-md-4" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                    <!-- <span class="input-group-text" id="inputGroup-sizing-sm">Pais:</span> -->
                     <span class="input-group-text" id="inputGroup-sizing-sm">Estado:</span>
-                    <input type="text" name="estado" id="estado" class="form-select" aria-label="Default select example" required disabled>
-                    <span class="error-text">Selecciona estado</span>
+                    <input type="text" name="estado" id="estado" class="form-control form-control-sm" aria-label="Default select example" required disabled>
+                    <!-- <select class="form-select" v-on:change="getMunicipiosEstado($event)" v-model="id_estadoFiltro" aria-label="Default select example">
+                      <option value="" selected>Seleccionar</option>
+                      <option :value="item.id_estado" v-for="item in estadosFiltro">{{item.estado}}</option>
+                    </select>                     -->
+                    <span class="error-text">Selecciona un estado</span>
                   </div>
                 </div>
 
                 <div class="col-md-4" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Municipio:</span>
-                    <input type="text" name="municipio" id="municipio" class="form-select" aria-label="Default select example" required disabled>
-                    <span class="error-text">Selecciona municipio</span>
+                    <input type="text" name="municipio" id="municipio" class="form-control form-control-sm" aria-label="Default select example" required disabled>
+                    <!-- <select class="form-select" id="municipio" v-model="id_municipioFiltro" aria-label="Default select example">
+                      <option value="" selected>Seleccionar</option>
+                      <option :value="item.id_municipio" v-for="item in municipiosFiltro">{{item.municipio}}</option>
+                    </select>                     -->
+                    <span class="error-text">Selecciona un municipio</span>
                   </div>
                 </div>
-
 
                 <div class="col-md-6" style="margin:0; padding:5px;">
                   <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
@@ -180,7 +196,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
 
                 <!-- <div class="col-md-2"></div> -->
 
-                
+
                 <div class="col-md-4" style="margin:0; padding: 5px;">
                   <label for="">Sexo</label>
                   <div class="d-flex">
@@ -232,6 +248,14 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           id_periodoFiltro: "",
           secciones: [],
           periodosFiltro: [],
+
+          id_estadoFiltro: "",
+          id_municipioFiltro: "",
+
+          paisesFiltro: [],
+          estadosFiltro: [],
+          municipiosFiltro: [],
+
           info_pensum_1: "",
           info_pensum_2: "",
           formulario_valido: false,
@@ -242,6 +266,29 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
         }
       },
       methods: {
+        getMunicipiosEstado(event) {
+          let id_estado = event.target.value;
+          // console.log(`ID del Estado: ${id_estado}`);
+          $.ajax({
+            url: './Controllers/EstudiantesController.php',
+            method: 'GET',
+            data: {
+              ope: 'ConsulMunicipios',
+              id_estado: id_estado
+            },
+            success: function(result) {
+              result = JSON.parse(result);
+              data = result.data;
+              $('#municipio').html('');
+              for (let i = 0; i < data.length; i++) {
+                let row = data[i];
+                let option = '<option value="' + row['id_municipio'] + '">' + row['municipio'] + '</option>';
+                $('#municipio').append(option);
+              }
+            }
+          });
+
+        },
         SendData(e) {
 
           e.preventDefault();
@@ -262,6 +309,10 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
             this.ToggleModal();
             ViewAlert(result.mensaje, result.estado);
             this.periodo_activo();
+
+            this.paises();
+            this.estados();
+            this.municipios();
           }).catch(Error => console.error(Error))
 
 
@@ -356,6 +407,43 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
               } else this.des_periodo = "No hay Periodo Escolar Activo";
             }).catch(Error => console.error(Error))
         },
+
+        // -------- Inicio de la función que consulta Países -------- //
+        async paises() {
+          await fetch(`./Controllers/EstudiantesController.php?ope=ConsulPaises`)
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              if (data[0] != undefined) this.paisesFiltro = data;
+              else this.paisesFiltro = [];
+            }).catch(Error => console.error(Error))
+        },
+        // -------- Fin de la función que consulta Países -------- //
+
+        // -------- Inicio de la función que consulta Estados -------- //
+        async estados() {
+          await fetch(`./Controllers/EstudiantesController.php?ope=ConsulEstados`)
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              if (data[0] != undefined) this.estadosFiltro = data;
+              else this.estadosFiltro = [];
+            }).catch(Error => console.error(Error))
+        },
+        // -------- Fin de la función que consulta Estados -------- //
+
+        // -------- Inicio de la función que consulta Municipios -------- //
+        async municipios() {
+          await fetch(`./Controllers/EstudiantesController.php?ope=ConsulMunicipios`)
+            .then(res => res.json()).then(({
+              data
+            }) => {
+              if (data[0] != undefined) this.municipiosFiltro = data;
+              else this.municipiosFiltro = [];
+            }).catch(Error => console.error(Error))
+        },
+        // -------- Fin de la función que consulta Municipios -------- //        
+
         ToggleModal() {
           $("#staticBackdrop").modal("hide");
           $("body").removeClass("modal-open");
@@ -374,6 +462,9 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           this.direccion = ""
           this.sexo = ""
           this.action = "Save";
+
+          this.id_estadoFiltro = "";
+          this.id_municipioFiltro = "";
         },
         async consultarSecciones(anio) {
           const res = await fetch(`./Controllers/SeccionController.php?ope=ConsultPorAnio&&anio=${anio}`)
@@ -433,6 +524,9 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
       },
       async mounted() {
         await this.periodo_activo();
+        await this.paises();
+        await this.estados();
+        await this.municipios();
         await this.GetPeriodoEscolar();
         await this.Get_pengums();
       }

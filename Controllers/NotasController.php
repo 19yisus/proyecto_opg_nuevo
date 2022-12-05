@@ -16,6 +16,10 @@ if (isset($_POST['ope'])) {
 			ReprobarEstudiante();
 			break;
 
+		case 'Save_notasExternas':
+			Save_notasExternas();
+		break;
+
 		case 'ChangeStatus':
 			ChangeStatusData();
 			break;
@@ -67,6 +71,26 @@ function ReprobarEstudiante()
 	$NotasModel->reprobar_estudiante();
 }
 
+function Save_notasExternas(){
+	$NotasModel = new NotasModel();
+	$notas = [];
+	for($i = 0; $i < sizeof($_POST['ext_materia']); $i++){
+		array_push($notas,[
+			"des" => $_POST['ext_materia'][$i],
+			'nota' => $_POST['ext_nota'][$i]
+		]);
+	}
+
+	$datos = [
+		'ext_periodo' => $_POST['ext_periodo'],
+		'ext_plantel' => $_POST['ext_plantel'],
+		'ext_anio' => $_POST['ext_anio'],
+		'ext_notas' => $notas
+	];
+	
+	$NotasModel->registro_notasExternas($_POST['cedula_estudiante'], $datos);
+}
+
 function ChangeStatusData()
 {
 	$NotasModel = new NotasModel();
@@ -113,7 +137,8 @@ function OrderPost()
 		"seccion" => $_POST['id_seccion'],
 		"periodo" => $_POST['id_periodo'],
 		"estatus" => $_POST['estatus_notas'],
-		"observacion" => $_POST['observacion']
+		"observacion" => $_POST['observacion'],
+		"id_plantel" => (isset($_POST['id_plantel'])) ? $_POST['id_plantel'] : null
 	]);
 
 	return [

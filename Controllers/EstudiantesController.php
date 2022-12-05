@@ -35,6 +35,27 @@
 				GetDatas();
 			break;
 
+			case 'ConsulPaises':
+				$objEstudiante = new EstudiantesModel();
+				$objEstudiante->GetPaises();
+			break;	
+
+			case 'ConsulEstados':
+				$objEstudiante = new EstudiantesModel();
+				$objEstudiante->GetEstados();
+			break;			
+
+			case 'ConsulMunicipios':
+				$objEstudiante = new EstudiantesModel();
+				$estado_param = '';
+				if(isset($_GET['id_estado'])) {
+					$estado_param = 'id_estado = ' . $_GET['id_estado'];
+				} else {
+					$estado_param = '1 = 1';
+				}
+				$objEstudiante->GetMunicipios($estado_param);
+			break;						
+
 			case 'ConsultOne':
 				GetData($_GET['id']);
 			break;

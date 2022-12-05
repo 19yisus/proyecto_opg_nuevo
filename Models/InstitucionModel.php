@@ -1,6 +1,6 @@
 <?php
-require("db.php");
 
+if(!class_exists("DB")) require("db.php");
 class InstitucionModel extends DB
 {
   private $id_institucion, $des_institucion, $codigo_institucion, $direccion_institucion, $estatus;
@@ -215,6 +215,18 @@ class InstitucionModel extends DB
   {
     try {
       $result = $this->consultAll("SELECT * FROM institucion WHERE si_externa = 1;");
+      if (isset($result[0])) $this->ResDataJSON($result);
+      else $this->ResDataJSON([]);
+    } catch (PDOException $e) {
+      error_log("InstitucionModel(66) => " . $e->getMessages());
+      $this->ResJSON("Operacion Fallida! (error_log)", "error");
+    }
+  }
+
+  public function GetInternas()
+  {
+    try {
+      $result = $this->consult("SELECT * FROM institucion WHERE si_externa = 0 AND estatus_institucion = 1;");
       if (isset($result[0])) $this->ResDataJSON($result);
       else $this->ResDataJSON([]);
     } catch (PDOException $e) {

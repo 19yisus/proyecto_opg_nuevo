@@ -20,7 +20,7 @@ class NotasModel extends DB
     $this->estatus = isset($estu[0]['estatus']) ? $estu[0]['estatus'] : 1;
     $this->observacion = isset($estu[0]['observacion']) ? $estu[0]['observacion'] : Null;
     $this->usuario_id = $_SESSION['id_user'];
-    // $this->plantel = isset($estu[0]['plantel']) ? $estu[0]['plantel'] : $estu[0]['plantel'];
+    $this->plantel = $estu[0]['id_plantel'];
     $this->materias = $materias;
   }
 
@@ -100,8 +100,8 @@ class NotasModel extends DB
         } else {
           $operacion = "Registro";
           // nota_lapso1, nota_lapso2, nota_lapso3,  $nt1,$nt2,$nt3,
-          $sql_nota = "INSERT INTO nota(idNota, cedula_estudiante, periodo_escolar_id, seccion_id, materia_id,nota_final, recuperativo_1, recuperativo_2, recuperativo_3, recuperativo_4, estatusNotas) 
-            VALUES(NULL,'$this->cedula_estudiante',$this->id_periodo,$this->id_seccion,$idMateria,$nt4,$rp1,$rp2,$rp3,$rp4,$this->estatus);";
+          $sql_nota = "INSERT INTO nota(idNota, cedula_estudiante, periodo_escolar_id, seccion_id, materia_id,nota_final, recuperativo_1, recuperativo_2, recuperativo_3, recuperativo_4, estatusNotas, plantel) 
+            VALUES(NULL,'$this->cedula_estudiante',$this->id_periodo,$this->id_seccion,$idMateria,$nt4,$rp1,$rp2,$rp3,$rp4,$this->estatus,'$this->plantel');";
 
           $sql_nota = str_ireplace(",,", ",NULL,", $sql_nota);
           $sql_nota = str_ireplace(",,", ",NULL,", $sql_nota);
@@ -260,8 +260,8 @@ class NotasModel extends DB
   public function director_activo()
   {
     try {
-      $datosDirector = $this->consult("SELECT * FROM profesor
-					INNER JOIN personas ON personas.cedula_persona = profesor.cedula_profesor WHERE profesor.estatus_profesor = 1 ;");
+      $datosDirector = $this->consult("SELECT * FROM director
+					INNER JOIN personas ON personas.cedula_persona = director.cedula_director WHERE director.estatus_director = 1 ;");
 
       return $datosDirector;
     } catch (PDOException $e) {
@@ -304,81 +304,219 @@ class NotasModel extends DB
     $seccion = $result_consulta_estudiante['idSeccion'];
     $seguimiento = $result_consulta_estudiante['ano_seguimiento'];
     $seguimiento = intval($seguimiento);
-    if ($seguimiento < 4) {
-      if ($seguimiento == 1) $string = "materia.primero = 1";
-      if ($seguimiento == 2) $string = "materia.segundo = 1";
-      if ($seguimiento == 3) $string = "materia.tercero = 1";
-      $clasificacion = 'B';
-    } else {
-      $clasificacion = 'D';
-      if ($seguimiento == 4) $string = "materia.cuarto = 1";
-      if ($seguimiento == 5) $string = "materia.quinto = 1";
-      if ($seguimiento == 6) $string = "materia.sexto = 1";
-    }
-    // $sql_pensum = "SELECT * FROM pensum WHERE anios_abarcados = '$clasificacion' ;";
-    $resultPensum = $this->consultAll("SELECT materia.* FROM materia 
-    INNER JOIN pensum ON pensum.id = materia.id_pensum_ma
-    INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = materia.id_periodo_ma
-    WHERE periodo_escolar.estatus_periodo_escolar = 1 AND pensum.anios_abarcados = '$clasificacion' AND $string;");
 
-    if ($resultPensum == false) {
-      $this->ResJSON("Operacion Fallida! No hay pensum para el año a trabajar", "error");
-      return false;
-    }
-
-    $listaMaterias = [];
-    foreach ($resultPensum as $materia) {
-      array_push($listaMaterias, [
-        'materia_id' => $materia['id_materia'],
-        'des_materia' => $materia['des_materia'],
-      ]);
-    }
-
-    $materias_estudiante = [];
-    foreach ($listaMaterias as $materia) {
-      $id_materia = $materia['materia_id'];
-      $sql_notas_estudiante = "SELECT nota.idNota, nota.materia_id, materia.des_materia,nota.nota_lapso1,nota.nota_lapso2,
-            nota.nota_lapso3,nota.nota_final,nota.recuperativo_1,nota.recuperativo_2,nota.recuperativo_3,nota.recuperativo_4
-            ,nota.estatusNotas FROM nota INNER JOIN materia ON materia.id_materia = nota.materia_id WHERE
-            nota.periodo_escolar_id = $periodo AND nota.materia_id = $id_materia AND nota.cedula_estudiante = '$this->cedula_estudiante';";
-      $resultado = $this->consult($sql_notas_estudiante);
-
-      if (isset($resultado['idNota'])) {
-        array_push($materias_estudiante, [
-          'idNota' => $resultado['idNota'],
-          'materia_id' => $resultado['materia_id'],
-          'des_materia' => $resultado['des_materia'],
-          'estatus_nota' => $resultado['estatusNotas'],
-          // 'nota_lapso1' => $resultado['nota_lapso1'],
-          // 'nota_lapso2' => $resultado['nota_lapso2'],
-          // 'nota_lapso3' => $resultado['nota_lapso3'],
-          'nota_final' => $resultado['nota_final'],
-          'recuperativo_1' => $resultado['recuperativo_1'],
-          'recuperativo_2' => $resultado['recuperativo_2'],
-          'recuperativo_3' => $resultado['recuperativo_3'],
-          'recuperativo_4' => $resultado['recuperativo_4']
-        ]);
+    if (!$this->validar_historial($result_consulta_estudiante)) {
+      if ($seguimiento < 4) {
+        if ($seguimiento == 1) $string = "materia.primero = 1";
+        if ($seguimiento == 2) $string = "materia.segundo = 1";
+        if ($seguimiento == 3) $string = "materia.tercero = 1";
+        $clasificacion = 'B';
       } else {
-        array_push($materias_estudiante, [
-          'idNota' => null,
-          'materia_id' => $materia['materia_id'],
+        $clasificacion = 'D';
+        if ($seguimiento == 4) $string = "materia.cuarto = 1";
+        if ($seguimiento == 5) $string = "materia.quinto = 1";
+        if ($seguimiento == 6) $string = "materia.sexto = 1";
+      }
+      // $sql_pensum = "SELECT * FROM pensum WHERE anios_abarcados = '$clasificacion' ;";
+      $resultPensum = $this->consultAll("SELECT materia.* FROM materia 
+      INNER JOIN pensum ON pensum.id = materia.id_pensum_ma
+      INNER JOIN periodo_escolar ON periodo_escolar.id_periodo_escolar = materia.id_periodo_ma
+      WHERE periodo_escolar.estatus_periodo_escolar = 1 AND pensum.anios_abarcados = '$clasificacion' AND $string;");
+
+      if ($resultPensum == false) {
+        $this->ResJSON("Operacion Fallida! No hay pensum para el año a trabajar", "error");
+        return false;
+      }
+
+      $listaMaterias = [];
+      foreach ($resultPensum as $materia) {
+        array_push($listaMaterias, [
+          'materia_id' => $materia['id_materia'],
           'des_materia' => $materia['des_materia'],
-          'estatus_nota' => 1,
-          // 'nota_lapso1' => null,
-          // 'nota_lapso2' => null,
-          // 'nota_lapso3' => null,
-          'nota_final' => null,
-          'recuperativo_1' => null,
-          'recuperativo_2' => null,
-          'recuperativo_3' => null,
-          'recuperativo_4' => null
         ]);
       }
+
+      $materias_estudiante = [];
+      foreach ($listaMaterias as $materia) {
+        $id_materia = $materia['materia_id'];
+        $sql_notas_estudiante = "SELECT nota.idNota, nota.materia_id, materia.des_materia,nota.nota_lapso1,nota.nota_lapso2,
+              nota.nota_lapso3,nota.nota_final,nota.recuperativo_1,nota.recuperativo_2,nota.recuperativo_3,nota.recuperativo_4
+              ,nota.estatusNotas,nota.plantel FROM nota INNER JOIN materia ON materia.id_materia = nota.materia_id WHERE
+              nota.periodo_escolar_id = $periodo AND nota.materia_id = $id_materia AND nota.cedula_estudiante = '$this->cedula_estudiante';";
+        $resultado = $this->consult($sql_notas_estudiante);
+
+        if (isset($resultado['idNota'])) {
+          array_push($materias_estudiante, [
+            'idNota' => $resultado['idNota'],
+            'materia_id' => $resultado['materia_id'],
+            'des_materia' => $resultado['des_materia'],
+            'estatus_nota' => $resultado['estatusNotas'],
+            'plantel' => $resultado['plantel'],
+            // 'nota_lapso1' => $resultado['nota_lapso1'],
+            // 'nota_lapso2' => $resultado['nota_lapso2'],
+            // 'nota_lapso3' => $resultado['nota_lapso3'],
+            'nota_final' => $resultado['nota_final'],
+            'recuperativo_1' => $resultado['recuperativo_1'],
+            'recuperativo_2' => $resultado['recuperativo_2'],
+            'recuperativo_3' => $resultado['recuperativo_3'],
+            'recuperativo_4' => $resultado['recuperativo_4']
+          ]);
+        } else {
+          array_push($materias_estudiante, [
+            'idNota' => null,
+            'materia_id' => $materia['materia_id'],
+            'des_materia' => $materia['des_materia'],
+            'estatus_nota' => 1,
+            'plantel' => null,
+            // 'nota_lapso1' => null,
+            // 'nota_lapso2' => null,
+            // 'nota_lapso3' => null,
+            'nota_final' => null,
+            'recuperativo_1' => null,
+            'recuperativo_2' => null,
+            'recuperativo_3' => null,
+            'recuperativo_4' => null
+          ]);
+        }
+      }
+      $this->ResDataJSON([
+        'materias' => $materias_estudiante,
+        'estudiante' => $result_consulta_estudiante
+      ]);
     }
-    $this->ResDataJSON([
-      'materias' => $materias_estudiante,
-      'estudiante' => $result_consulta_estudiante
-    ]);
+  }
+
+  public function registro_notasExternas($cedula, $datos_externos)
+  {
+    $periodo = $datos_externos['ext_periodo'];
+    $plantel = $datos_externos['ext_plantel'];
+    $anio = $datos_externos['ext_anio'];
+
+    for ($i = 0; $i < sizeof($datos_externos['ext_notas']); $i++) {
+      $ext_nota = $datos_externos['ext_notas'][$i]['nota'];
+      $ext_materia = $datos_externos['ext_notas'][$i]['des'];
+
+      $sql = "INSERT INTO notas_externas(id_estudiante_ext, des_materia_ext, nota_ext, periodo_ext, plantel_ext, anio_ext)
+        VALUES('$cedula','$ext_materia',$ext_nota,'$periodo','$plantel',$anio)";
+      $this->driver->query($sql);
+    }
+
+    return $this->ResJSON("Registro de notas externas exitoso!", "success");
+
+  }
+
+  private function validar_notasExternas($seguimiento, $cedula)
+  {
+    $sql = "SELECT * FROM notas_externas WHERE id_estudiante_ext = '$cedula' AND anio_ext = '$seguimiento';";
+    $result = $this->consultAll($sql);
+    if (isset($result[0])) return true;
+    else return false;
+  }
+
+  private function validar_historial($estudiante)
+  {
+    $seguimiento = intval($estudiante['ano_seguimiento']);
+    $cedula = $this->cedula_estudiante;
+
+    if ($seguimiento > 1) {
+      $sql = "SELECT * FROM estudiante
+      INNER JOIN asignacion_estudiante_seccion ON asignacion_estudiante_seccion.cedula_estu_asignacion = estudiante.cedula_estudiante
+      INNER JOIN seccion ON seccion.idSeccion = asignacion_estudiante_seccion.id_seccion
+      WHERE estudiante.cedula_estudiante = '$cedula' AND seccion.ano_seguimiento < $seguimiento;";
+      $datos = $this->consultAll($sql);
+
+      if (isset($datos[0])) {
+        $anios = [];
+        foreach ($datos as $item) {
+          $anterior_seguimiento = intval($item['ano_seguimiento']);
+          array_push($anios, $anterior_seguimiento);
+        }
+
+        // var_dump($anios);
+        // VERIFICO QUE EL HISTORIAL DE AÑOS CONCUERDE Y NO FALTÉ NINGUN AÑO
+        // EJEMPLO, UN ESTUDIANTE DE 3RO, QUE NO TENGA NOTAS EN 2DO
+        if ($anios[sizeof($anios)] = ($seguimiento - 1) && sizeof($anios) == ($seguimiento - 1)) {
+          return false;
+        } else {
+          $anio_pendiente = '';
+          for ($s = 0; $s < ($seguimiento - 1); $s++) {
+            if (!in_array(($s + 1), $anios)) {
+              $n = $s + 1;
+              // var_dump("Te falta $n");
+              // VERIFICAMOS SI ESA NOTA DE ESE AÑO EXISTE EN NOTAS EXTERNAS
+              $resultado = $this->validar_notasExternas($n, $cedula);
+              if (!$resultado) {
+                $anio_pendiente = $n;
+                break;
+              }
+            }
+          }
+          // var_dump("Año pendiente $anio_pendiente");
+          if ($anio_pendiente != '') {
+            $nuevo_seguimiento = ($seguimiento - 1);
+            if ($nuevo_seguimiento == 1 || $nuevo_seguimiento == 2) $cant_materias = 7;
+            if ($nuevo_seguimiento == 3 || $nuevo_seguimiento == 4) $cant_materias = 8;
+            if ($nuevo_seguimiento == 5 || $nuevo_seguimiento == 6) $cant_materias = 10;
+
+            $info = [
+              'desde' => $nuevo_seguimiento,
+              'hasta' => ($seguimiento - 1),
+              'cant_materias' => $cant_materias,
+              'mensaje' => "Este estudiante no tiene historial de notas, debes de registrar notas externas"
+            ];
+
+            $this->ResDataJSON([
+              'estudiante' => $estudiante,
+              'notas_externas' => $info
+            ]);
+            return true;
+          }else{
+            return false;
+          }
+        }
+      } else {
+        $nuevo_seguimiento = ($seguimiento - 1);
+        $seguimiento_consultar = 1;
+        // var_dump("Seg: $seguimiento. - consult: $seguimiento_consultar");
+        // BUCLE WHILE PARA REVISAR AÑO POR AÑO EN LAS NOTAS EXTERIORES DEL ESTUDIANTE, EN EL CASO DE QUE NO TENGA HISTORIAL ALGUNO EN LAS NOTAS NORMALES
+        while ($this->validar_notasExternas($seguimiento_consultar, $cedula) == true && $seguimiento_consultar < $seguimiento) {
+          // var_dump("Seguimiento a consultar: $seguimiento_consultar");
+          // var_dump("Seguimiento tope: $seguimiento");
+          $seguimiento_consultar = ($seguimiento_consultar + 1);
+        }
+        // $seguimiento_consultar = $seguimiento_consultar - 1;
+        // NO TIENE NOTAS EXTERNAS, TIENE QUE REGISTRARLAS PRIMERO, Y DESPUES SUS NOTAS NORMALES
+        if ($seguimiento_consultar == 0) $nuevo_seguimiento = 1;
+        // SI TIENE NOTAS EXTERNAS, PUEDE REGISTRAR SUS NOTAS NORMALES
+        if ($seguimiento_consultar == $seguimiento) return false;
+
+        if ($seguimiento_consultar == 1 || $seguimiento_consultar == 2) $cant_materias = 7;
+        if ($seguimiento_consultar == 3 || $seguimiento_consultar == 4) $cant_materias = 8;
+        if ($seguimiento_consultar == 5 || $seguimiento_consultar == 6) $cant_materias = 10;
+
+        
+        $info = [
+          'desde' => $seguimiento_consultar,
+          'hasta' => ($seguimiento - 1),
+          'cant_materias' => $cant_materias,
+          'mensaje' => "Este estudiante no tiene historial de notas, debes de registrar notas externas"
+        ];
+
+        $this->ResDataJSON([
+          'estudiante' => $estudiante,
+          'notas_externas' => $info
+        ]);
+      }
+
+      return true;
+    }
+    return false;
+  }
+
+  public function ConsultarParaPdfNotasExternas($cedula, $seguimiento){
+    $sql = "SELECT * FROM notas_externas WHERE id_estudiante_ext = '$cedula' AND anio_ext = '$seguimiento';";
+    $result = $this->consultAll($sql);
+    return $result;
   }
 
   public function ConsultaParaPdf($cedula, $periodo)
@@ -395,8 +533,7 @@ class NotasModel extends DB
     WHERE nota.cedula_estudiante = '$cedula' AND periodo_escolar.id_periodo_escolar <= $periodo AND nota.estatusNotas = 0 AND nota.plantel = institucion.id_institucion
     GROUP BY nota.idNota";
 
-    // var_dump($sqlNotasHistoricas);
-    // die("FDF");
+    
     $sqlInstitucion = "SELECT institucion.* FROM periodo_escolar 
     INNER JOIN institucion on institucion.id_institucion = periodo_escolar.institucion_id
     WHERE periodo_escolar.estatus_periodo_escolar = 1";
@@ -416,9 +553,6 @@ class NotasModel extends DB
         array_push($array_planteles, $result_datos_planteles);
       }
     }
-    // var_dump($sqlNotasHistoricas);
-    // die('FDF');
-
     return [
       'datos' => $result_datos_estudiante,
       'notas' => $result_datos_notas,

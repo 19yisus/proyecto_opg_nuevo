@@ -41,6 +41,10 @@ if (isset($_GET['ope'])) {
       GetDatasExternas();
     break;
 
+    case 'interno':
+      GetDatasInterno();
+    break;
+
     case 'ConsulAll_bitacora':
       GetBitacora();
       break;
@@ -74,6 +78,11 @@ function GetDatasExternas()
 {
   $InstitucionModel = new InstitucionModel();
   $InstitucionModel->GetExternas();
+}
+function GetDatasInterno()
+{
+  $InstitucionModel = new InstitucionModel();
+  $InstitucionModel->GetInternas();
 }
 
 function ChangeStatusData()

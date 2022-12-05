@@ -152,8 +152,7 @@ class EstudiantesModel extends DB
 		}
 	}
 
-	public function GetOne($id)
-	{
+	public function GetOne($id) {
 		try {
 			$result = $this->consult("SELECT * FROM estudiante
 			INNER JOIN personas ON estudiante.cedula_estudiante = personas.cedula_persona
@@ -169,4 +168,42 @@ class EstudiantesModel extends DB
 			$this->ResJSON("Operacion Fallida! (error_log)", "error");
 		}
 	}
+
+	public function GetPaises() {
+		try {
+			$result = $this->consultAll("SELECT * FROM pais");
+			if (isset($result[0])) $this->ResDataJSON($result);
+			else $this->ResDataJSON([]);
+		} catch (PDOException $e) {
+			error_log("EstudiantesModel(66) => " . $e->getMessages());
+			$this->ResJSON("Operacion Fallida! (error_log)", "error");
+		}
+	}
+
+	public function GetEstados() {
+		try {
+			$result = $this->consultAll("SELECT * FROM estados");
+			if (isset($result[0])) $this->ResDataJSON($result);
+			else $this->ResDataJSON([]);
+		} catch (PDOException $e) {
+			error_log("EstudiantesModel(66) => " . $e->getMessages());
+			$this->ResJSON("Operacion Fallida! (error_log)", "error");
+		}
+	}
+
+	public function GetMunicipios($id_estado) {
+		try {
+			$sql = "SELECT * FROM municipios WHERE " . $id_estado;
+			// var_dump($sql);
+			$result = $this->consultAll($sql);
+			if (isset($result[0])) $this->ResDataJSON($result);
+			else $this->ResDataJSON([]);
+		} catch (PDOException $e) {
+			error_log("EstudiantesModel(66) => " . $e->getMessages());
+			$this->ResJSON("Operacion Fallida! (error_log)", "error");
+		}
+	}	
+
+	
+
 }

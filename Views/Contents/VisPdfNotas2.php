@@ -1003,18 +1003,14 @@
                       </tr>
                       <tr class="border border-black p-1">
                         <td>
-                          <!-- value="<?php //echo isset($director['nombre_persona']) ? $director['nombre_persona'] . $director['apellido_persona'] : '**'; 
-                                      ?>" -->
-                          <input type="text" class="w-full outline-none border-none">
+                          <input type="text" class="w-full outline-none border-none" value="<?php echo isset($director['nombre_persona']) ? $director['nombre_persona'] . $director['apellido_persona'] : '**'; ?>">
                         </td>
                       </tr>
                       <tr class="border border-black p-1">
                         <td>Cédula de Identidad</td>
                       </tr>
                       <tr class="border border-black p-1">
-                        <!-- value="<?php //echo isset($director['nacionalidad_persona']) ? $director['nacionalidad_persona'] . $director['cedula_persona'] : '**'; 
-                                    ?>" -->
-                        <td><input type="text" class="w-full outline-none border-none"></td>
+                        <td><input type="text" class="w-full outline-none border-none" value="<?php echo isset($director['nacionalidad_persona']) ? $director['nacionalidad_persona'].' '.$director['cedula_persona'] : '**'; ?>"></td>
                       </tr>
                       <tr class="border border-black p-1">
                         <td>Firma</td>
@@ -1048,7 +1044,7 @@
                       </tr>
                       <tr class="border border-black p-1">
                         <td>
-                          <input type="text" class="w-full outline-none border-none">
+                          <input type="text" class="w-full outline-none border-none" >
                         </td>
                       </tr>
                       <tr class="border border-black p-1">
@@ -1079,7 +1075,7 @@
     window.matchMedia('print').addListener((evento) => {
       if (!evento.matches) window.close()
     });
-    // window.print()
+    window.print()
   </script>
 </body>
 

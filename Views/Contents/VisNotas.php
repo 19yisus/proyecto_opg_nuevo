@@ -130,17 +130,35 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
               <input type="hidden" name="observacion" value="no">
               <input type="hidden" name="estatus_notas" value="1">
               <div class="modal-body row" style="padding: 0 70px ;">
-                <div class="container">
-                  <div class="row">
-                    <div class="form-control">
-                      <label for="">Seleccione el plantel de {{nuevo_plantel}} las notas</label>
-                      <select name="id_plantel" id="" class="form-control">
+                <div class="row">
+                  <div class="col-12 my-2">
+                    <!-- <div class="form-control">
+                      <label for="">Seleccione el plantel {{nuevo_plantel}} y {{notas_externas}} de las notas</label>
+
+                    </div> -->
+                    <input type="hidden" name="id_plantel" v-model="id_plantel">
+                    <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Seleccione el plantel de las notas:</span>
+                      <input type="text" name="des_plantel" id="" v-model="des_plantel" readonly class="form-control form-control-sm">
+                      <!-- <select name="id_plantel" id="" class="form-control" v-model="id_plantel" @change="sel_Plantel()">
                         <option value="">Seleccione una opcion</option>
                         <option v-for="item in planteles" :value="item.id_institucion">{{item.des_institucion}} {{item.entidad_federal}}</option>
-                      </select>
+                      </select> -->
+                      <!-- <span class="error-text">Selecciona año y sección</span> -->
                     </div>
                   </div>
-                  <table class="table" v-show="!nuevo_plantel">
+                  <!-- <div class="col-12 my-2">
+                    <div class="form-control">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" value="no" v-bind:checked="plantel_noregistrado" @change="check_nuevoPlantel()" v-model="plantel_noregistrado">
+                        <small class="form-check-label">El plantel no esta registrado?</small>
+                      </div>
+                    </div>
+                  </div> -->
+                </div>
+                <div class="container">
+
+                  <table class="table" v-show="notas_externas == false">
                     <thead>
                       <tr>
                         <th class="text-center" scope="col">Materia</th>
@@ -241,56 +259,93 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           </div>
         </div>
       </div>
-      <!-- Vista de plantales -->
-      <div class="modal modal-md fade" id="staticBackdrop3" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+      <!-- Registro de notas externas -->
+      <div class="modal modal-xl fade" id="staticBackdrop3" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h6 class="modal-title" id="staticBackdropLabel">Planteles</h6>
+              <h6 class="modal-title" id="staticBackdropLabel">Registro de notas externas</h6>
             </div>
-            <!-- Boton -->
-            <button type="button" onClick="Consult(this)" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">Registrar
-            </button>
+            <form action="#" @submit.preventDefault="SendNotasExternas" id="Formulario_notasExternas" class="needs-validation" novalidate>
 
-            <!-- select de planteles -->
-            <select name="id_plantel" id="" class="form-select">
-              <option value="">Seleccione una opcion</option>
-              <option v-for="item in planteles" :value="item.id_institucion">{{item.des_institucion}}</option>
-            </select>
-            <div class="modal-footer mx-auto">
-              <input type="hidden" name="ope" v-model="action">
-              <button type="submit" value="Save" :disabled="!boton_desactivado" class="btn btn-sm btn-success">
-                <i class="fa-regular fa-circle-check"></i>GUARDAR
-              </button>
-              <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
-                <i class="fa-regular fa-circle-xmark"></i>SALIR
-              </button>
-            </div>
+              <div class="modal-body " style="padding: 0 70px ;">
+                <div class="row">
+                  <h5>
+                    Estas registrando notas externas de este estudiante, las cuales corresponden a año {{notas_externas_desde}},
+                    debes de asegurarte de que los datos ingresados sean los correctos, ya que este registro solo se puede realizar una vez
+                  </h5>
+                </div>
+                <div class="row">
+                  <div class="col-12 my-2">
+                    <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Año de las materias</span>
+                      <input type="hidden" name="ext_anio" v-model="notas_externas_desde">
+                      <input type="hidden" name="cedula_estudiante" v-model="cedula">
+                      <input type="text" name="ext_periodo" class="form-control form-control-sm" id="ext_periodo" required placeholder="Ingrese el periodo escolar de estas notas">
+                      <!-- <span class="error-text">Cedula incorrecta</span> -->
+                    </div>
+                  </div>
+                  <!-- <div class="col-12 my-2">
+                    <div class="input-group input-group-sm form-box" style="display:flex; flex-wrap: wrap;">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Seccion</span>
+                      <input type="text" name="ext_seccion" class="form-control form-control-sm" id="ext_seccion" required placeholder="Ingrese la sección en la que cursó estas materias">
+                    </div>
+                  </div> -->
+                </div>
+                <div class="row">
+                  <div class="col-12 my-2">
+                    <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Seleccione el plantel de las notas:</span>
+                      <select name="ext_plantel" id="ext_plantel" class="form-select" aria-label="Default select example" required>
+                        <option value="">Seleccione una opcion</option>
+                        <option v-for="item in planteles" :value="item.id_institucion">{{item.des_institucion}} {{item.entidad_federal}}</option>
+                      </select>
+                      <!-- <span class="error-text">Selecciona año y sección</span> -->
+                    </div>
+                  </div>
+                  <div class="col-12 my-2" v-show="id_plantel == ''">
+                    <div class="form-group">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" value="no" v-bind:checked="plantel_noregistrado" @change="check_nuevoPlantel()" v-model="plantel_noregistrado">
+                        <small class="form-check-label">El plantel no esta registrado?</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <table class="table">
+                    <thead>
+                      <th>Materia</th>
+                      <th>Nota final</th>
+                    </thead>
+                    <tbody>
+                      <tr v-for="materia in cantidad_materias">
+                        <td class="text-center">
+                          <input name="ext_materia[]" type="text" class="form-control form-control-sm" id="" placeholder="">
+                        </td>
+                        <td class="text-center">
+                          <input max="20" min="1" maxlength="2" @keypress="validar" name="ext_nota[]" type="number" class="form-control form-control-sm" id="" placeholder="">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="modal-footer mx-auto">
+                <input type="hidden" name="ope" v-model="action">
+                <button type="submit" value="Save" class="btn btn-sm btn-primary">
+                  <i class="fa-regular fa-circle-check"></i>GUARDAR
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">
+                  <i class="fa-regular fa-circle-xmark"></i>SALIR
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
 
-      <!-- ventana emergente para preguntar sobre el plantel -->
-      <div class="modal fade" tabindex="-1" id="deleteEmployeeModal" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p style="text-align: center;"> El estudiante pertenece a otro plantel ?</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" onClick="Consult(this)" data-seguimiento='${row.seguimiento_estudiante}' data-id='${row.cedula_estudiante}' class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">Si
-              </button>
-              <button type="button" onClick="Consult(this)" data-seguimiento='${row.seguimiento_estudiante}' data-id='${row.cedula_estudiante}' class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">No
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <?php $this->Script(); ?>
     <script>
@@ -311,6 +366,13 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
             materias: [],
             cedula_estudiante: "",
             // 
+            notas_externas_desde: '',
+            notas_externas_hasta: '',
+            notas_externas: false,
+            cantidad_materias: 0,
+            id_plantel: "",
+            des_plantel: "",
+            plantel_noregistrado: false,
             entidad_federal: '',
             des_institucion: '',
             planteles: [{
@@ -331,6 +393,17 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
               document.getElementById("Form_pdf").submit();
             }, 100)
           },
+          check_nuevoPlantel() {
+            if (this.plantel_noregistrado) {
+              $('#staticBackdrop').modal('hide')
+              $('#staticBackdrop3').modal('hide')
+              $('#staticBackdrop2').modal('show')
+            }
+          },
+          sel_Plantel() {
+            if (this.id_plantel != '') this.nuevo_plantel = false;
+            else this.nuevo_plantel = true;
+          },
           validar(e) {
             setTimeout(() => {
               if (parseInt(e.target.value) > 20) e.target.value = 20;
@@ -338,17 +411,48 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
             }, 100);
           },
           async obtener_externas() {
-            fetch("./Controllers/InstitucionController.php?ope=externas")
+            await fetch("./Controllers/InstitucionController.php?ope=externas")
               .then(res => res.json()).then(result => {
                 console.log(result)
                 this.planteles = result.data
               }).catch(Error => console.error(Error))
           },
+          async obtener_interno() {
+            await fetch("./Controllers/InstitucionController.php?ope=interno")
+              .then(res => res.json()).then(result => {
+                console.log(result)
+                this.id_plantel = result.data.id_plantel;
+                this.des_plantel = result.data.des_institucion;
+              }).catch(Error => console.error(Error))
+          },
+          SendNotasExternas(e) {
+            this.action = 'Save_notasExternas';
+            e.preventDefault();
+            setTimeout(() => {
+              let form = new FormData(e.target);
+              fetch("./Controllers/NotasController.php", {
+                method: "POST",
+                body: form
+              }).then(res => res.json()).then(result => {
+                $("#datatable").DataTable().ajax.reload(null, false);
+                this.notas_externas_desde = '';
+                this.notas_externas_hasta = '';
+                this.notas_externas = false;
+                this.cantidad_materias = 0;
+                /* this.ToggleModal(); */
+                ViewAlert(result.mensaje, result.estado);
+                this.periodo_activo();
+                this.GetData(this.cedula);
+                // this.obtener_externas();
+              }).catch(Error => console.error(Error))
+            }, 100);
+          },
           SendDataPlantel(e) {
             this.action = 'save_externo';
             e.preventDefault();
             $('#staticBackdrop2').modal('hide')
-            $('#staticBackdrop').modal('show') // if(!$("#Formulario").valid()) return false;
+            this.plantel_noregistrado = false;
+            // if(!$("#Formulario").valid()) return false;
 
             setTimeout(() => {
               let form = new FormData(e.target);
@@ -362,6 +466,8 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                 this.periodo_activo();
                 this.GetData(this.cedula);
                 this.obtener_externas();
+                if (this.notas_externas == false) $('#staticBackdrop').modal('show');
+                else $('#staticBackdrop3').modal('show')
               }).catch(Error => console.error(Error))
             }, 100);
           },
@@ -385,6 +491,8 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
             }, 100);
           },
           async GetData(cedula) {
+            $('#staticBackdrop2').modal('hide');
+            $('#staticBackdrop3').modal('hide');
             this.materias = [];
             this.aprobar = true;
             this.boton_desactivado = true;
@@ -400,23 +508,42 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                   }, 200)
                   return false;
                 }
-
-                let data = res.data;
                 this.recuperacion = false;
                 this.aprobar = true;
+                let data = res.data;
+
+                this.nombre = data.estudiante.nombre_persona + ' ' + data.estudiante.apellido_persona;
+                this.cedula = data.estudiante.cedula_persona;
+
+                if (data.notas_externas) {
+                  this.notas_externas = true;
+                  this.notas_externas_desde = data.notas_externas.desde;
+                  this.notas_externas_hasta = data.notas_externas.hasta;
+                  this.cantidad_materias = parseInt(data.notas_externas.cant_materias);
+                  ViewAlert(data.notas_externas.mensaje, "error");
+
+                  setTimeout(() => {
+                    $("#staticBackdrop").modal('hide');
+                    $("#staticBackdrop3").modal('show');
+                  }, 700)
+                  return false;
+                } else {
+                  this.notas_externas = false;
+                  console.log("listoo")
+                }
+
                 this.seccion = data.estudiante.idSeccion;
                 this.periodo = data.estudiante.periodoescolar;
                 this.id_periodo = data.estudiante.id_periodo_escolar;
-                this.nombre = data.estudiante.nombre_persona + ' ' + data.estudiante.apellido_persona;
-                this.cedula = data.estudiante.cedula_persona;
                 this.materias = data.materias;
-                // console.log(data.materias)
+                this.id_plantel = (data.materias[0].plantel != null) ? data.materias[0].plantel : '';
+
+                if (data.materias[0].nota_final != null) this.nuevo_plantel = false;
+                else this.nuevo_plantel = true;
 
                 data.materias.forEach(item => {
-                  
-                  if (item.nota_final != null && parseInt(item.nota_final) < 10){
+                  if (item.nota_final != null && parseInt(item.nota_final) < 10) {
                     this.recuperacion = true;
-                    this.nuevo_plantel = false;
                   }
                   if (item.nota_final != null && parseInt(item.nota_final) < 10) {
                     if (item.recuperativo_1 != null && parseInt(item.recuperativo_1) < 10) {
@@ -483,7 +610,6 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
         },
         computed: {
           if_reprobar() {
-            console.log(this.aprobar, this.boton_desactivado, this.recuperacion)
             if (this.aprobar == false && this.boton_desactivado == true) {
               if (this.recuperacion == true) {
                 let reprobar = true;
@@ -505,6 +631,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           await this.periodo_activo();
           await this.consultarSecciones()
           await this.obtener_externas()
+          await this.obtener_interno();
 
         }
       }).mount("#App_vue");
