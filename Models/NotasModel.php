@@ -533,6 +533,8 @@ class NotasModel extends DB
     WHERE nota.cedula_estudiante = '$cedula' AND periodo_escolar.id_periodo_escolar <= $periodo AND nota.estatusNotas = 0 AND nota.plantel = institucion.id_institucion
     GROUP BY nota.idNota";
 
+    // var_dump($sqlNotasHistoricas);
+
     
     $sqlInstitucion = "SELECT institucion.* FROM periodo_escolar 
     INNER JOIN institucion on institucion.id_institucion = periodo_escolar.institucion_id
@@ -560,6 +562,8 @@ class NotasModel extends DB
       'planteles' => $array_planteles
     ];
   }
+
+
 
   public function reportePorseccion($id_seccion, $id_periodo)
   {

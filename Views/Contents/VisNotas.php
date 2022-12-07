@@ -129,6 +129,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
               <input type="hidden" name="cedula" v-model="cedula">
               <input type="hidden" name="observacion" value="no">
               <input type="hidden" name="estatus_notas" value="1">
+              <input type="hidden" name="id_plantel" v-model="id_plantel">
               <div class="modal-body row" style="padding: 0 70px ;">
                 <div class="row">
                   <div class="col-12 my-2">
@@ -136,7 +137,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                       <label for="">Seleccione el plantel {{nuevo_plantel}} y {{notas_externas}} de las notas</label>
 
                     </div> -->
-                    <input type="hidden" name="id_plantel" v-model="id_plantel">
+
                     <div class="input-group input-group-sm form-box form-box-select" style="display:flex; flex-wrap: wrap;">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Seleccione el plantel de las notas:</span>
                       <input type="text" name="des_plantel" id="" v-model="des_plantel" readonly class="form-control form-control-sm">
@@ -413,15 +414,13 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
           async obtener_externas() {
             await fetch("./Controllers/InstitucionController.php?ope=externas")
               .then(res => res.json()).then(result => {
-                console.log(result)
                 this.planteles = result.data
               }).catch(Error => console.error(Error))
           },
           async obtener_interno() {
             await fetch("./Controllers/InstitucionController.php?ope=interno")
               .then(res => res.json()).then(result => {
-                console.log(result)
-                this.id_plantel = result.data.id_plantel;
+                this.id_plantel = result.data.id_institucion;
                 this.des_plantel = result.data.des_institucion;
               }).catch(Error => console.error(Error))
           },
@@ -475,7 +474,7 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
             this.action = e.submitter.value;
             e.preventDefault();
             // if(!$("#Formulario").valid()) return false;
-
+            
             setTimeout(() => {
               let form = new FormData(e.target);
               fetch("./Controllers/NotasController.php", {
@@ -529,14 +528,13 @@ if (!isset($res['id_periodo_escolar'])) header("Location: ./VisPeriodo?codigo=40
                   return false;
                 } else {
                   this.notas_externas = false;
-                  console.log("listoo")
                 }
 
                 this.seccion = data.estudiante.idSeccion;
                 this.periodo = data.estudiante.periodoescolar;
                 this.id_periodo = data.estudiante.id_periodo_escolar;
                 this.materias = data.materias;
-                this.id_plantel = (data.materias[0].plantel != null) ? data.materias[0].plantel : '';
+                this.id_plantel = (data.materias[0].plantel != null) ? data.materias[0].plantel : this.id_plantel;
 
                 if (data.materias[0].nota_final != null) this.nuevo_plantel = false;
                 else this.nuevo_plantel = true;

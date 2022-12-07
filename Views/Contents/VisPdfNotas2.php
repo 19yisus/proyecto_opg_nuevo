@@ -16,14 +16,14 @@
 
 <body>
   <?php
-  if ($primero == [] && $segundo == [] && $tercero == [] && $cuarto == [] && $quinto == [] && $sexto == []) {
+  //if ($primero == ['20', '15', '15'] && $segundo == ['20', '15', '15'] && $tercero == ['20', '15', '15'] && $cuarto == ['20', '15', '15'] && $quinto == ['20', '15', '15'] && $sexto == ['20', '15', '15']) {
   ?>
-    <script>
+    <!-- <script>
       alert("El estudiante no tiene notas registradas");
       window.close();
-    </script>
+    </script> -->
   <?php
-  }
+  //}
   ?>
   <div class="mx-auto w-10/12 text-sm p-1" id="pagina">
     <div class="w-full flex justify-between items-center">

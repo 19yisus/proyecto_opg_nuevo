@@ -52,6 +52,7 @@ function SaveData()
 	$NotasModel = new NotasModel();
 	$datos = OrderPost();
 	$NotasModel->SetData($datos[0], $datos[1]);
+	
 	$NotasModel->SaveDatos();
 }
 

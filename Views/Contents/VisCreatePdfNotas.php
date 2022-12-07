@@ -10,6 +10,9 @@ if (!isset($datos['notas'][0])) {
         </script>";
 }
 
+// var_dump($datos);
+// die("FDF");
+
 $resultado = $datos['datos'];
 $notas = $datos['notas'];
 $inst = $datos['institucion'];
@@ -103,7 +106,7 @@ if (!isset($quinto[0])) {
 	$resultado = $nota_model->ConsultarParaPdfNotasExternas($cedula, 5);
 	if (isset($resultado[0])) {
 		foreach ($resultado as $item) {
-			array_push($tercero, [
+			array_push($quinto, [
 				'nota_final' => $item['nota_ext'],
 				'des_materia' => $item['des_materia_ext'],
 				'periodoescolar' => $item['periodo_ext'] . '-' . '1',
