@@ -214,7 +214,7 @@ class InstitucionModel extends DB
   public function GetExternas()
   {
     try {
-      $result = $this->consultAll("SELECT * FROM institucion WHERE si_externa = 1;");
+      $result = $this->consultAll("SELECT * FROM institucion;");
       if (isset($result[0])) $this->ResDataJSON($result);
       else $this->ResDataJSON([]);
     } catch (PDOException $e) {

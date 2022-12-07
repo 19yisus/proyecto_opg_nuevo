@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 05-12-2022 a las 12:51:30
+-- Tiempo de generación: 07-12-2022 a las 03:34:08
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.4.22
 
@@ -44,11 +44,17 @@ CREATE TABLE `asignacion_estudiante_seccion` (
 INSERT INTO `asignacion_estudiante_seccion` (`id_asignacion_estu`, `cedula_estu_asignacion`, `id_seccion`, `id_periodo`, `estatus_asig_estu`) VALUES
 (1, '10425562', 1, 1, 0),
 (2, '10412103', 6, 1, 1),
-(3, '22222222', 13, 2, 1),
-(4, '12345678', 13, 2, 1),
-(5, '33333333', 13, 2, 1),
+(3, '22222222', 13, 2, 0),
+(4, '12345678', 13, 2, 0),
+(5, '33333333', 13, 2, 0),
 (6, '12121212', 17, 2, 1),
-(7, '10425562', 15, 2, 1);
+(7, '10425562', 15, 2, 0),
+(8, '12456987', 13, 2, 0),
+(9, '21546975', 13, 2, 0),
+(10, '23654789', 13, 2, 0),
+(11, '21546987', 13, 2, 0),
+(12, '26547896', 13, 2, 0),
+(13, '12345679', 13, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -99,7 +105,40 @@ INSERT INTO `bitacora_notas` (`id_bitacora`, `usuario_id`, `nota_id`, `fecha_bit
 (4, 2, 4, '2022-12-05 03:37:11', 'no', 'Nuevo Registro'),
 (5, 2, 5, '2022-12-05 03:37:11', 'no', 'Nuevo Registro'),
 (6, 2, 6, '2022-12-05 03:37:11', 'no', 'Nuevo Registro'),
-(7, 2, 7, '2022-12-05 03:37:11', 'no', 'Nuevo Registro');
+(7, 2, 7, '2022-12-05 03:37:11', 'no', 'Nuevo Registro'),
+(8, 2, 8, '2022-12-05 07:01:59', 'no', 'Nuevo Registro'),
+(9, 2, 9, '2022-12-05 07:01:59', 'no', 'Nuevo Registro'),
+(10, 2, 10, '2022-12-05 07:01:59', 'no', 'Nuevo Registro'),
+(11, 2, 11, '2022-12-05 07:02:52', 'no', 'Nuevo Registro'),
+(12, 2, 12, '2022-12-05 07:02:52', 'no', 'Nuevo Registro'),
+(13, 2, 13, '2022-12-05 07:02:52', 'no', 'Nuevo Registro'),
+(14, 2, 14, '2022-12-05 07:02:59', 'no', 'Nuevo Registro'),
+(15, 2, 15, '2022-12-05 07:02:59', 'no', 'Nuevo Registro'),
+(16, 2, 16, '2022-12-05 07:02:59', 'no', 'Nuevo Registro'),
+(17, 2, 17, '2022-12-05 07:08:01', 'no', 'Nuevo Registro'),
+(18, 2, 18, '2022-12-05 07:08:01', 'no', 'Nuevo Registro'),
+(19, 2, 19, '2022-12-05 07:08:01', 'no', 'Nuevo Registro'),
+(20, 2, 20, '2022-12-05 07:08:09', 'no', 'Nuevo Registro'),
+(21, 2, 21, '2022-12-05 07:08:09', 'no', 'Nuevo Registro'),
+(22, 2, 22, '2022-12-05 07:08:09', 'no', 'Nuevo Registro'),
+(23, 2, 23, '2022-12-05 07:08:33', 'no', 'Nuevo Registro'),
+(24, 2, 24, '2022-12-05 07:08:33', 'no', 'Nuevo Registro'),
+(25, 2, 25, '2022-12-05 07:08:33', 'no', 'Nuevo Registro'),
+(26, 2, 26, '2022-12-05 07:08:46', 'no', 'Nuevo Registro'),
+(27, 2, 27, '2022-12-05 07:08:47', 'no', 'Nuevo Registro'),
+(28, 2, 28, '2022-12-05 07:08:47', 'no', 'Nuevo Registro'),
+(29, 2, 29, '2022-12-05 07:08:58', 'no', 'Nuevo Registro'),
+(30, 2, 30, '2022-12-05 07:08:58', 'no', 'Nuevo Registro'),
+(31, 2, 31, '2022-12-05 07:08:58', 'no', 'Nuevo Registro'),
+(32, 2, 32, '2022-12-05 07:20:49', 'no', 'Nuevo Registro'),
+(33, 2, 33, '2022-12-05 07:20:50', 'no', 'Nuevo Registro'),
+(34, 2, 34, '2022-12-05 07:20:50', 'no', 'Nuevo Registro'),
+(35, 2, 35, '2022-12-05 07:44:47', 'no', 'Nuevo Registro'),
+(36, 2, 36, '2022-12-05 07:44:47', 'no', 'Nuevo Registro'),
+(37, 2, 37, '2022-12-05 07:44:47', 'no', 'Nuevo Registro'),
+(38, 2, 38, '2022-12-06 20:26:45', 'no', 'Nuevo Registro'),
+(39, 2, 39, '2022-12-06 20:26:45', 'no', 'Nuevo Registro'),
+(40, 2, 40, '2022-12-06 20:26:45', 'no', 'Nuevo Registro');
 
 -- --------------------------------------------------------
 
@@ -161,7 +200,14 @@ INSERT INTO `bitacora_sistema` (`id`, `name_tabla`, `descripcion`, `registro_id`
 (39, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '2', '2022-12-05 06:56:21', 2),
 (40, 'periodo_escolar', 'REGISTRO', '3', '2022-12-05 06:56:34', 2),
 (41, 'periodo_escolar', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '3', '2022-12-05 06:58:57', 2),
-(42, 'periodo_escolar', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '2', '2022-12-05 06:58:59', 2);
+(42, 'periodo_escolar', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '2', '2022-12-05 06:58:59', 2),
+(43, 'institucion', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-12-05 06:59:36', 2),
+(44, 'institucion', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '1', '2022-12-05 06:59:37', 2),
+(45, 'Institucion', 'REGISTRO', '2', '2022-12-05 07:00:10', 2),
+(46, 'institucion', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '1', '2022-12-05 07:00:13', 2),
+(47, 'institucion', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '2', '2022-12-05 07:00:14', 2),
+(48, 'institucion', 'CAMBIO DE ESTATUS (DESACTIVACION DE REGISTRO)', '2', '2022-12-05 07:01:10', 2),
+(49, 'institucion', 'CAMBIO DE ESTATUS (ACTIVACION DE REGISTRO)', '1', '2022-12-05 07:01:11', 2);
 
 -- --------------------------------------------------------
 
@@ -761,11 +807,17 @@ CREATE TABLE `estudiante` (
 
 INSERT INTO `estudiante` (`cedula_estudiante`, `seguimiento_estudiante`, `estatus_estudiante`) VALUES
 ('10412103', 2, 1),
-('10425562', 2, 1),
+('10425562', 3, 1),
 ('12121212', 3, 1),
-('12345678', 1, 1),
-('22222222', 1, 1),
-('33333333', 1, 1);
+('12345678', 3, 1),
+('12345679', 2, 1),
+('12456987', 2, 1),
+('21546975', 2, 1),
+('21546987', 2, 1),
+('22222222', 2, 1),
+('23654789', 2, 1),
+('26547896', 2, 1),
+('33333333', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -791,7 +843,8 @@ CREATE TABLE `institucion` (
 --
 
 INSERT INTO `institucion` (`id_institucion`, `des_institucion`, `codigo_institucion`, `direccion_institucion`, `municipio`, `entidad_federal`, `zona_educativa`, `telefono`, `estatus_institucion`, `si_externa`) VALUES
-(1, 'uen oscar picon giacopini', '1654060464', 'calle 10', 'agua blanca', 'portuguesa', 'portuguesa', '04124546545', 1, 0);
+(1, 'uen oscar picon giacopini', '1654060464', 'calle 10', 'agua blanca', 'portuguesa', 'portuguesa', '04124546545', 1, 0),
+(2, 'hilarion lopez', '1232131213', 'acarigua', 'acarigua', 'acarigua', 'acarigua', '02555621415', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1218,7 +1271,10 @@ INSERT INTO `nota` (`idNota`, `cedula_estudiante`, `periodo_escolar_id`, `seccio
 (4, '10425562', 1, 1, 4, NULL, NULL, NULL, NULL, 16, 1, 1, 1, 1, 0, ''),
 (5, '10425562', 1, 1, 5, NULL, NULL, NULL, NULL, 10, 1, 1, 1, 1, 0, ''),
 (6, '10425562', 1, 1, 6, NULL, NULL, NULL, NULL, 20, 1, 1, 1, 1, 0, ''),
-(7, '10425562', 1, 1, 7, NULL, NULL, NULL, NULL, 15, 1, 1, 1, 1, 0, '');
+(7, '10425562', 1, 1, 7, NULL, NULL, NULL, NULL, 15, 1, 1, 1, 1, 0, ''),
+(38, '12345678', 2, 13, 8, NULL, NULL, NULL, NULL, 16, 1, 1, 1, 1, 0, '1'),
+(39, '12345678', 2, 13, 9, NULL, NULL, NULL, NULL, 14, 1, 1, 1, 1, 0, '1'),
+(40, '12345678', 2, 13, 10, NULL, NULL, NULL, NULL, 13, 1, 1, 1, 1, 0, '1');
 
 -- --------------------------------------------------------
 
@@ -1235,6 +1291,19 @@ CREATE TABLE `notas_externas` (
   `plantel_ext` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
   `anio_ext` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `notas_externas`
+--
+
+INSERT INTO `notas_externas` (`nota_externa`, `id_estudiante_ext`, `des_materia_ext`, `nota_ext`, `periodo_ext`, `plantel_ext`, `anio_ext`) VALUES
+(1, '12121212', 'ingles', 20, '1990', '', 1),
+(2, '12121212', 'matematica', 20, '1990', '', 1),
+(3, '12121212', 'ciencias', 20, '1990', '', 1),
+(4, '12121212', 'castellano', 20, '1990', '', 1),
+(5, '12121212', 'historia', 20, '1990', '', 1),
+(6, '12121212', 'idk', 20, '1990', '', 1),
+(7, '12121212', 'ghc', 20, '1990', '', 1);
 
 -- --------------------------------------------------------
 
@@ -2729,8 +2798,14 @@ INSERT INTO `personas` (`cedula_persona`, `nombre_persona`, `apellido_persona`, 
 ('11111111', 'Juan Carlos', 'Perez Hidalgo', 'V', 'M', 'fasdfasdf@gmail.com', '1970-01-01', 'adasdadasdsd', '11111111', NULL, NULL, NULL, NULL),
 ('12121212', 'Carlos Augusto', 'Mediomundo Valvuena', 'V', 'M', NULL, '1977-09-01', 'Agua Blanca', '12121212', NULL, 'Venezuela', 'Portuguesa', 'Agua Blanca'),
 ('12345678', 'Jose Alexander', 'Ferrer Carrasco', 'V', 'M', NULL, '1975-01-01', 'Paez', '12345678', NULL, 'Venezuela', 'Portuguesa', 'Paez'),
+('12345679', 'pedro', 'perez delgado', 'V', 'M', NULL, '1977-08-05', 'Agua Blanca', '12345679', NULL, 'venezuela', 'portuguesa', 'Agua Blanca'),
+('12456987', 'felipe', 'arraez', 'V', 'M', NULL, '1977-02-02', 'agua blanca', '12456987', NULL, 'Venezuela', 'Portuguesa', 'Agua Blanca'),
 ('14585203', 'Yehilin', 'Diaz', 'V', 'F', NULL, NULL, 'nohay', '14585203', NULL, NULL, NULL, NULL),
+('21546975', 'margarita', 'pelaes', 'V', 'F', NULL, '1977-06-02', 'Agua Blanca', '21546975', NULL, 'venezuela', 'Portuguesa', 'Agua Blanca'),
+('21546987', 'andres', 'zerpa', 'V', 'F', NULL, '1977-08-10', 'Agua Blanca', '21546987', NULL, 'venezuela', 'portuguesa', 'Agua Blanca'),
 ('22222222', 'Jose Manuel', 'Perez Lopez', 'V', 'M', NULL, '1976-01-01', 'Agua Blanca', '22222222', NULL, 'Venezuela', 'Portuguesa', 'Agua Blanca'),
+('23654789', 'felicia', 'perez', 'V', 'F', NULL, '1977-08-05', 'Agua Blanca', '23654789', NULL, 'venezuela', 'Portuguesa', 'Agua Blanca'),
+('26547896', 'jose', 'fernandez', 'V', 'F', NULL, '1977-04-05', 'Agua Blanca', '26547896', NULL, 'venezuela', 'portuguesa', 'Agua Blanca'),
 ('33333333', 'Carmen Alexandra', 'Jimenez Mora', 'V', 'F', NULL, '1977-09-01', 'Agua Blanca', '33333333', NULL, 'Venezuela', 'Portuguesa', 'Agua Blanca'),
 ('9511515', 'Alfredo', 'Torrealba', 'V', 'M', NULL, NULL, 'nohay', '9511515', NULL, NULL, NULL, NULL);
 
@@ -3034,7 +3109,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `asignacion_estudiante_seccion`
 --
 ALTER TABLE `asignacion_estudiante_seccion`
-  MODIFY `id_asignacion_estu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_asignacion_estu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacion_profesor_seccion`
@@ -3046,13 +3121,13 @@ ALTER TABLE `asignacion_profesor_seccion`
 -- AUTO_INCREMENT de la tabla `bitacora_notas`
 --
 ALTER TABLE `bitacora_notas`
-  MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_bitacora` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT de la tabla `bitacora_sistema`
 --
 ALTER TABLE `bitacora_sistema`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT de la tabla `ciudades`
@@ -3070,7 +3145,7 @@ ALTER TABLE `estados`
 -- AUTO_INCREMENT de la tabla `institucion`
 --
 ALTER TABLE `institucion`
-  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `materia`
@@ -3088,13 +3163,13 @@ ALTER TABLE `municipios`
 -- AUTO_INCREMENT de la tabla `nota`
 --
 ALTER TABLE `nota`
-  MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idNota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT de la tabla `notas_externas`
 --
 ALTER TABLE `notas_externas`
-  MODIFY `nota_externa` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `nota_externa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `pais`
